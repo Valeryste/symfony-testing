@@ -11,7 +11,7 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-
+mysql/
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
