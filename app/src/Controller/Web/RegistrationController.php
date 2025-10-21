@@ -2,9 +2,9 @@
 
 namespace App\Controller\Web;
 
-use App\DTO\Web\RegisterFormDTO;
-use App\Form\Web\RegistrationFormType;
-use App\Service\Web\RegistrationService;
+use App\DTO\RegisterFormDTO;
+use App\Form\RegistrationFormType;
+use App\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
