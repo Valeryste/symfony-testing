@@ -12,8 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Role
 {
     public const MANAGER = 'Manager';
+
     public const ADMIN = 'Admin';
+
     public const GUEST = 'Guest';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -43,9 +46,11 @@ class Role
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -56,7 +61,7 @@ class Role
         return $this->users;
     }
 
-    public function addUser(User $user): static
+    public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -66,10 +71,9 @@ class Role
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
             if ($user->getRoleId() === $this) {
                 $user->setRoleId(null);
             }

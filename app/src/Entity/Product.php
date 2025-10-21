@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table('products')]
-class Product
+class Product extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,15 +24,6 @@ class Product
 
     #[ORM\Column]
     private ?float $price = null;
-
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
 
     /**
      * @var Collection<int, Category>
@@ -69,7 +60,7 @@ class Product
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -81,7 +72,7 @@ class Product
         return $this->count;
     }
 
-    public function setCount(int $count): static
+    public function setCount(int $count): self
     {
         $this->count = $count;
 
@@ -93,45 +84,9 @@ class Product
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(float $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
-    {
-        $this->deleted_at = $deleted_at;
 
         return $this;
     }
@@ -144,7 +99,7 @@ class Product
         return $this->categories;
     }
 
-    public function addCategory(Category $category): static
+    public function addCategory(Category $category): self
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
@@ -154,7 +109,7 @@ class Product
         return $this;
     }
 
-    public function removeCategory(Category $category): static
+    public function removeCategory(Category $category): self
     {
         if ($this->categories->removeElement($category)) {
             $category->removeProduct($this);
@@ -171,7 +126,7 @@ class Product
         return $this->countHistory;
     }
 
-    public function addCountHistory(CountHistory $countHistory): static
+    public function addCountHistory(CountHistory $countHistory): self
     {
         if (!$this->countHistory->contains($countHistory)) {
             $this->countHistory->add($countHistory);
@@ -181,10 +136,9 @@ class Product
         return $this;
     }
 
-    public function removeCountHistory(CountHistory $countHistory): static
+    public function removeCountHistory(CountHistory $countHistory): self
     {
         if ($this->countHistory->removeElement($countHistory)) {
-            // set the owning side to null (unless already changed)
             if ($countHistory->getProductId() === $this) {
                 $countHistory->setProductId(null);
             }
@@ -201,7 +155,7 @@ class Product
         return $this->priceHistories;
     }
 
-    public function addPriceHistory(PriceHistory $priceHistory): static
+    public function addPriceHistory(PriceHistory $priceHistory): self
     {
         if (!$this->priceHistories->contains($priceHistory)) {
             $this->priceHistories->add($priceHistory);
@@ -211,21 +165,14 @@ class Product
         return $this;
     }
 
-    public function removePriceHistory(PriceHistory $priceHistory): static
+    public function removePriceHistory(PriceHistory $priceHistory): self
     {
         if ($this->priceHistories->removeElement($priceHistory)) {
-            // set the owning side to null (unless already changed)
             if ($priceHistory->getProductId() === $this) {
                 $priceHistory->setProductId(null);
             }
         }
 
         return $this;
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
     }
 }

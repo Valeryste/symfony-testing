@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 #[ORM\Table('cities')]
-class City
+class City extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,15 +18,6 @@ class City
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
 
     /**
      * @var Collection<int, Shop>
@@ -53,35 +44,11 @@ class City
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(?string $name): self
     {
         $this->name = $name;
-    }
 
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
+        return $this;
     }
 
     /**
@@ -92,7 +59,7 @@ class City
         return $this->shops;
     }
 
-    public function addShop(Shop $shop): static
+    public function addShop(Shop $shop): self
     {
         if (!$this->shops->contains($shop)) {
             $this->shops->add($shop);
@@ -102,10 +69,9 @@ class City
         return $this;
     }
 
-    public function removeShop(Shop $shop): static
+    public function removeShop(Shop $shop): self
     {
         if ($this->shops->removeElement($shop)) {
-            // set the owning side to null (unless already changed)
             if ($shop->getCityId() === $this) {
                 $shop->setCityId(null);
             }
@@ -119,7 +85,7 @@ class City
         return $this->country_id;
     }
 
-    public function setCountryId(?Country $country_id): static
+    public function setCountryId(?Country $country_id): self
     {
         $this->country_id = $country_id;
 

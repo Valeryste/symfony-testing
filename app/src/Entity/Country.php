@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 #[ORM\Table('countries')]
-class Country
+class Country extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,15 +18,6 @@ class Country
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
-
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
 
     /**
      * @var Collection<int, City>
@@ -49,42 +40,11 @@ class Country
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
     }
 
     /**
@@ -95,7 +55,7 @@ class Country
         return $this->cities;
     }
 
-    public function addCity(City $city): static
+    public function addCity(City $city): self
     {
         if (!$this->cities->contains($city)) {
             $this->cities->add($city);
@@ -105,10 +65,9 @@ class Country
         return $this;
     }
 
-    public function removeCity(City $city): static
+    public function removeCity(City $city): self
     {
         if ($this->cities->removeElement($city)) {
-            // set the owning side to null (unless already changed)
             if ($city->getCountryId() === $this) {
                 $city->setCountryId(null);
             }

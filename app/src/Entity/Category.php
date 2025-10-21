@@ -9,13 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table('categories')]
-class Category
+class Category extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
@@ -26,15 +25,6 @@ class Category
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
-
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
 
     /**
      * @var Collection<int, Product>
@@ -47,7 +37,6 @@ class Category
         $this->products = new ArrayCollection();
     }
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -58,7 +47,7 @@ class Category
         return $this->parent_id;
     }
 
-    public function setParentId(?self $parent_id): static
+    public function setParentId(?self $parent_id): self
     {
         $this->parent_id = $parent_id;
 
@@ -70,41 +59,11 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
-    {
-        $this->updated_at = $updated_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
     }
 
     /**
@@ -115,7 +74,7 @@ class Category
         return $this->products;
     }
 
-    public function addProduct(Product $product): static
+    public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
@@ -124,7 +83,7 @@ class Category
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function removeProduct(Product $product): self
     {
         $this->products->removeElement($product);
 
@@ -136,19 +95,13 @@ class Category
         return $this->children;
     }
 
-    public function addChild(self $child): static
+    public function addChild(self $child): self
     {
         if (!$this->children->contains($child)) {
             $this->children->add($child);
             $child->setParentId($this);
         }
+
         return $this;
     }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
-    }
-
 }

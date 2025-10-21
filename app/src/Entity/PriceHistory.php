@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PriceHistoryRepository::class)]
 #[ORM\Table('price_history')]
-class PriceHistory
+class PriceHistory extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,15 +21,6 @@ class PriceHistory
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -40,7 +31,7 @@ class PriceHistory
         return $this->product_id;
     }
 
-    public function setProductId(?Product $product_id): static
+    public function setProductId(?Product $product_id): self
     {
         $this->product_id = $product_id;
 
@@ -52,47 +43,10 @@ class PriceHistory
         return $this->price;
     }
 
-    public function setPrice(int $price): static
+    public function setPrice(int $price): self
     {
         $this->price = $price;
 
         return $this;
     }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
-    {
-        $this->updated_at = $updated_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
-    }
-
 }

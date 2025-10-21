@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ShopRepository::class)]
 #[ORM\Table('shops')]
-class Shop
+class Shop extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,15 +24,6 @@ class Shop
 
     #[ORM\Column(length: 255)]
     private ?string $address = null;
-
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
 
     /**
      * @var Collection<int, Employee>
@@ -59,7 +50,7 @@ class Shop
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -71,7 +62,7 @@ class Shop
         return $this->is_open;
     }
 
-    public function setIsOpen(bool $is_open): static
+    public function setIsOpen(bool $is_open): self
     {
         $this->is_open = $is_open;
 
@@ -83,52 +74,22 @@ class Shop
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
-    {
-        $this->updated_at = $updated_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
-    }
-
     /**
-     * @return Collection<int, Emloyee>
+     * @return Collection<int, Employee>
      */
     public function getEmployees(): Collection
     {
         return $this->employees;
     }
 
-    public function addEmployee(Emloyee $employee): static
+    public function addEmployee(Employee $employee): self
     {
         if (!$this->employees->contains($employee)) {
             $this->employees->add($employee);
@@ -138,10 +99,9 @@ class Shop
         return $this;
     }
 
-    public function removeEmployee(Emloyee $employee): static
+    public function removeEmployee(Employee $employee): self
     {
         if ($this->employees->removeElement($employee)) {
-            // set the owning side to null (unless already changed)
             if ($employee->getShopId() === $this) {
                 $employee->setShopId(null);
             }
@@ -150,18 +110,12 @@ class Shop
         return $this;
     }
 
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
-    }
-
     public function getCityId(): ?City
     {
         return $this->city_id;
     }
 
-    public function setCityId(?City $city_id): static
+    public function setCityId(?City $city_id): self
     {
         $this->city_id = $city_id;
 

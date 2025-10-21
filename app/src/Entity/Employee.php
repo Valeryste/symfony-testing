@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmloyeeRepository::class)]
 #[ORM\Table('employees')]
-class Employee
+class Employee extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,15 +33,6 @@ class Employee
     #[ORM\JoinColumn(name: 'shop_id', nullable: false)]
     private ?Shop $shop_id = null;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updated_at = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -52,7 +43,7 @@ class Employee
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -64,7 +55,7 @@ class Employee
         return $this->surname;
     }
 
-    public function setSurname(string $surname): static
+    public function setSurname(string $surname): self
     {
         $this->surname = $surname;
 
@@ -76,7 +67,7 @@ class Employee
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
 
@@ -88,7 +79,7 @@ class Employee
         return $this->position;
     }
 
-    public function setPosition(string $position): static
+    public function setPosition(string $position): self
     {
         $this->position = $position;
 
@@ -100,7 +91,7 @@ class Employee
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -112,41 +103,10 @@ class Employee
         return $this->shop_id;
     }
 
-    public function setShopId(?Shop $shop_id): static
+    public function setShopId(?Shop $shop_id): self
     {
         $this->shop_id = $shop_id;
 
         return $this;
-    }
-
-    #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
-    {
-        $this->updated_at = new \DateTimeImmutable();
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deleted_at;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): void
-    {
-        $this->deleted_at = $deleted_at;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updated_at;
     }
 }
