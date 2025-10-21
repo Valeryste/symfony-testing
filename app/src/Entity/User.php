@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table('users')]
-class User extends BaseEntity
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,7 +29,9 @@ class User extends BaseEntity
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'role_id', nullable: false)]
-    private ?Role $role_id = null;
+    private ?Role $role = null;
+
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -68,14 +74,45 @@ class User extends BaseEntity
         return $this;
     }
 
-    public function getRoleId(): ?Role
+    public function getRole(): ?Role
     {
-        return $this->role_id;
+        return $this->role;
     }
 
-    public function setRoleId(?Role $role_id): self
+    public function setRole(?Role $role): self
     {
-        $this->role_id = $role_id;
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        if ($this->role) {
+            return [$this->role->getName()];
+        }
+
+        return ['Guest'];
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string)$this->username;
+    }
+
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
