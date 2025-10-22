@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait TimeStampsTrait
 {
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    protected \DateTimeImmutable $created_at;
+    protected ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(nullable: true)]
     protected ?\DateTimeImmutable $updated_at = null;
@@ -20,6 +20,19 @@ trait TimeStampsTrait
     }
 
     #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if (!isset($this->created_at)) {
+            $this->created_at = new \DateTimeImmutable();
+        }
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
@@ -32,7 +45,6 @@ trait TimeStampsTrait
         return $this->updated_at;
     }
 
-    #[ORM\PreUpdate]
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;

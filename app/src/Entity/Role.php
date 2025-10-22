@@ -65,7 +65,7 @@ class Role
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setRoleId($this);
+            $user->setRole($this);
         }
 
         return $this;
@@ -74,8 +74,8 @@ class Role
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            if ($user->getRoleId() === $this) {
-                $user->setRoleId(null);
+            if ($user->getRole() === $this) {
+                $user->setRole(null);
             }
         }
 
