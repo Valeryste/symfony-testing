@@ -25,6 +25,10 @@ class LoginService extends BaseService
             throw new \Exception('Invalid user');
         }
 
+        if(!$user->isActive()) {
+            throw new \Exception('User is blocked');
+        }
+
         if (!$this->passwordHasher->isPasswordValid($user, $loginFormDTO->password)) {
             throw new \Exception('Invalid password');
         }

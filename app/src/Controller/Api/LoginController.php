@@ -3,11 +3,11 @@
 namespace App\Controller\Api;
 
 use App\DTO\LoginFormDTO;
+use App\Request\LoginRequest;
 use App\Service\JwtTokenService;
 use App\Service\LoginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 class LoginController extends AbstractController
@@ -18,15 +18,12 @@ class LoginController extends AbstractController
     ){}
 
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!isset($data['username']) || !isset($data['password'])) {
-            return $this->json([
-                'error' => 'Username and password are required'
-            ], 400);
-        }
+        $data = [
+            'username' => $request->getUsername(),
+            'password' => $request->getPassword()
+        ];
 
         try {
             $user = $this->loginService->login(new LoginFormDTO(...$data));

@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table('users')]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,6 +31,9 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'role_id', nullable: false)]
     private ?Role $role = null;
+
+    #[ORM\Column(name: 'is_active', nullable: false, options: ['default' => true])]
+    private bool $is_active = true;
 
     private ?string $plainPassword = null;
 
@@ -92,7 +96,7 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
             return [$this->role->getName()];
         }
 
-        return ['Guest'];
+        return [Role::GUEST];
     }
 
     public function getUserIdentifier(): string
@@ -115,5 +119,23 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         $this->plainPassword = $plainPassword;
 
         return $this;
+    }
+
+    public function IsActive(): bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): void
+    {
+        $this->is_active = $is_active;
+    }
+
+    #[ORM\PrePersist]
+    public function setIsActiveAtValue(): void
+    {
+        if ($this->id === null) {
+            $this->is_active = true;
+        }
     }
 }

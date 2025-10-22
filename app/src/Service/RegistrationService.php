@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DTO\RegisterFormDTO;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,7 +31,7 @@ class RegistrationService extends BaseService
                 $this->passwordHasher->hashPassword($user, $registerFormDTO->plainPassword)
             );
 
-        $user->setRole($this->roleRepository->findOneBy(['name' => 'Guest']));
+        $user->setRole($this->roleRepository->findOneBy(['name' => Role::GUEST]));
 
         $user->eraseCredentials();
 

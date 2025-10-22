@@ -27,7 +27,7 @@ class RegistrationFormType extends AbstractType
                     new NotBlank(['message' => 'Please enter a username']),
                     new Length([
                         'min' => 3,
-                        'max' => 50,
+                        'max' => 255,
                         'minMessage' => 'Username must be at least {{ limit }} characters',
                         'maxMessage' => 'Username cannot be longer than {{ limit }} characters',
                     ]),
@@ -38,12 +38,14 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
-                'mapped' => false,
+                'mapped' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Please enter your email']),
                     new Email(['message' => 'Please enter a valid email address']),
                     new Length([
+                        'min' => 3,
                         'max' => 255,
+                        'minMessage' => 'Email must be at least {{ limit }} characters',
                         'maxMessage' => 'Email cannot be longer than {{ limit }} characters',
                     ]),
                 ],
@@ -66,7 +68,7 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
+                        'max' => 255,
                     ]),
                 ],
             ]);
