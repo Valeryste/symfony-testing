@@ -62,4 +62,12 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('users/{id}', name: 'admin_users_delete', methods: ['POST'])]
+    public function delete(User $user): Response
+    {
+        $this->userService->delete($user);
+
+        return $this->redirectToRoute('admin_users_index');
+    }
+
 }

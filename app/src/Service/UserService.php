@@ -23,15 +23,21 @@ class UserService extends BaseService
 
     public function getAllPaginate(Request $request): PaginationInterface
     {
+        $this->entityManager->getFilters()->disable('softdeleteable');
+
         $query = $this->userRepository->createQueryBuilder('u')
             ->orderBy('u.id', 'ASC')
             ->getQuery();
 
-        return $this->paginator->paginate(
+        $paginationUser = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             self::PAGINATION_LIMIT
         );
+
+        $this->entityManager->getFilters()->enable('softdeleteable');
+
+        return $paginationUser;
     }
 
     public function update(User $user): User
@@ -39,5 +45,14 @@ class UserService extends BaseService
         $this->entityManager->flush();
 
         return $user;
+    }
+
+    public function delete(User $user): void
+    {
+        $user->setIsActive(false);
+
+        $user->setDeletedAt(new \DateTime());
+
+        $this->entityManager->flush();
     }
 }

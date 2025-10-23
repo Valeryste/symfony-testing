@@ -4,12 +4,12 @@ namespace App\Interface;
 
 interface TimeStampsInterface
 {
-    public function getCreatedAt(): ?\DateTimeImmutable;
-    public function setCreatedAt(\DateTimeImmutable $created_at): self;
+    public function getCreatedAt(): ?\DateTime;
+    public function setCreatedAt(\DateTime $createdAt): self;
 
-    public function getUpdatedAt(): ?\DateTimeImmutable;
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self;
+    public function getUpdatedAt(): ?\DateTime;
+    public function setUpdatedAt(?\DateTime $updatedAt): self;
 
-    public function getDeletedAt(): ?\DateTimeImmutable;
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): self;
+    public function getDeletedAt(): ?\DateTime;
+    public function setDeletedAt(?\DateTime $deletedAt): self;
 }
