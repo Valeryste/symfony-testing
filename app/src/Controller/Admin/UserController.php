@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\Admin\UpdateUserFormType;
+use App\Form\Admin\User\UpdateFormType;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,14 +35,14 @@ class UserController extends AbstractController
     {
         return $this->render('admin/user/edit.html.twig', [
             'user' => $user,
-            'form' => $this->createForm(UpdateUserFormType::class, $user)
+            'updatedForm' => $this->createForm(UpdateFormType::class, $user)
         ]);
     }
 
     #[Route('/users/{id}', name: 'admin_users_update', methods: ['POST'])]
     public function update(Request $request, User $user): Response
     {
-        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form = $this->createForm(UpdateFormType::class, $user);
 
         $form->handleRequest($request);
 
@@ -58,11 +58,11 @@ class UserController extends AbstractController
 
         return $this->render('admin/user/edit.html.twig', [
             'user' => $user,
-            'form' => $form
+            'updateForm' => $form
         ]);
     }
 
-    #[Route('users/{id}', name: 'admin_users_delete', methods: ['POST'])]
+    #[Route('/users/{id}/delete', name: 'admin_users_delete', methods: ['POST'])]
     public function delete(User $user): Response
     {
         $this->userService->delete($user);

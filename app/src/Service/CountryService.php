@@ -2,19 +2,19 @@
 
 namespace App\Service;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Entity\Country;
+use App\Repository\CountryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserService extends BaseService
+class CountryService extends BaseService
 {
     private const PAGINATION_LIMIT = 10;
 
     public function __construct(
-        private readonly UserRepository         $userRepository,
+        private readonly CountryRepository      $countryRepository,
         private readonly PaginatorInterface     $paginator,
         private readonly EntityManagerInterface $entityManager,
     )
@@ -25,11 +25,11 @@ class UserService extends BaseService
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $query = $this->userRepository->createQueryBuilder('u')
+        $query = $this->countryRepository->createQueryBuilder('u')
             ->orderBy('u.id', 'ASC')
             ->getQuery();
 
-        $paginationUsers = $this->paginator->paginate(
+        $paginationCountries = $this->paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             self::PAGINATION_LIMIT
@@ -37,23 +37,31 @@ class UserService extends BaseService
 
         $this->entityManager->getFilters()->enable('softdeleteable');
 
-        return $paginationUsers;
+        return $paginationCountries;
     }
 
-    public function update(User $user): User
+    public function store(Country $country): Country
     {
-        $user->setUpdatedAt(new \DateTime());
+        $this->entityManager->persist($country);
 
         $this->entityManager->flush();
 
-        return $user;
+        return $country;
     }
 
-    public function delete(User $user): void
-    {
-        $user->setIsActive(false);
 
-        $user->setDeletedAt(new \DateTime());
+    public function update(Country $country): Country
+    {
+        $country->setUpdatedAt(new \DateTime());
+
+        $this->entityManager->flush();
+
+        return $country;
+    }
+
+    public function delete(Country $country): void
+    {
+        $country->setDeletedAt(new \DateTime());
 
         $this->entityManager->flush();
     }

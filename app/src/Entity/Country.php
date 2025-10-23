@@ -6,9 +6,11 @@ use App\Repository\CountryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 #[ORM\Table('countries')]
+#[UniqueEntity(fields: ['name'], message: 'country with that name already exists')]
 class Country extends BaseEntity
 {
     #[ORM\Id]

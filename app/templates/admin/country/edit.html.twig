@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактирование пользователя #{{ user.id }} - Admin Panel{% endblock %}
+{% block title %}Редактирование страны #{{ country.id }} - Admin Panel{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Редактирование пользователя</h1>
+            <h1 class="h2">Редактирование стрнаы</h1>
             <div>
-                <a href="{{ path('admin_users_index') }}" class="btn">
-                    ← Назад к списку пользователей
+                <a href="{{ path('admin_countries_index') }}" class="btn">
+                    ← Назад к списку стран
                 </a>
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-md-8">
                 {{ form_start(updateForm, {
-                    'action': path('admin_users_update', {'id': user.id}),
+                    'action': path('admin_countries_update', { 'id': country.id }),
                     'method': 'POST'
                 }) }}
                 <div class="card">
@@ -38,32 +38,14 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label text-muted">ID пользователя</label>
-                            <div class="form-control-plaintext">#{{ user.id }}</div>
+                            <label class="form-label text-muted">ID страны</label>
+                            <div class="form-control-plaintext">#{{ country.id }}</div>
                         </div>
 
                         <div class="mb-3">
-                            {{ form_label(updateForm.username, 'username', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(updateForm.username, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(updateForm.username) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_label(updateForm.email, 'email', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(updateForm.email, {'attr': {'class': 'form-control'}}) }}
-                            {{ form_errors(updateForm.email) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_label(updateForm.role, 'role', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(updateForm.role, {'attr': {'class': 'form-select'}}) }}
-                            {{ form_errors(updateForm.role) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_widget(updateForm.isActive, {'attr': {'class': 'form-check-input'}}) }}
-                            {{ form_label(updateForm.isActive, 'активный пользователь', {'label_attr': {'class': 'form-check-label'}}) }}
-                            {{ form_errors(updateForm.isActive) }}
+                            {{ form_label(updateForm.name, 'name', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(updateForm.name, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(updateForm.name) }}
                         </div>
                     </div>
                 </div>
@@ -73,7 +55,7 @@
                             <button type="submit" class="btn btn-success">
                                 💾 Сохранить изменения
                             </button>
-                            <a href="{{ path('admin_users_edit', { 'id': user.id }) }}"
+                            <a href="{{ path('admin_countries_edit', { 'id': country.id }) }}"
                                class="btn btn-outline-secondary">
                                 🔄 Сбросить
                             </a>
@@ -84,12 +66,12 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <div class="d-flex gap-2">
-                            <form method="post" action="{{ path('admin_users_delete', { 'id': user.id }) }}"
+                            <form method="post" action="{{ path('admin_countries_delete', { 'id': country.id }) }}"
                                   style="display: inline;"
                                   onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ country.id) }}">
                                 <button class="btn btn-outline-danger" title="Удалить">
-                                    🗑️ Удалить пользователя
+                                    🗑️ Удалить страну
                                 </button>
                             </form>
                         </div>
@@ -105,13 +87,13 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <strong>Дата регистрации:</strong><br>
-                        <span class="text-muted">{{ user.createdAt ? user.createdAt|date('d.m.Y H:i') : 'Не указана' }}</span>
+                        <strong>Дата создания:</strong><br>
+                        <span class="text-muted">{{ country.createdAt ? country.createdAt|date('d.m.Y H:i') : 'Не указана' }}</span>
                     </div>
 
                     <div class="mb-3">
                         <strong>Последнее обновление данных:</strong><br>
-                        <span class="text-muted">{{ user.updatedAt ? user.updatedAt|date('d.m.Y H:i') : 'Не указана' }}</span>
+                        <span class="text-muted">{{ country.updatedAt ? country.updatedAt|date('d.m.Y H:i') : 'Не указана' }}</span>
                     </div>
                 </div>
             </div>
