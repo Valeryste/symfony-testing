@@ -15,7 +15,9 @@ class RegistrationService extends BaseService
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly RoleRepository              $roleRepository
-    ) {}
+    )
+    {
+    }
 
     public function register(
         RegisterFormDTO $registerFormDTO
@@ -31,7 +33,7 @@ class RegistrationService extends BaseService
                 $this->passwordHasher->hashPassword($user, $registerFormDTO->plainPassword)
             );
 
-        $user->setRole($this->roleRepository->findOneBy(['name' => Role::GUEST]));
+        $user->setRole($this->roleRepository->findOneBy(['name' => Role::USER]));
 
         $user->eraseCredentials();
 

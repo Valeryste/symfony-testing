@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование пользователя #{{ user.id }} - Admin Panel{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Редактирование пользователя</h1>
+            <div>
+                <a href="{{ path('admin_users_index') }}" class="btn">
+                    ← Назад к списку пользователей
+                </a>
+            </div>
+        </div>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ✅ {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ❌ {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-8">
+                {{ form_start(form, {
+                    'action': path('admin_users_update', {'id': user.id}),
+                    'method': 'POST'
+                }) }}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Основная информация</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">ID пользователя</label>
+                            <div class="form-control-plaintext">#{{ user.id }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.username, 'username', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.username) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.email, 'email', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.role, 'role', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.role, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.role) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(form.isActive, 'активный пользователь', {'label_attr': {'class': 'form-check-label'}}) }}
+                            {{ form_errors(form.isActive) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                💾 Сохранить изменения
+                            </button>
+                            <a href="{{ path('admin_users_edit', { 'id': user.id }) }}"
+                               class="btn btn-outline-secondary">
+                                🔄 Сбросить
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Дополнительная информация</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Дата регистрации:</strong><br>
+                        <span class="text-muted">{{ user.createdAt ? user.createdAt|date('d.m.Y H:i') : 'Не указана' }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Последнее обновление данных:</strong><br>
+                        <span class="text-muted">{{ user.updatedAt ? user.updatedAt|date('d.m.Y H:i') : 'Не указана' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

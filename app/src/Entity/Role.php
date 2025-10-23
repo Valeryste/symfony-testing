@@ -11,11 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table('roles')]
 class Role
 {
-    public const MANAGER = 'Manager';
+    public const MANAGER = 'MANAGER';
 
-    public const ADMIN = 'Admin';
+    public const ADMIN = 'ADMIN';
 
-    public const GUEST = 'Guest';
+    public const USER = 'USER';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -90,10 +90,5 @@ class Role
     public static function getAdmin(): string
     {
         return self::ADMIN;
-    }
-
-    public static function getGuest(): string
-    {
-        return self::GUEST;
     }
 }

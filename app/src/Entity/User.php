@@ -33,7 +33,7 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     private ?Role $role = null;
 
     #[ORM\Column(name: 'is_active', nullable: false, options: ['default' => true])]
-    private bool $is_active = true;
+    private bool $isActive = true;
 
     private ?string $plainPassword = null;
 
@@ -93,10 +93,10 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
     public function getRoles(): array
     {
         if ($this->role) {
-            return [$this->role->getName()];
+            return ['ROLE_' . $this->role->getName()];
         }
 
-        return [Role::GUEST];
+        return ['ROLE_' . Role::USER];
     }
 
     public function getUserIdentifier(): string
@@ -123,19 +123,19 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
 
     public function IsActive(): bool
     {
-        return $this->is_active;
+        return $this->isActive;
     }
 
     public function setIsActive(bool $is_active): void
     {
-        $this->is_active = $is_active;
+        $this->isActive = $is_active;
     }
 
     #[ORM\PrePersist]
     public function setIsActiveAtValue(): void
     {
         if ($this->id === null) {
-            $this->is_active = true;
+            $this->isActive = true;
         }
     }
 }

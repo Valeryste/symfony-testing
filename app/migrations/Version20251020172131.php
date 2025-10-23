@@ -43,14 +43,14 @@ final class Version20251020172131 extends AbstractMigration
         $this->addSql('ALTER TABLE users ADD CONSTRAINT FK_1483A5E9D60322AC FOREIGN KEY (role_id) REFERENCES roles (id)');
 
         $this->addSql("INSERT INTO roles (name) VALUES 
-            ('Manager'),
-            ('Admin'),
-            ('Guest')
+            ('USER'),                 
+            ('MANAGER'),
+            ('ADMIN')
         ");
 
         $hashedPassword = password_hash('admin', PASSWORD_DEFAULT);
         $this->addSql("INSERT INTO users (role_id, email, username, password, created_at) VALUES 
-            (2, 'admin@example.com', 'admin', '$hashedPassword', NOW())");
+            (3, 'admin@example.com', 'admin', '$hashedPassword', NOW())");
     }
 
     public function down(Schema $schema): void
