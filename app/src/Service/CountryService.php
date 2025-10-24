@@ -7,7 +7,6 @@ use App\Repository\CountryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class CountryService extends BaseService
 {
@@ -21,18 +20,14 @@ class CountryService extends BaseService
     {
     }
 
-    public function getAllPaginate(Request $request): PaginationInterface
+    public function getList(int $page): PaginationInterface
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $query = $this->countryRepository->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery();
-
         $paginationCountries = $this->paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            self::PAGINATION_LIMIT
+            target: $this->countryRepository->getListQuery(),
+            page: $page,
+            limit: self::PAGINATION_LIMIT
         );
 
         $this->entityManager->getFilters()->enable('softdeleteable');
@@ -61,7 +56,7 @@ class CountryService extends BaseService
 
     public function delete(Country $country): void
     {
-        $country->setDeletedAt(new \DateTime());
+        $this->entityManager->remove($country);
 
         $this->entityManager->flush();
     }

@@ -1,41 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Admin Panel{% endblock %}
 
-{% block body %}
+{% block admin_content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="fas fa-th-large text-primary"></i> Панель управления
+        </h1>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title mb-0">
-                        <i class="fas fa-th-large text-primary"></i> Меню админ-панели
-                    </h2>
-                </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100 border-primary">
-                                <div class="card-header bg-primary text-white">
-                                    <h3 class="mb-0">
-                                        <a class="fas fa-users me-2"
-                                           href="{{ path('admin_users_index') }}">Пользователи</a>
-                                    </h3>
-                                </div>
-                                <div class="card-header bg-primary text-white">
-                                    <h3 class="mb-0">
-                                        <a class="fas fa-users me-2"
-                                           href="{{ path('admin_countries_index') }}">Страны</a>
-                                    </h3>
-                                </div>
-                                <div class="card-header bg-primary text-white">
-                                    <h3 class="mb-0">
-                                        <a class="fas fa-users me-2"
-                                           href="{{ path('admin_cities_index') }}">Города</a>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h5 class="card-title">Добро пожаловать в админ-панель</h5>
+                    <p class="card-text">Используйте меню слева для навигации по разделам.</p>
                 </div>
             </div>
         </div>

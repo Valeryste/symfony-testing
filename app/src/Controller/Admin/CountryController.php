@@ -27,8 +27,10 @@ class CountryController extends AbstractController
     #[Route('/countries', name: 'admin_countries_index')]
     public function index(Request $request): Response
     {
+        $page = $request->query->getInt('page', 1);
+
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'countries' => $this->countryService->getAllPaginate($request),
+            'countries' => $this->countryService->getList($page),
             'createForm' => $this->createForm(CreateFormType::class)
         ]);
     }
@@ -47,9 +49,10 @@ class CountryController extends AbstractController
 
             return $this->redirectToRoute('admin_countries_index');
         }
+        $page = $request->query->getInt('page', 1);
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'countries' => $this->countryService->getAllPaginate($request),
+            'countries' => $this->countryService->getList($page),
             'createForm' => $form
         ]);
     }

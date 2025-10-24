@@ -7,7 +7,6 @@ use App\Repository\CityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class CityService extends BaseService
 {
@@ -21,18 +20,14 @@ class CityService extends BaseService
     {
     }
 
-    public function getAllPaginate(Request $request): PaginationInterface
+    public function getList(int $page): PaginationInterface
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $query = $this->cityRepository->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery();
-
         $paginationCities = $this->paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            self::PAGINATION_LIMIT
+            target: $this->cityRepository->getListQueryWithSoftDelete(),
+            page: $page,
+            limit: self::PAGINATION_LIMIT
         );
 
         $this->entityManager->getFilters()->enable('softdeleteable');

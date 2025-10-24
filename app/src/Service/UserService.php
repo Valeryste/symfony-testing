@@ -4,10 +4,9 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserService extends BaseService
 {
@@ -19,20 +18,17 @@ class UserService extends BaseService
         private readonly EntityManagerInterface $entityManager,
     )
     {
+
     }
 
-    public function getAllPaginate(Request $request): PaginationInterface
+    public function getList(int $page): PaginationInterface
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $query = $this->userRepository->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery();
-
         $paginationUsers = $this->paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            self::PAGINATION_LIMIT
+            target: $this->userRepository->getListQuery(),
+            page: $page,
+            limit: self::PAGINATION_LIMIT
         );
 
         $this->entityManager->getFilters()->enable('softdeleteable');
@@ -57,4 +53,5 @@ class UserService extends BaseService
 
         $this->entityManager->flush();
     }
+
 }

@@ -15,6 +15,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
+    private const PATH_TO_TEMPLATES = 'admin/user/';
+
     public function __construct(
         private readonly UserService $userService,
     )
@@ -24,8 +26,10 @@ class UserController extends AbstractController
     #[Route('/users', name: 'admin_users_index')]
     public function index(Request $request): Response
     {
-        return $this->render('admin/user/index.html.twig', [
-                'users' => $this->userService->getAllPaginate($request)
+        $page = $request->query->getInt('page', 1);
+
+        return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
+                'users' => $this->userService->getList($page)
             ]
         );
     }
@@ -33,9 +37,9 @@ class UserController extends AbstractController
     #[Route('/users/{id}/edit', name: 'admin_users_edit', methods: 'GET')]
     public function edit(User $user): Response
     {
-        return $this->render('admin/user/edit.html.twig', [
+        return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'user' => $user,
-            'updatedForm' => $this->createForm(UpdateFormType::class, $user)
+            'updateForm' => $this->createForm(UpdateFormType::class, $user)
         ]);
     }
 
@@ -49,14 +53,14 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userService->update($user);
 
-            $this->addFlash('success', 'Registration successful!');
+            $this->addFlash('success', 'Updated successful!');
 
             return $this->redirectToRoute('admin_users_edit', [
                 'id' => $user->getId()
             ]);
         }
 
-        return $this->render('admin/user/edit.html.twig', [
+        return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'user' => $user,
             'updateForm' => $form
         ]);
@@ -69,5 +73,4 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('admin_users_index');
     }
-
 }
