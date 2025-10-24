@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Управление пользователями{% endblock %}
 
-{% block body %}
+{% block admin_content %}
     <div class="page-header">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
@@ -61,20 +61,26 @@
                             <span>{{ user.role.name }}</span>
                         </td>
                         <td>
-                            {% if user.isActive %}
-                                <span class="badge bg-success">
-                                    ✅ Активен
-                                </span>
-                            {% else %}
-                                <span class="badge bg-danger">
-                                    ❌ Неактивен
-                                </span>
-                            {% endif %}
-                            {% if user.isDeleted %}
-                                <span class="badge bg-success">
-                                    ❌ Удален
-                                </span>
-                            {% endif %}
+                            <div class="status-badges">
+                                {% if user.isActive %}
+                                    <span class="status-badge active">
+                                     <i class="fas fa-check-circle"></i>
+                                        Активен
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge inactive">
+                                        <i class="fas fa-times-circle"></i>
+                                        Неактивен
+                                    </span>
+                                {% endif %}
+
+                                {% if user.isDeleted %}
+                                    <span class="status-badge deleted">
+                                        <i class="fas fa-trash"></i>
+                                        Удален
+                                    </span>
+                                {% endif %}
+                            </div>
                         </td>
                         <td>
                             {% if user.isDeleted == null %}

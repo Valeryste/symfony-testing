@@ -1,42 +1,47 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white">
-                        <span>Админ-панель</span>
-                    </h6>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white {% if app.request.attributes.get('_route') starts with 'admin_users' %}active bg-primary{% endif %}"
-                               href="{{ path('admin_users_index') }}">
-                                <i class="fas fa-users me-2"></i>
-                                Пользователи
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white {% if app.request.attributes.get('_route') starts with 'admin_countries' %}active bg-primary{% endif %}"
-                               href="{{ path('admin_countries_index') }}">
-                                <i class="fas fa-globe me-2"></i>
-                                Страны
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white {% if app.request.attributes.get('_route') starts with 'admin_cities' %}active bg-primary{% endif %}"
-                               href="{{ path('admin_cities_index') }}">
-                                <i class="fas fa-city me-2"></i>
-                                Города
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="admin-layout">
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="admin-title">
+                    <i class="fas fa-cogs"></i>
+                    Админ-панель
+                </h2>
             </div>
 
-            <div class="col-md-9 col-lg-10 ml-sm-auto px-4 py-4">
-                {% block admin_content %}{% endblock %}
-            </div>
-        </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item {% if app.request.attributes.get('_route') starts with 'admin_users' %}active{% endif %}">
+                    <a href="{{ path('admin_users_index') }}" class="menu-link">
+                    <span class="menu-icon">
+                        <i class="fas fa-users"></i>
+                    </span>
+                        <span class="menu-text">Пользователи</span>
+                    </a>
+                </li>
+
+                <li class="menu-item {% if app.request.attributes.get('_route') starts with 'admin_countries' %}active{% endif %}">
+                    <a href="{{ path('admin_countries_index') }}" class="menu-link">
+                    <span class="menu-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </span>
+                        <span class="menu-text">Страны</span>
+                    </a>
+                </li>
+
+                <li class="menu-item {% if app.request.attributes.get('_route') starts with 'admin_cities' %}active{% endif %}">
+                    <a href="{{ path('admin_cities_index') }}" class="menu-link">
+                    <span class="menu-icon">
+                        <i class="fas fa-city"></i>
+                    </span>
+                        <span class="menu-text">Города</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="admin-content">
+            {% block admin_content %}{% endblock %}
+        </main>
     </div>
 {% endblock %}
