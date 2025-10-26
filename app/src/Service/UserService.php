@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService extends BaseService
@@ -14,7 +13,6 @@ class UserService extends BaseService
 
     public function __construct(
         private readonly UserRepository         $userRepository,
-        private readonly PaginatorInterface     $paginator,
         private readonly EntityManagerInterface $entityManager,
     )
     {
@@ -25,8 +23,7 @@ class UserService extends BaseService
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $paginationUsers = $this->paginator->paginate(
-            target: $this->userRepository->getListQuery(),
+        $paginationUsers = $this->userRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT
         );

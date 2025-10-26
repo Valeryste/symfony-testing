@@ -14,7 +14,6 @@ class CountryService extends BaseService
 
     public function __construct(
         private readonly CountryRepository      $countryRepository,
-        private readonly PaginatorInterface     $paginator,
         private readonly EntityManagerInterface $entityManager,
     )
     {
@@ -24,8 +23,7 @@ class CountryService extends BaseService
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $paginationCountries = $this->paginator->paginate(
-            target: $this->countryRepository->getListQuery(),
+        $paginationCountries = $this->countryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT
         );

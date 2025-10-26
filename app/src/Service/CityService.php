@@ -6,7 +6,6 @@ use App\Entity\City;
 use App\Repository\CityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
 class CityService extends BaseService
 {
@@ -14,7 +13,6 @@ class CityService extends BaseService
 
     public function __construct(
         private readonly CityRepository         $cityRepository,
-        private readonly PaginatorInterface     $paginator,
         private readonly EntityManagerInterface $entityManager,
     )
     {
@@ -24,10 +22,10 @@ class CityService extends BaseService
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
-        $paginationCities = $this->paginator->paginate(
-            target: $this->cityRepository->getListQueryWithSoftDelete(),
+        $paginationCities = $this->cityRepository->getPaginatedResults(
             page: $page,
-            limit: self::PAGINATION_LIMIT
+            limit: self::PAGINATION_LIMIT,
+            withDeletedCountries: true
         );
 
         $this->entityManager->getFilters()->enable('softdeleteable');
