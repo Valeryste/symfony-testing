@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Управление городами{% endblock %}
 
@@ -102,12 +102,14 @@
                         </td>
                         <td>
                             {% if city.isDeleted %}
-                                <span class="badge bg-success">
-                                    ❌ Удален
+                                <span class="status-badge inactive">
+                                    <i class="fas fa-check-circle"></i>
+                                        Удален
                                 </span>
                             {% else %}
-                                <span class="badge bg-success">
-                                    ✅ Дейсвует
+                                <span class="status-badge active">
+                                    <i class="fas fa-check-circle"></i>
+                                        Действует
                                 </span>
                             {% endif %}
                         </td>
