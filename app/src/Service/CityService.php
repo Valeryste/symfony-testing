@@ -56,7 +56,7 @@ class CityService extends BaseService
 
     public function delete(City $city): void
     {
-        $city->setDeletedAt(new \DateTime());
+        $this->entityManager->remove($city);
 
         $this->entityManager->flush();
     }

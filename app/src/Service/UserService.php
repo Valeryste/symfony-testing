@@ -49,9 +49,13 @@ class UserService extends BaseService
     {
         $user->setIsActive(false);
 
-        $user->setDeletedAt(new \DateTime());
+        $this->entityManager->persist($user);
 
         $this->entityManager->flush();
-    }
 
+        $this->entityManager->remove($user);
+
+        $this->entityManager->flush();
+
+    }
 }
