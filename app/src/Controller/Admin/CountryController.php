@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Country;
-use App\Form\Admin\Country\CreateFormType;
-use App\Form\Admin\Country\UpdateFormType;
+use App\Form\Admin\Country\CreateCountryFormType;
+use App\Form\Admin\Country\UpdateCountryFormType;
 use App\Service\CountryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +20,7 @@ class CountryController extends AbstractController
 
     public function __construct(
         private readonly CountryService $countryService
-    )
-    {
+    ) {
     }
 
     #[Route('/countries', name: 'admin_countries_index')]
@@ -31,14 +30,14 @@ class CountryController extends AbstractController
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList($page),
-            'createForm' => $this->createForm(CreateFormType::class)
+            'createForm' => $this->createForm(CreateCountryFormType::class)
         ]);
     }
 
     #[Route('/countries/store', name: 'admin_countries_store')]
     public function store(Request $request): Response
     {
-        $form = $this->createForm(CreateFormType::class, $country = new Country());
+        $form = $this->createForm(CreateCountryFormType::class, $country = new Country());
 
         $form->handleRequest($request);
 
@@ -62,14 +61,14 @@ class CountryController extends AbstractController
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'country' => $country,
-            'updateForm' => $this->createForm(UpdateFormType::class, $country)
+            'updateForm' => $this->createForm(UpdateCountryFormType::class, $country)
         ]);
     }
 
     #[Route('/countries/{id}', name: 'admin_countries_update', methods: ['POST'])]
     public function update(Request $request, Country $country): Response
     {
-        $form = $this->createForm(UpdateFormType::class, $country);
+        $form = $this->createForm(UpdateCountryFormType::class, $country);
 
         $form->handleRequest($request);
 

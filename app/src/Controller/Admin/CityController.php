@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\City;
-use App\Form\Admin\City\CreateFormType;
-use App\Form\Admin\City\UpdateFormType;
+use App\Form\Admin\City\CreateCityFormType;
+use App\Form\Admin\City\UpdateCityFormType;
 use App\Service\CityService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +20,7 @@ class CityController extends AbstractController
 
     public function __construct(
         private readonly CityService $cityService
-    )
-    {
+    ) {
     }
 
     #[Route('/cities', name: 'admin_cities_index')]
@@ -31,14 +30,14 @@ class CityController extends AbstractController
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'cities' => $this->cityService->getList($page),
-            'createForm' => $this->createForm(CreateFormType::class)
+            'createForm' => $this->createForm(CreateCityFormType::class)
         ]);
     }
 
     #[Route('/cities/store', name: 'admin_cities_store')]
     public function store(Request $request): Response
     {
-        $form = $this->createForm(CreateFormType::class, $city = new City());
+        $form = $this->createForm(CreateCityFormType::class, $city = new City());
 
         $form->handleRequest($request);
 
@@ -63,14 +62,14 @@ class CityController extends AbstractController
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'city' => $city,
-            'updateForm' => $this->createForm(UpdateFormType::class, $city)
+            'updateForm' => $this->createForm(UpdateCityFormType::class, $city)
         ]);
     }
 
     #[Route('/cities/{id}', name: 'admin_cities_update', methods: ['POST'])]
     public function update(Request $request, City $city): Response
     {
-        $form = $this->createForm(UpdateFormType::class, $city);
+        $form = $this->createForm(UpdateCityFormType::class, $city);
 
         $form->handleRequest($request);
 

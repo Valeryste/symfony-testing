@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class UpdateFormType extends AbstractType
+class CreateCityFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -38,7 +38,6 @@ class UpdateFormType extends AbstractType
             ->add('country', EntityType::class, [
                 'mapped' => true,
                 'class' => Country::class,
-                'required' => true,
                 'choice_label' => 'name'
             ]);
     }

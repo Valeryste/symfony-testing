@@ -46,8 +46,6 @@ class UserService extends BaseService
     {
         $user->setIsActive(false);
 
-        $this->entityManager->persist($user);
-
         $this->entityManager->flush();
 
         $this->entityManager->remove($user);

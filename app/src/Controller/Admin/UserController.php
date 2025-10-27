@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\Admin\User\UpdateFormType;
+use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +19,7 @@ class UserController extends AbstractController
 
     public function __construct(
         private readonly UserService $userService,
-    )
-    {
+    ) {
     }
 
     #[Route('/users', name: 'admin_users_index')]
@@ -39,14 +38,14 @@ class UserController extends AbstractController
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'user' => $user,
-            'updateForm' => $this->createForm(UpdateFormType::class, $user)
+            'updateForm' => $this->createForm(UpdateUserFormType::class, $user)
         ]);
     }
 
     #[Route('/users/{id}', name: 'admin_users_update', methods: ['POST'])]
     public function update(Request $request, User $user): Response
     {
-        $form = $this->createForm(UpdateFormType::class, $user);
+        $form = $this->createForm(UpdateUserFormType::class, $user);
 
         $form->handleRequest($request);
 
