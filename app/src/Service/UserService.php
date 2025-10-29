@@ -20,7 +20,7 @@ class UserService extends BaseService
     ) {
     }
 
-    public function getList(int $page, array $filters, array $sorts): PaginationInterface
+    public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 

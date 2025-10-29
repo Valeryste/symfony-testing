@@ -47,10 +47,6 @@ class CountryController extends AbstractController
     #[Route('/countries/store', name: 'admin_countries_store')]
     public function store(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
-
-        $filters = $request->query->all()['filters'] ?? [];
-
         $form = $this->createForm(CreateCountryFormType::class, $country = new Country());
 
         $form->handleRequest($request);
@@ -66,8 +62,6 @@ class CountryController extends AbstractController
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filters,
-                sorts: $sorts
             ),
             'createForm' => $form,
             'filters' => CountryFilters::getFilterCases(),

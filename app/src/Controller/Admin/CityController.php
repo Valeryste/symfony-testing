@@ -48,10 +48,6 @@ class CityController extends AbstractController
     #[Route('/cities/store', name: 'admin_cities_store')]
     public function store(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
-
-        $filters = $request->query->all()['filters'] ?? [];
-
         $form = $this->createForm(CreateCityFormType::class, $city = new City());
 
         $form->handleRequest($request);
@@ -67,8 +63,6 @@ class CityController extends AbstractController
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'cities' => $this->cityService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filters,
-                sorts: $sorts
             ),
             'createForm' => $this->createForm(CreateCityFormType::class),
             'filters' => CityFilters::getFilterCases(),
