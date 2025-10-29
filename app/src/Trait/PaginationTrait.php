@@ -15,15 +15,20 @@ trait PaginationTrait
         $this->paginator = $paginator;
     }
 
-    public function getPaginatedResults(int $page = 1, int $limit = 10): PaginationInterface
+    public function getPaginatedResults(
+        int   $page = 1,
+        int   $limit = 10,
+        array $filters = [],
+        array $sorts = [],
+    ): PaginationInterface
     {
         return $this->paginator->paginate(
-            target: $this->getListQuery(),
+            target: $this->getListQuery($filters, $sorts)->getResult(),
             page: $page,
             limit: $limit
         );
     }
 
-    abstract public function getListQuery(): Query;
+    abstract public function getListQuery(array $filters = [], array $sorts = []): Query;
 
 }

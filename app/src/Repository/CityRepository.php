@@ -6,7 +6,6 @@ use App\Entity\City;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
@@ -15,33 +14,22 @@ use Knp\Component\Pager\PaginatorInterface;
 class CityRepository extends BaseRepository
 {
     public function __construct(
-        ManagerRegistry $registry,
+        ManagerRegistry    $registry,
         PaginatorInterface $paginator
-    ) {
+    )
+    {
         parent::__construct($registry, $paginator, City::class);
     }
 
-    public function getListQuery(bool $withDeletedCountries = false): Query
+    public function getListQuery(array $filters = [], array $sorts = []): Query
     {
-        $query = $this->createQueryBuilder('c')
-            ->orderBy('c.id', 'ASC');
+        $query = $this->createQueryBuilder('c');
 
+        $this->setFilterInQuery($query, $filters);
 
-        if ($withDeletedCountries) {
-            $query->innerJoin('c.country', 'country')
-                ->andWhere('country.deletedAt IS NULL');
-        }
+        $this->setSortInQuery($query, $sorts);
 
         return $query->getQuery();
-    }
-
-    public function getPaginatedResults(int $page = 1, int $limit = 10, bool $withDeletedCountries = false): PaginationInterface
-    {
-        return $this->paginator->paginate(
-            target: $this->getListQuery($withDeletedCountries),
-            page: $page,
-            limit: $limit
-        );
     }
 
     //    /**
@@ -68,4 +56,15 @@ class CityRepository extends BaseRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /*private function setSortInQuery(QueryBuilder $queryBuilder, array $sorting): void
+    {
+        if ($sorting['value'] === 'NOT NULL' || $sorting['value'] === 'NULL') {
+            $queryBuilder->andWhere("c.{$sorting['field']} IS " . $filter['value']);
+        } else {
+            $queryBuilder
+                ->andWhere("c.{$filter['field']} = :filter_value")
+                ->setParameter('filter_value', $filter['value']);
+        }
+    }*/
 }

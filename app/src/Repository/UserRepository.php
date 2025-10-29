@@ -14,17 +14,22 @@ use Knp\Component\Pager\PaginatorInterface;
 class UserRepository extends BaseRepository
 {
     public function __construct(
-        ManagerRegistry $registry,
+        ManagerRegistry    $registry,
         PaginatorInterface $paginator
-    ) {
+    )
+    {
         parent::__construct($registry, $paginator, User::class);
     }
 
-    public function getListQuery(): Query
+    public function getListQuery(array $filters = [], array $sorts = []): Query
     {
-        return $this->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery();
+        $query = $this->createQueryBuilder('u');
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
     }
 
     //    /**

@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Country;
+use App\Enum\CountryFilters;
+use App\Enum\CountrySorts;
 use App\Form\Admin\Country\CreateCountryFormType;
 use App\Form\Admin\Country\UpdateCountryFormType;
 use App\Service\CountryService;
@@ -26,17 +28,29 @@ class CountryController extends AbstractController
     #[Route('/countries', name: 'admin_countries_index')]
     public function index(Request $request): Response
     {
-        $page = $request->query->getInt('page', 1);
+        $sorts = $request->query->all()['sorts'] ?? [];
+
+        $filters = $request->query->all()['filters'] ?? [];
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'countries' => $this->countryService->getList($page),
-            'createForm' => $this->createForm(CreateCountryFormType::class)
+            'countries' => $this->countryService->getList(
+                page: $request->query->getInt('page', 1),
+                filters: $filters,
+                sorts: $sorts
+            ),
+            'createForm' => $this->createForm(CreateCountryFormType::class),
+            'filters' => CountryFilters::getFilterCases(),
+            'sorts' => CountrySorts::getSortCases()
         ]);
     }
 
     #[Route('/countries/store', name: 'admin_countries_store')]
     public function store(Request $request): Response
     {
+        $sorts = $request->query->all()['sorts'] ?? [];
+
+        $filters = $request->query->all()['filters'] ?? [];
+
         $form = $this->createForm(CreateCountryFormType::class, $country = new Country());
 
         $form->handleRequest($request);
@@ -48,11 +62,16 @@ class CountryController extends AbstractController
 
             return $this->redirectToRoute('admin_countries_index');
         }
-        $page = $request->query->getInt('page', 1);
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'countries' => $this->countryService->getList($page),
-            'createForm' => $form
+            'countries' => $this->countryService->getList(
+                page: $request->query->getInt('page', 1),
+                filters: $filters,
+                sorts: $sorts
+            ),
+            'createForm' => $form,
+            'filters' => CountryFilters::getFilterCases(),
+            'sorts' => CountrySorts::getSortCases()
         ]);
     }
 
@@ -95,5 +114,4 @@ class CountryController extends AbstractController
 
         return $this->redirectToRoute('admin_countries_index');
     }
-
 }

@@ -3,10 +3,10 @@
 namespace App\Service;
 
 use App\Entity\Country;
+use App\Enum\CountryFilters;
 use App\Repository\CountryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
-use Knp\Component\Pager\PaginatorInterface;
 
 class CountryService extends BaseService
 {
@@ -15,17 +15,30 @@ class CountryService extends BaseService
     public function __construct(
         private readonly CountryRepository      $countryRepository,
         private readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
-    public function getList(int $page): PaginationInterface
+    public function getList(int $page, array $filters, array $sorts): PaginationInterface
     {
         $this->entityManager->getFilters()->disable('softdeleteable');
 
+        $transformedFilters = array_filter(
+            array_map(
+                function ($filterCase) use ($filters) {
+                    if (isset($filters[$filterCase->value])) {
+                        return [$filterCase, $filters[$filterCase->value]];
+                    }
+                    return null;
+                },
+                CountryFilters::getFilterCases()
+            )
+        );
+
         $paginationCountries = $this->countryRepository->getPaginatedResults(
             page: $page,
-            limit: self::PAGINATION_LIMIT
+            limit: self::PAGINATION_LIMIT,
+            filters: $transformedFilters,
+            sorts: $sorts
         );
 
         $this->entityManager->getFilters()->enable('softdeleteable');

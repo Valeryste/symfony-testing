@@ -20,11 +20,25 @@ class CountryRepository extends BaseRepository
         parent::__construct($registry, $paginator, Country::class);
     }
 
-    public function getListQuery(): Query
+    public function getListQuery(array $filters = [], array $sorts = []): Query
+    {
+        $query = $this->createQueryBuilder('c');
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
+    }
+
+    public function findCountriesWithCities(): array
     {
         return $this->createQueryBuilder('c')
-            ->orderBy('c.id', 'ASC')
-            ->getQuery();
+            ->innerJoin('c.cities', 'cities')
+            ->groupBy('c.id')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

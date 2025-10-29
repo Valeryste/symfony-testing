@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Enum\UserFilters;
+use App\Enum\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,10 +27,19 @@ class UserController extends AbstractController
     #[Route('/users', name: 'admin_users_index')]
     public function index(Request $request): Response
     {
-        $page = $request->query->getInt('page', 1);
+        $sorts = $request->query->all()['sorts'] ?? [];
+
+        $filters = $request->query->all()['filters'] ?? [];
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-                'users' => $this->userService->getList($page)
+                'users' => $this->userService->getList(
+                    page: $request->query->getInt('page', 1),
+                    filters: $filters,
+                    sorts: $sorts
+                ),
+                'filters' => UserFilters::getFilterCases(),
+                'sorts' => UserSorts::getSortCases(),
+                'roles' => $this->userService->getAllRole(),
             ]
         );
     }

@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\City;
+use App\Enum\CityFilters;
+use App\Enum\CitySorts;
 use App\Form\Admin\City\CreateCityFormType;
 use App\Form\Admin\City\UpdateCityFormType;
 use App\Service\CityService;
@@ -26,17 +28,30 @@ class CityController extends AbstractController
     #[Route('/cities', name: 'admin_cities_index')]
     public function index(Request $request): Response
     {
-        $page = $request->query->getInt('page', 1);
+        $sorts = $request->query->all()['sorts'] ?? [];
+
+        $filters = $request->query->all()['filters'] ?? [];
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'cities' => $this->cityService->getList($page),
-            'createForm' => $this->createForm(CreateCityFormType::class)
+            'cities' => $this->cityService->getList(
+                page: $request->query->getInt('page', 1),
+                filters: $filters,
+                sorts: $sorts
+            ),
+            'createForm' => $this->createForm(CreateCityFormType::class),
+            'filters' => CityFilters::getFilterCases(),
+            'sorts' => CitySorts::getSortCases(),
+            'countries' => $this->cityService->findCountriesWithCities()
         ]);
     }
 
     #[Route('/cities/store', name: 'admin_cities_store')]
     public function store(Request $request): Response
     {
+        $sorts = $request->query->all()['sorts'] ?? [];
+
+        $filters = $request->query->all()['filters'] ?? [];
+
         $form = $this->createForm(CreateCityFormType::class, $city = new City());
 
         $form->handleRequest($request);
@@ -49,11 +64,16 @@ class CityController extends AbstractController
             return $this->redirectToRoute('admin_cities_index');
         }
 
-        $page = $request->query->getInt('page', 1);
-
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'cities' => $this->cityService->getList($page),
-            'createForm' => $form
+            'cities' => $this->cityService->getList(
+                page: $request->query->getInt('page', 1),
+                filters: $filters,
+                sorts: $sorts
+            ),
+            'createForm' => $this->createForm(CreateCityFormType::class),
+            'filters' => CityFilters::getFilterCases(),
+            'sorts' => CitySorts::getSortCases(),
+            'countries' => $this->cityService->findCountriesWithCities()
         ]);
     }
 
@@ -96,5 +116,4 @@ class CityController extends AbstractController
 
         return $this->redirectToRoute('admin_cities_index');
     }
-
 }

@@ -1,0 +1,12 @@
+<label class="form-label small mb-1">{{ filter.translateValueToRu }}</label>
+<label>
+    <select name="filters[{{ filter.value }}]" class="form-select form-select-sm filter-select">
+        <option value="">Все</option>
+        {% for item in items %}
+            <option value="{{ item.id }}"
+                    {{ (app.request.query.all()['filters'][filter.value]|default('')) == item.id ? 'selected' : '' }}>
+                {{ item.name }}
+            </option>
+        {% endfor %}
+    </select>
+</label>
