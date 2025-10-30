@@ -71,7 +71,12 @@
                         <input type="hidden" name="page" value="{{ app.request.get('page') }}">
                     {% endif %}
 
-                    <div class="row">
+                    {% include 'admin/include/filter_and_sort.html.twig' with {
+                        filters: filters,
+                        sorts: sorts
+                    } %}
+
+                    {#<div class="row">
                         {% for filter in filters %}
                             <div class="col-md-3 mb-3">
                                 {% if filter.getType == 'checkbox' %}
@@ -118,7 +123,7 @@
                                 </div>
                             </div>
                         {% endfor %}
-                    </div>
+                    </div>#}
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary btn-sm w-100">Применить</button>
                     </div>

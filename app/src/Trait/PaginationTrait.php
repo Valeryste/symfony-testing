@@ -22,11 +22,13 @@ trait PaginationTrait
         array $sorts = [],
     ): PaginationInterface
     {
+
         return $this->paginator->paginate(
-            target: $this->getListQuery($filters, $sorts)->getResult(),
+            target: $this->getListQuery($filters, $sorts),
             page: $page,
             limit: $limit
         );
+
     }
 
     abstract public function getListQuery(array $filters = [], array $sorts = []): Query;

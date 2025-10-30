@@ -22,7 +22,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         $this->setPaginator($paginator);
     }
 
-    protected function setFilterInQuery(QueryBuilder $queryBuilder, ?array $filters): void
+    protected function setFilterInQuery(QueryBuilder $queryBuilder, array $filters = []): void
     {
         $alias = $queryBuilder->getRootAliases()[0];
 
@@ -39,6 +39,7 @@ abstract class BaseRepository extends ServiceEntityRepository
                 $condition = $value == 1 ? 'IS NOT NULL' : 'IS NUll';
 
                 $queryBuilder->andWhere("$alias.$field $condition");
+
                 continue;
             }
 
@@ -46,10 +47,9 @@ abstract class BaseRepository extends ServiceEntityRepository
                 ->andWhere("$alias.$field =:filter_value")
                 ->setParameter('filter_value', $value);
         }
-
     }
 
-    protected function setSortInQuery(QueryBuilder $queryBuilder, ?array $sorts): void
+    protected function setSortInQuery(QueryBuilder $queryBuilder, array $sorts = []): void
     {
         $alias = $queryBuilder->getRootAliases()[0];
 

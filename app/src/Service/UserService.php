@@ -22,7 +22,9 @@ class UserService extends BaseService
 
     public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
     {
-        $this->entityManager->getFilters()->disable('softdeleteable');
+        if(isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+            $this->entityManager->getFilters()->disable('softdeleteable');
+        }
 
         $transformedFilters = array_filter(
             array_map(
@@ -43,7 +45,9 @@ class UserService extends BaseService
             sorts: $sorts
         );
 
-        $this->entityManager->getFilters()->enable('softdeleteable');
+        if(isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+            $this->entityManager->getFilters()->enable('softdeleteable');
+        }
 
         return $paginationUsers;
     }
