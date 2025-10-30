@@ -6,9 +6,11 @@ use App\Repository\CountryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 #[ORM\Table('countries')]
+#[UniqueEntity(fields: ['name'], message: 'country with that name already exists')]
 class Country extends BaseEntity
 {
     #[ORM\Id]
@@ -22,7 +24,7 @@ class Country extends BaseEntity
     /**
      * @var Collection<int, City>
      */
-    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', orphanRemoval: true)]
     private Collection $cities;
 
     public function __construct()
@@ -59,7 +61,7 @@ class Country extends BaseEntity
     {
         if (!$this->cities->contains($city)) {
             $this->cities->add($city);
-            $city->setCountryId($this);
+            $city->setCountry($this);
         }
 
         return $this;
@@ -68,8 +70,8 @@ class Country extends BaseEntity
     public function removeCity(City $city): self
     {
         if ($this->cities->removeElement($city)) {
-            if ($city->getCountryId() === $this) {
-                $city->setCountryId(null);
+            if ($city->getCountry() === $this) {
+                $city->setCountry(null);
             }
         }
 

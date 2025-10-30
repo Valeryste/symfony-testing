@@ -14,13 +14,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegisterController extends AbstractController
 {
     public function __construct(
-        private readonly RegistrationService $registerService,
-        private readonly JwtTokenService $jwtTokenService,
-        private readonly UserRepository $userRepository
-    ) {}
+        private readonly RegistrationService $registrationService,
+        private readonly JwtTokenService     $jwtTokenService,
+        private readonly UserRepository      $userRepository
+    ) {
+    }
 
     #[Route('/api/register', name: 'api_register', methods: ['POST'])]
-    public function register(RegistrationRequest $request) : JsonResponse
+    public function register(RegistrationRequest $request): JsonResponse
     {
         $data = [
             'username' => $request->getUsername(),
@@ -41,15 +42,14 @@ class RegisterController extends AbstractController
                 ], 400);
             }
 
-            $user = $this->registerService->register(new RegisterFormDTO(...$data));
+            $user = $this->registrationService->register(new RegisterFormDTO(...$data));
 
             return $this->json([
                 'message' => 'Registration successful',
                 ... $this->jwtTokenService->createAuthResponse($user)
             ], 201);
 
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
             ], 401);

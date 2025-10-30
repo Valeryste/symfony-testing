@@ -14,7 +14,8 @@ class RegistrationController extends AbstractController
 {
     public function __construct(
         private readonly RegistrationService $registrationService
-    ){}
+    ) {
+    }
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request): Response
@@ -43,9 +44,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render(
-            'authentication/register.html.twig',
-            ['registrationForm' => $form]
+        return $this->render('authentication/register.html.twig', [
+                'registrationForm' => $form
+            ]
         );
     }
 }

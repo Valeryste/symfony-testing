@@ -27,7 +27,7 @@ class City extends BaseEntity
 
     #[ORM\ManyToOne(inversedBy: 'cities')]
     #[ORM\JoinColumn(name: 'country_id', nullable: false)]
-    private ?Country $country_id = null;
+    private ?Country $country = null;
 
     public function __construct()
     {
@@ -80,14 +80,14 @@ class City extends BaseEntity
         return $this;
     }
 
-    public function getCountryId(): ?Country
+    public function getCountry(): ?Country
     {
-        return $this->country_id;
+        return $this->country;
     }
 
-    public function setCountryId(?Country $country_id): self
+    public function setCountry(?Country $country_id): self
     {
-        $this->country_id = $country_id;
+        $this->country = $country_id;
 
         return $this;
     }

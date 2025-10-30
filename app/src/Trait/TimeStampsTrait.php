@@ -5,62 +5,67 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TimeStampsTrait
 {
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    protected ?\DateTimeImmutable $created_at = null;
+    #[ORM\Column(name: 'created_at', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected ?\DateTime $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    protected ?\DateTimeImmutable $updated_at = null;
+    #[ORM\Column(name: 'updated_at', nullable: true)]
+    protected ?\DateTime $updatedAt = null;
 
-    #[ORM\Column(nullable: true)]
-    protected ?\DateTimeImmutable $deleted_at = null;
+    #[ORM\Column(name: 'deleted_at', nullable: true)]
+    protected ?\DateTime $deletedAt = null;
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
-        if (!isset($this->created_at)) {
-            $this->created_at = new \DateTimeImmutable();
+        if (!isset($this->createdAt)) {
+            $this->createdAt = new \DateTime();
         }
     }
 
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
-        $this->updated_at = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?\DateTime
     {
-        return $this->deleted_at;
-    }
+        return $this->deletedAt;
+}
 
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): self
+    public function setDeletedAt(?\DateTime $deletedAt): self
     {
-        $this->deleted_at = $deleted_at;
+        $this->deletedAt = $deletedAt;
 
         return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+        return null !== $this->deletedAt;
     }
 }

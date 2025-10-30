@@ -4,16 +4,32 @@ namespace App\Repository;
 
 use App\Entity\City;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<City>
  */
-class CityRepository extends ServiceEntityRepository
+class CityRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry    $registry,
+        PaginatorInterface $paginator
+    )
     {
-        parent::__construct($registry, City::class);
+        parent::__construct($registry, $paginator, City::class);
+    }
+
+    public function getListQuery(array $filters = [], array $sorts = []): Query
+    {
+        $query = $this->createQueryBuilder('c');
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
     }
 
     //    /**
@@ -40,4 +56,15 @@ class CityRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /*private function setSortInQuery(QueryBuilder $queryBuilder, array $sorting): void
+    {
+        if ($sorting['value'] === 'NOT NULL' || $sorting['value'] === 'NULL') {
+            $queryBuilder->andWhere("c.{$sorting['field']} IS " . $filter['value']);
+        } else {
+            $queryBuilder
+                ->andWhere("c.{$filter['field']} = :filter_value")
+                ->setParameter('filter_value', $filter['value']);
+        }
+    }*/
 }

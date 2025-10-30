@@ -4,16 +4,41 @@ namespace App\Repository;
 
 use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Country>
  */
-class CountryRepository extends ServiceEntityRepository
+class CountryRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        PaginatorInterface $paginator
+    ) {
+        parent::__construct($registry, $paginator, Country::class);
+    }
+
+    public function getListQuery(array $filters = [], array $sorts = []): Query
     {
-        parent::__construct($registry, Country::class);
+        $query = $this->createQueryBuilder('c');
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
+    }
+
+    public function findCountriesWithCities(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.cities', 'cities')
+            ->groupBy('c.id')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

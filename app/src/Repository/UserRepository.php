@@ -4,16 +4,32 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
  */
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry    $registry,
+        PaginatorInterface $paginator
+    )
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, $paginator, User::class);
+    }
+
+    public function getListQuery(array $filters = [], array $sorts = []): Query
+    {
+        $query = $this->createQueryBuilder('u');
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
     }
 
     //    /**
