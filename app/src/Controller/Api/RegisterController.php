@@ -17,8 +17,7 @@ class RegisterController extends AbstractController
         private readonly RegistrationService $registrationService,
         private readonly JwtTokenService     $jwtTokenService,
         private readonly UserRepository      $userRepository
-    )
-    {
+    ) {
     }
 
     #[Route('/api/register', name: 'api_register', methods: ['POST'])]

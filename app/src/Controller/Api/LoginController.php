@@ -15,7 +15,8 @@ class LoginController extends AbstractController
     public function __construct(
         private readonly LoginService $loginService,
         private readonly JwtTokenService $jwtTokenService
-    ){}
+    ) {
+    }
 
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function login(LoginRequest $request): JsonResponse
