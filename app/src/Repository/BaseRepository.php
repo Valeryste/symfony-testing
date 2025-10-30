@@ -26,12 +26,12 @@ abstract class BaseRepository extends ServiceEntityRepository
     {
         $alias = $queryBuilder->getRootAliases()[0];
 
-        foreach ($filters as $filter) {
+        foreach ($filters as $key => $filter) {
             $field = $filter[0]->getField();
 
             $value = $filter[1];
 
-            if ($value === '' || $value === null) {
+            if (empty($value)) {
                 continue;
             }
 
@@ -44,8 +44,9 @@ abstract class BaseRepository extends ServiceEntityRepository
             }
 
             $queryBuilder
-                ->andWhere("$alias.$field =:filter_value")
-                ->setParameter('filter_value', $value);
+                ->andWhere("$alias.$field = :filter_value_$key")
+                ->setParameter("filter_value_$key", $value);
+
         }
     }
 
