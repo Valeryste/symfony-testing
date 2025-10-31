@@ -1,10 +1,21 @@
 <label class="form-label small mb-1">{{ filter.translateValueToRu }}</label>
 <label>
-    <select name="filters[{{ filter.value }}]" class="form-select form-select-sm filter-select">
-        <option value="">Все</option>
+    <select name="filters[{{ filter.value }}]{% if isMultiple %}[]{% endif %}"
+            {% if isMultiple %}multiple{% endif %}
+            class="form-select form-select-sm filter-select">
+
+        {% if not isMultiple %}
+            <option value="">Все</option>
+        {% endif %}
+
+        {% set selectedValues = app.request.query.all()['filters'][filter.value]|default([]) %}
+        {% if not isMultiple and selectedValues is not iterable %}
+            {% set selectedValues = [selectedValues] %}
+        {% endif %}
+
         {% for item in items %}
             <option value="{{ item.id }}"
-                    {{ (app.request.query.all()['filters'][filter.value]|default('')) == item.id ? 'selected' : '' }}>
+                    {{ (item.id in selectedValues) ? 'selected' : '' }}>
                 {{ item.name }}
             </option>
         {% endfor %}

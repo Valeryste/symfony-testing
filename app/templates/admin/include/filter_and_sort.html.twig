@@ -18,9 +18,16 @@
             {% elseif filter.getType == 'select' %}
                 {% set variableName = filter.getTemplateVariable() %}
                 {% if attribute(_context, variableName) is defined %}
+                    {% set isMultiple = false %}
+
+                    {% if filter.getFieldType is defined %}
+                        {% set isMultiple = filter.getFieldType == 'array' %}
+                    {% endif %}
+
                     {% include './include/filterSelect.html.twig' with {
                         filter: filter,
-                        items: attribute(_context, variableName)
+                        items: attribute(_context, variableName),
+                        isMultiple: isMultiple
                     } %}
                 {% endif %}
             {% endif %}

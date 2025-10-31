@@ -36,7 +36,8 @@ class ProductController extends AbstractController
                 sorts: $request->query->all()['sorts'] ?? []
             ),
             'filters' => ProductFilters::getFilterCases(),
-            'sorts' => ProductSorts::getSortCases()
+            'sorts' => ProductSorts::getSortCases(),
+            'categories' => $this->productService->finCategoriesWithProducts()
         ]);
     }
 

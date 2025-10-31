@@ -43,6 +43,17 @@ abstract class BaseRepository extends ServiceEntityRepository
                 continue;
             }
 
+            if($filter[0]->getFieldType() === 'array') {
+                $joinAlias = "{$alias}_{$field}";
+
+                $queryBuilder
+                    ->join("$alias.$field", $joinAlias)
+                    ->andWhere("$joinAlias.id IN (:filter_value_$key)")
+                    ->setParameter("filter_value_$key", $value);
+
+                continue;
+            }
+
             $queryBuilder
                 ->andWhere("$alias.$field = :filter_value_$key")
                 ->setParameter("filter_value_$key", $value);

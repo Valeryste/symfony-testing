@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Product;
 use App\Enum\ProductFilters;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -14,7 +15,8 @@ class ProductService extends BaseService
 
     public function __construct(
         private readonly ProductRepository      $productRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CategoryRepository     $categoryRepository
     )
     {
     }
@@ -78,6 +80,10 @@ class ProductService extends BaseService
         $this->entityManager->remove($product);
 
         $this->entityManager->flush();
+    }
 
+    public function finCategoriesWithProducts(): array
+    {
+        return $this->categoryRepository->findCategoriesWithProducts();
     }
 }

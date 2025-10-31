@@ -4,16 +4,30 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Category>
  */
-class CategoryRepository extends ServiceEntityRepository
+class CategoryRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry $registry,
+        PaginatorInterface $paginator
+    ) {
+        parent::__construct($registry, $paginator, Category::class);
+    }
+
+    public function findCategoriesWithProducts(): array
     {
-        parent::__construct($registry, Category::class);
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.products', 'p')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+
     }
 
     //    /**
@@ -40,4 +54,8 @@ class CategoryRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function getListQuery(array $filters = [], array $sorts = []): Query
+    {
+        return new Query($this->getEntityManager());
+    }
 }
