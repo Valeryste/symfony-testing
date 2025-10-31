@@ -24,7 +24,7 @@
                         {% set isMultiple = filter.getFieldType == 'array' %}
                     {% endif %}
 
-                    {% include './include/filterSelect.html.twig' with {
+                    {% include '/include/filter_select.html.twig' with {
                         filter: filter,
                         items: attribute(_context, variableName),
                         isMultiple: isMultiple

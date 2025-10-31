@@ -24,7 +24,7 @@
                         <input type="hidden" name="page" value="{{ app.request.get('page') }}">
                     {% endif %}
 
-                    {% include 'admin/include/filter_and_sort.html.twig' with {
+                    {% include '/include/filter_and_sort.html.twig' with {
                         filters: filters,
                         sorts: sorts
                     } %}
