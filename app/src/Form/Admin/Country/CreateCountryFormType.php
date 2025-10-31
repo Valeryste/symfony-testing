@@ -20,16 +20,16 @@ class CreateCountryFormType extends AbstractType
                 'mapped' => true,
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Please enter a username']),
+                    new NotBlank(['message' => 'Please enter a name']),
                     new Length([
                         'min' => 3,
                         'max' => 255,
-                        'minMessage' => 'Username must be at least {{ limit }} characters',
-                        'maxMessage' => 'Username cannot be longer than {{ limit }} characters',
+                        'minMessage' => 'name must be at least 3 characters',
+                        'maxMessage' => 'name cannot be longer than 255 characters',
                     ]),
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9_]+$/',
-                        'message' => 'Username can only contain letters, numbers and underscores',
+                        'message' => 'name can only contain letters, numbers and underscores',
                     ]),
                 ],
             ]);

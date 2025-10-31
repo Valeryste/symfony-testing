@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin')]
+#[Route('/admin/countries')]
 #[IsGranted('ROLE_ADMIN')]
 class CountryController extends AbstractController
 {
@@ -25,18 +25,14 @@ class CountryController extends AbstractController
     ) {
     }
 
-    #[Route('/countries', name: 'admin_countries_index')]
+    #[Route(name: 'admin_countries_index')]
     public function index(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
-
-        $filters = $request->query->all()['filters'] ?? [];
-
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filters,
-                sorts: $sorts
+                filters: $request->query->all()['filters'] ?? [],
+                sorts: $request->query->all()['sorts'] ?? []
             ),
             'createForm' => $this->createForm(CreateCountryFormType::class),
             'filters' => CountryFilters::getFilterCases(),
@@ -44,7 +40,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/store', name: 'admin_countries_store')]
+    #[Route('/store', name: 'admin_countries_store')]
     public function store(Request $request): Response
     {
         $form = $this->createForm(CreateCountryFormType::class, $country = new Country());
@@ -59,6 +55,8 @@ class CountryController extends AbstractController
             return $this->redirectToRoute('admin_countries_index');
         }
 
+        $this->addFlash('error', 'Validation or create error');
+
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList(
                 page: $request->query->getInt('page', 1),
@@ -69,7 +67,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/{id}/edit', name: 'admin_countries_edit', methods: 'GET')]
+    #[Route('/{id}/edit', name: 'admin_countries_edit', methods: 'GET')]
     public function edit(Country $country): Response
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
@@ -78,7 +76,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/{id}', name: 'admin_countries_update', methods: ['POST'])]
+    #[Route('/{id}', name: 'admin_countries_update', methods: ['POST'])]
     public function update(Request $request, Country $country): Response
     {
         $form = $this->createForm(UpdateCountryFormType::class, $country);
@@ -95,13 +93,15 @@ class CountryController extends AbstractController
             ]);
         }
 
+        $this->addFlash('error', 'Validation or update error');
+
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
             'country' => $country,
             'updateForm' => $form
         ]);
     }
 
-    #[Route('/countries/{id}/delete', name: 'admin_countries_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'admin_countries_delete', methods: ['POST'])]
     public function delete(Country $country): Response
     {
         $this->countryService->delete($country);

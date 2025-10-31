@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin')]
+#[Route('/admin/users')]
 #[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
@@ -24,7 +24,7 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[Route('/users', name: 'admin_users_index')]
+    #[Route(name: 'admin_users_index')]
     public function index(Request $request): Response
     {
         $sorts = $request->query->all()['sorts'] ?? [];
@@ -44,7 +44,7 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route('/users/{id}/edit', name: 'admin_users_edit', methods: 'GET')]
+    #[Route('/{id}/edit', name: 'admin_users_edit', methods: 'GET')]
     public function edit(User $user): Response
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
@@ -53,7 +53,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}', name: 'admin_users_update', methods: ['POST'])]
+    #[Route('/{id}', name: 'admin_users_update', methods: ['POST'])]
     public function update(Request $request, User $user): Response
     {
         $form = $this->createForm(UpdateUserFormType::class, $user);
@@ -76,7 +76,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}/delete', name: 'admin_users_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'admin_users_delete', methods: ['POST'])]
     public function delete(User $user): Response
     {
         $this->userService->delete($user);

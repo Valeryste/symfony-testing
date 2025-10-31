@@ -19,16 +19,17 @@ class Product extends BaseEntity
     #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     private ?int $count = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, options: ['unsigned' => true])]
     private ?float $price = null;
 
     /**
      * @var Collection<int, Category>
      */
-    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'products')]
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
+    #[ORM\JoinTable(name: 'category_product')]
     private Collection $categories;
 
     /**
@@ -172,6 +173,17 @@ class Product extends BaseEntity
                 $priceHistory->setProductId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function removeAllCategories(): self
+    {
+        foreach ($this->categories as $category) {
+            $category->removeProduct($this);
+        }
+
+        $this->categories->clear();
 
         return $this;
     }
