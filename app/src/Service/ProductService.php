@@ -55,20 +55,9 @@ class ProductService extends BaseService
 
     public function store(Product $product): Product
     {
-        $this->entityManager->beginTransaction();
+        $this->entityManager->persist($product);
 
-        try {
-
-            $this->entityManager->persist($product);
-
-            $this->entityManager->flush();
-
-            $this->entityManager->commit();
-
-        } catch (\Exception $e) {
-            $this->entityManager->rollBack();
-            throw new \RuntimeException('Failed to save product: ' . $e->getMessage(), 0, $e);
-        }
+        $this->entityManager->flush();
 
         return $product;
     }
@@ -78,8 +67,6 @@ class ProductService extends BaseService
         $product->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();
-
-        $this->entityManager->commit();
 
         return $product;
     }
@@ -91,8 +78,6 @@ class ProductService extends BaseService
         $this->entityManager->remove($product);
 
         $this->entityManager->flush();
-
-        $this->entityManager->commit();
 
     }
 }
