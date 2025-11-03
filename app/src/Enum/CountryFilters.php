@@ -4,14 +4,7 @@ namespace App\Enum;
 
 enum CountryFilters: string
 {
-    case WITH_DELETED = 'with_deleted';
-
-    public function getField(): string
-    {
-        return match($this) {
-            self::WITH_DELETED => 'deletedAt'
-        };
-    }
+    case WITH_DELETED = 'deletedAt';
 
     public static function getFilterCases(): array
     {
@@ -20,7 +13,7 @@ enum CountryFilters: string
         ];
     }
 
-    public function translateValueToRu(): string
+    public function outputInTemplate(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',

@@ -26,16 +26,16 @@ abstract class BaseRepository extends ServiceEntityRepository
     {
         $alias = $queryBuilder->getRootAliases()[0];
 
-        foreach ($filters as $key => $filter) {
-            $field = $filter[0]->getField();
-
-            $value = $filter[1];
+        foreach ($filters as $filter) {
+            $field = $filter['field'];
+            $value = $filter['value'];
+            $fieldType = $filter['fieldType'];
 
             if (empty($value)) {
                 continue;
             }
 
-            if ($filter[0]->getFieldType() === 'datetime') {
+            if ($fieldType === 'datetime') {
                 $condition = $value == 1 ? 'IS NOT NULL' : 'IS NUll';
 
                 $queryBuilder->andWhere("$alias.$field $condition");
@@ -43,20 +43,20 @@ abstract class BaseRepository extends ServiceEntityRepository
                 continue;
             }
 
-            if($filter[0]->getFieldType() === 'array') {
+            if($fieldType === 'array') {
                 $joinAlias = "{$alias}_{$field}";
 
                 $queryBuilder
                     ->join("$alias.$field", $joinAlias)
-                    ->andWhere("$joinAlias.id IN (:filter_value_$key)")
-                    ->setParameter("filter_value_$key", $value);
+                    ->andWhere("$joinAlias.id IN (:filter_value_$field)")
+                    ->setParameter("filter_value_$field", $value);
 
                 continue;
             }
 
             $queryBuilder
-                ->andWhere("$alias.$field = :filter_value_$key")
-                ->setParameter("filter_value_$key", $value);
+                ->andWhere("$alias.$field = :filter_value_$field")
+                ->setParameter("filter_value_$field", $value);
 
         }
     }

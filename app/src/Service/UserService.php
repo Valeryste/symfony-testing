@@ -22,30 +22,18 @@ class UserService extends BaseService
 
     public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
     {
-        if (isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
-
-        $transformedFilters = array_filter(
-            array_map(
-                function ($filterCase) use ($filters) {
-                    if (isset($filters[$filterCase->value])) {
-                        return [$filterCase, $filters[$filterCase->value]];
-                    }
-                    return null;
-                },
-                UserFilters::getFilterCases()
-            )
-        );
 
         $paginationUsers = $this->userRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
-            filters: $transformedFilters,
+            filters: $filters,
             sorts: $sorts
         );
 
-        if (isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 

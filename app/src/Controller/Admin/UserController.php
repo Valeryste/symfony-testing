@@ -2,12 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\User;
+use App\Enum\ProductFilters;
 use App\Enum\UserFilters;
 use App\Enum\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/users')]
 #[IsGranted('ROLE_ADMIN')]
-class UserController extends AbstractController
+class UserController extends BaseController
 {
     private const PATH_TO_TEMPLATES = 'admin/user/';
 
@@ -27,15 +28,16 @@ class UserController extends AbstractController
     #[Route(name: 'admin_users_index')]
     public function index(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
-
-        $filters = $request->query->all()['filters'] ?? [];
+        $filtersFromRequest = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: UserFilters::class
+        );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
                 'users' => $this->userService->getList(
                     page: $request->query->getInt('page', 1),
-                    filters: $filters,
-                    sorts: $sorts
+                    filters: $filtersFromRequest,
+                    sorts: $request->query->all()['sorts'] ?? []
                 ),
                 'filters' => UserFilters::getFilterCases(),
                 'sorts' => UserSorts::getSortCases(),

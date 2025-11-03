@@ -11,7 +11,7 @@
                             {{ (app.request.query.all()['filters'][filter.value] ?? '') == '1' ? 'checked' : '' }}
                            onchange="this.value = this.checked ? '1' : '0'">
                     <label class="form-check-label fw-bold" for="filter_{{ filter.value }}">
-                        {{ filter.translateValueToRu }}
+                        {{ filter.outputInTemplate }}
                     </label>
                 </div>
 

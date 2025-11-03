@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\Product;
 use App\Enum\ProductFilters;
 use App\Enum\ProductSorts;
 use App\Form\Admin\Product\CreateProductFormType;
 use App\Form\Admin\Product\UpdateProductFormType;
 use App\Service\ProductService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/products')]
 #[IsGranted('ROLE_ADMIN')]
-class ProductController extends AbstractController
+class ProductController extends BaseController
 {
     private const PATH_TO_TEMPLATES = 'admin/product/';
 
@@ -29,10 +29,15 @@ class ProductController extends AbstractController
     #[Route(name: 'admin_products_index')]
     public function index(Request $request): Response
     {
+        $filtersFromRequest = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: ProductFilters::class
+        );
+
         return $this->render(self:: PATH_TO_TEMPLATES . 'index.html.twig', [
             'products' => $this->productService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $request->query->all()['filters'] ?? [],
+                filters: $filtersFromRequest,
                 sorts: $request->query->all()['sorts'] ?? []
             ),
             'filters' => ProductFilters::getFilterCases(),

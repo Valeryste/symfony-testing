@@ -7,20 +7,11 @@ use Doctrine\ORM\EntityManager;
 
 enum UserFilters: string
 {
-    case WITH_DELETED = 'with_deleted';
+    case WITH_DELETED = 'deletedAt';
 
-    case ONLY_ACTIVE = 'only_active';
+    case ONLY_ACTIVE = 'isActive';
 
-    case BY_ROLE = 'by_role';
-
-    public function getField(): string
-    {
-        return match($this) {
-            self::WITH_DELETED => 'deletedAt',
-            self::ONLY_ACTIVE => 'isActive',
-            self::BY_ROLE => 'role'
-        };
-    }
+    case BY_ROLE = 'role';
 
     public static function getFilterCases(): array
     {
@@ -31,7 +22,7 @@ enum UserFilters: string
         ];
     }
 
-    public function translateValueToRu(): string
+    public function outputInTemplate(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',

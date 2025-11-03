@@ -8,7 +8,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
-class CategoryService extends  BaseService
+class CategoryService extends BaseService
 {
     private const PAGINATION_LIMIT = 10;
 
@@ -20,30 +20,18 @@ class CategoryService extends  BaseService
 
     public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
     {
-        if (isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
-
-        $transformedFilters = array_filter(
-            array_map(
-                function ($filterCase) use ($filters) {
-                    if (isset($filters[$filterCase->value])) {
-                        return [$filterCase, $filters[$filterCase->value]];
-                    }
-                    return null;
-                },
-                CategoryFilters::getFilterCases()
-            )
-        );
 
         $paginationCountries = $this->categoryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
-            filters: $transformedFilters,
+            filters: $filters,
             sorts: $sorts
         );
 
-        if (isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
@@ -78,11 +66,6 @@ class CategoryService extends  BaseService
     public function getAllParents(): array
     {
         return $this->categoryRepository->getAllParents();
-    }
-
-    public function getRootCategories() : array
-    {
-        return $this->categoryRepository->getRootCategories();
     }
 
     public function getAllExcept(int $id): array

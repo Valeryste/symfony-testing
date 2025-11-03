@@ -4,17 +4,9 @@ namespace App\Enum;
 
 enum CityFilters: string
 {
-    case WITH_DELETED = 'with_deleted';
+    case WITH_DELETED = 'deletedAt';
 
-    case BY_COUNTRY = 'by_country';
-
-    public function getField(): string
-    {
-        return match($this) {
-            self::WITH_DELETED => 'deletedAt',
-            self::BY_COUNTRY => 'country'
-        };
-    }
+    case BY_COUNTRY = 'country';
 
     public static function getFilterCases(): array
     {
@@ -32,7 +24,7 @@ enum CityFilters: string
         };
     }
 
-    public function translateValueToRu(): string
+    public function outputInTemplate(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',

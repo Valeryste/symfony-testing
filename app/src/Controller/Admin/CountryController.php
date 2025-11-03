@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\Country;
 use App\Enum\CountryFilters;
 use App\Enum\CountrySorts;
 use App\Form\Admin\Country\CreateCountryFormType;
 use App\Form\Admin\Country\UpdateCountryFormType;
 use App\Service\CountryService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/countries')]
 #[IsGranted('ROLE_ADMIN')]
-class CountryController extends AbstractController
+class CountryController extends BaseController
 {
     private const PATH_TO_TEMPLATES = 'admin/country/';
 
@@ -28,10 +28,15 @@ class CountryController extends AbstractController
     #[Route(name: 'admin_countries_index')]
     public function index(Request $request): Response
     {
+        $filtersFromRequest = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: CountryFilters::class
+        );
+
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $request->query->all()['filters'] ?? [],
+                filters: $filtersFromRequest,
                 sorts: $request->query->all()['sorts'] ?? []
             ),
             'createForm' => $this->createForm(CreateCountryFormType::class),

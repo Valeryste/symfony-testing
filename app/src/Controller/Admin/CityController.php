@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\City;
 use App\Enum\CityFilters;
 use App\Enum\CitySorts;
 use App\Form\Admin\City\CreateCityFormType;
 use App\Form\Admin\City\UpdateCityFormType;
 use App\Service\CityService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/cities')]
 #[IsGranted('ROLE_ADMIN')]
-class CityController extends AbstractController
+class CityController extends BaseController
 {
     private const PATH_TO_TEMPLATES = 'admin/city/';
 
@@ -28,10 +28,15 @@ class CityController extends AbstractController
     #[Route(name: 'admin_cities_index')]
     public function index(Request $request): Response
     {
+        $filtersFromRequest = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: CityFilters::class
+        );
+
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'cities' => $this->cityService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $request->query->all()['filters'] ?? [],
+                filters: $filtersFromRequest,
                 sorts: $request->query->all()['sorts'] ?? []
             ),
             'createForm' => $this->createForm(CreateCityFormType::class),

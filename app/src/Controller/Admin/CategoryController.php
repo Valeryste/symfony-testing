@@ -2,13 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\Category;
 use App\Enum\CategoryFilters;
 use App\Enum\CategorySorts;
 use App\Form\Admin\Category\CreateCategoryFormType;
 use App\Form\Admin\Category\UpdateCategoryFormType;
 use App\Service\CategoryService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/categories')]
 #[IsGranted('ROLE_ADMIN')]
-class CategoryController extends AbstractController
+class CategoryController extends BaseController
 {
     public function __construct(
         private readonly CategoryService $categoryService
@@ -29,10 +29,15 @@ class CategoryController extends AbstractController
     #[Route(name: 'admin_categories_index')]
     public function index(Request $request): Response
     {
+        $filtersFromRequest = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: CategoryFilters::class
+        );
+
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'categories' =>   $this->categoryService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $request->query->all()['filters'] ?? [],
+                filters: $filtersFromRequest,
                 sorts: $request->query->all()['sorts'] ?? []
             ),
             'filters' => CategoryFilters::getFilterCases(),

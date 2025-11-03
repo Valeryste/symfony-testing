@@ -4,17 +4,9 @@ namespace App\Enum;
 
 enum ProductFilters: string
 {
-    case WITH_DELETED = 'with_deleted';
+    case WITH_DELETED = 'deletedAt';
 
-    case BY_CATEGORY = 'by_category';
-
-    public function getField(): string
-    {
-        return match($this) {
-            self::WITH_DELETED => 'deletedAt',
-            self::BY_CATEGORY => 'categories'
-        };
-    }
+    case BY_CATEGORY = 'categories';
 
     public static function getFilterCases(): array
     {
@@ -32,7 +24,7 @@ enum ProductFilters: string
         };
     }
 
-    public function translateValueToRu(): string
+    public function outputInTemplate(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
