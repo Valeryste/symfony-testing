@@ -6,9 +6,11 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table('categories')]
+#[UniqueEntity(fields: ['name'], message: 'There is already an category with this name')]
 class Category extends BaseEntity
 {
     #[ORM\Id]
@@ -18,9 +20,9 @@ class Category extends BaseEntity
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    private ?self $parent_id = null;
+    private ?self $parent = null;
 
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', cascade: ['persist', 'remove'])]
     private Collection $children;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -34,6 +36,7 @@ class Category extends BaseEntity
 
     public function __construct()
     {
+        $this->children = new ArrayCollection();
         $this->products = new ArrayCollection();
     }
 
@@ -42,14 +45,14 @@ class Category extends BaseEntity
         return $this->id;
     }
 
-    public function getParentId(): ?self
+    public function getParent(): ?self
     {
-        return $this->parent_id;
+        return $this->parent;
     }
 
-    public function setParentId(?self $parent_id): self
+    public function setParent(?self $parent): self
     {
-        $this->parent_id = $parent_id;
+        $this->parent = $parent;
 
         return $this;
     }
@@ -99,7 +102,7 @@ class Category extends BaseEntity
     {
         if (!$this->children->contains($child)) {
             $this->children->add($child);
-            $child->setParentId($this);
+            $child->setParent($this);
         }
 
         return $this;

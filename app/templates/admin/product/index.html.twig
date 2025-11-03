@@ -10,21 +10,21 @@
                     <h1 class="h2 mb-1">Управление продуктами</h1>
                     <p class="mb-0 opacity-75">Все продукты</p>
                 </div>
-
             </div>
         </div>
+        <a href="{{ path('admin_products_create') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-plus-circle me-2"></i>
+            Создать продукт
+        </a>
     </div>
-    <a href="{{ path('admin_products_create') }}" class="btn btn-primary btn-lg">
-        <i class="fas fa-plus-circle me-2"></i>
-        Создать продукт
-    </a>
+
     <div class="container-fluid mb-4">
         <div class="card">
             <div class="card-header bg-light py-2">
                 <h3 class="mb-0">🔍 Фильтрация и сортировка</h3>
             </div>
             <div class="card-body p-3">
-                <form method="get" action="{{ path('admin_products_index') }}" class="row g-2 align-items-end">
+                <form method="GET" action="{{ path('admin_products_index') }}" class="row g-2 align-items-end">
                     {% if app.request.get('page') %}
                         <input type="hidden" name="page" value="{{ app.request.get('page') }}">
                     {% endif %}
@@ -137,7 +137,7 @@
                                     <form method="post"
                                           action="{{ path('admin_products_delete', { 'id': product.id }) }}"
                                           style="display: inline;"
-                                          onsubmit="return confirm('Вы уверены, что хотите удалить эту страну?')"
+                                          onsubmit="return confirm('Вы уверены, что хотите удалить этот продукт?')"
                                           data-turbo="false">
                                         <input type="hidden" name="_token"
                                                value="{{ csrf_token('delete' ~ product.id) }}">

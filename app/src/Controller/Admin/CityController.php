@@ -28,15 +28,11 @@ class CityController extends AbstractController
     #[Route(name: 'admin_cities_index')]
     public function index(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
-
-        $filters = $request->query->all()['filters'] ?? [];
-
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'cities' => $this->cityService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filters,
-                sorts: $sorts
+                filters: $request->query->all()['filters'] ?? [],
+                sorts: $request->query->all()['sorts'] ?? []
             ),
             'createForm' => $this->createForm(CreateCityFormType::class),
             'filters' => CityFilters::getFilterCases(),

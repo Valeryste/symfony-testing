@@ -2,19 +2,19 @@
 
 namespace App\Service;
 
-use App\Entity\Country;
-use App\Enum\CountryFilters;
-use App\Repository\CountryRepository;
+use App\Entity\Category;
+use App\Enum\CategoryFilters;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
-class CountryService extends BaseService
+class CategoryService extends  BaseService
 {
     private const PAGINATION_LIMIT = 10;
 
     public function __construct(
-        private readonly CountryRepository      $countryRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 
@@ -32,11 +32,11 @@ class CountryService extends BaseService
                     }
                     return null;
                 },
-                CountryFilters::getFilterCases()
+                CategoryFilters::getFilterCases()
             )
         );
 
-        $paginationCountries = $this->countryRepository->getPaginatedResults(
+        $paginationCountries = $this->categoryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $transformedFilters,
@@ -50,29 +50,43 @@ class CountryService extends BaseService
         return $paginationCountries;
     }
 
-    public function store(Country $country): Country
+    public function store(Category $category): Category
     {
-        $this->entityManager->persist($country);
+        $this->entityManager->persist($category);
 
         $this->entityManager->flush();
 
-        return $country;
+        return $category;
     }
 
-
-    public function update(Country $country): Country
+    public function update(Category $category): Category
     {
-        $country->setUpdatedAt(new \DateTime());
+        $category->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();
 
-        return $country;
+        return $category;
     }
 
-    public function delete(Country $country): void
+    public function delete(Category $category): void
     {
-        $this->entityManager->remove($country);
+        $this->entityManager->remove($category);
 
         $this->entityManager->flush();
+    }
+
+    public function getAllParents(): array
+    {
+        return $this->categoryRepository->getAllParents();
+    }
+
+    public function getRootCategories() : array
+    {
+        return $this->categoryRepository->getRootCategories();
+    }
+
+    public function getAllExcept(int $id): array
+    {
+        return $this->categoryRepository->getAllExcept($id);
     }
 }

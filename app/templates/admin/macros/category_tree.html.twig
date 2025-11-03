@@ -1,0 +1,73 @@
+{% macro render(categories, level = 0) %}
+    {% import _self as self %}
+
+    {% for category in categories %}
+        {% set base_color = 255 - (level * 20) %}
+        {% set bg_color = 'rgb(' ~ base_color ~ ', ' ~ base_color ~ ', ' ~ base_color ~ ')' %}
+
+        <tr class="category-node {% if level > 0 %}d-none{% endif %}"
+            data-level="{{ level }}"
+            data-category-id="{{ category.id }}"
+            style="background-color: {{ bg_color }};">
+            <td>
+                <strong>#{{ category.id }}</strong>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <span class="level-indent"></span>
+
+                    {% if category.children|length > 0 %}
+                        <span class="category-toggle me-2"
+                              data-category-id="{{ category.id }}"
+                              title="Показать дочерние категории"
+                              style="cursor: pointer;">
+                            📂
+                        </span>
+                    {% else %}
+                        <span class="me-2" style="width: 16px; display: inline-block;">📄</span>
+                    {% endif %}
+
+                    {{ category.name }}
+
+                    {% if category.children|length > 0 %}
+                        <span class="badge bg-secondary ms-2">{{ category.children|length }}</span>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                {% if category.isDeleted %}
+                    <span class="badge bg-danger">
+                        ❌ Удалена
+                    </span>
+                {% else %}
+                    <span class="badge bg-success">
+                        ✅ Активна
+                    </span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not category.isDeleted %}
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="{{ path('admin_categories_edit', { 'id': category.id }) }}"
+                           class="btn btn-outline-primary" title="Редактировать">
+                            ✏️
+                        </a>
+                        <form method="POST"
+                              action="{{ path('admin_categories_delete', { 'id': category.id }) }}"
+                              style="display: inline;"
+                              onsubmit="return confirm('Вы уверены, что хотите удалить эту категорию?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="btn btn-outline-danger" title="Удалить">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+
+        {% if category.children|length > 0 %}
+            {{ self.render(category.children, level + 1) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

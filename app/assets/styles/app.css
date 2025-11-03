@@ -750,3 +750,6 @@
     border-radius: 20px;
     font-size: 13px;
 }
+.d-none {
+    display: none !important;
+}
