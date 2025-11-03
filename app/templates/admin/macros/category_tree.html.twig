@@ -1,13 +1,12 @@
-{% macro render(categories, level = 0) %}
+{% macro render(categories, level = 0, isHidden = false) %}
     {% import _self as self %}
 
     {% for category in categories %}
         {% set base_color = 255 - (level * 20) %}
         {% set bg_color = 'rgb(' ~ base_color ~ ', ' ~ base_color ~ ', ' ~ base_color ~ ')' %}
 
-        <tr class="category-node {% if level > 0 %}d-none{% endif %}"
+        <tr class="category-node {% if isHidden %}d-none{% endif %}"
             data-level="{{ level }}"
-            data-category-id="{{ category.id }}"
             style="background-color: {{ bg_color }};">
             <td>
                 <strong>#{{ category.id }}</strong>
@@ -21,7 +20,7 @@
                               data-category-id="{{ category.id }}"
                               title="Показать дочерние категории"
                               style="cursor: pointer;">
-                            📂
+                            📀
                         </span>
                     {% else %}
                         <span class="me-2" style="width: 16px; display: inline-block;">📄</span>
@@ -67,7 +66,7 @@
         </tr>
 
         {% if category.children|length > 0 %}
-            {{ self.render(category.children, level + 1) }}
+            {{ self.render(category.children, level + 1, true) }}
         {% endif %}
     {% endfor %}
 {% endmacro %}
