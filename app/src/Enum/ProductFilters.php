@@ -8,10 +8,13 @@ enum ProductFilters: string
 
     case BY_CATEGORY = 'categories';
 
+    case ONLY_ACTIVE = 'isActive';
+
     public static function getFilterCases(): array
     {
         return [
             self::WITH_DELETED,
+            self::ONLY_ACTIVE,
             self::BY_CATEGORY
         ];
     }
@@ -19,7 +22,7 @@ enum ProductFilters: string
     public function getType(): string
     {
         return match($this) {
-            self::WITH_DELETED => 'checkbox',
+            self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
             self::BY_CATEGORY => 'select'
         };
     }
@@ -28,7 +31,8 @@ enum ProductFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
-            self::BY_CATEGORY => 'По категориям'
+            self::BY_CATEGORY => 'По категориям',
+            self::ONLY_ACTIVE => 'Только активные'
         };
     }
 
@@ -36,7 +40,8 @@ enum ProductFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
-            self::BY_CATEGORY => 'array'
+            self::BY_CATEGORY => 'array',
+            self::ONLY_ACTIVE => 'bool'
         };
     }
 

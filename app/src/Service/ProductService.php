@@ -44,6 +44,10 @@ class ProductService extends BaseService
 
     public function store(Product $product): Product
     {
+        $product->setIsActive(false);
+
+        $this->entityManager->flush();
+
         $this->entityManager->persist($product);
 
         $this->entityManager->flush();

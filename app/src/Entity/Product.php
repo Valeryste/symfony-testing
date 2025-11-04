@@ -25,6 +25,9 @@ class Product extends BaseEntity
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, options: ['unsigned' => true])]
     private ?float $price = null;
 
+    #[ORM\Column(name: 'is_active', nullable: false, options: ['default' => true])]
+    private bool $isActive = true;
+
     /**
      * @var Collection<int, Category>
      */
@@ -186,5 +189,15 @@ class Product extends BaseEntity
         $this->categories->clear();
 
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
     }
 }

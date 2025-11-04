@@ -58,6 +58,10 @@ class CategoryService extends BaseService
 
     public function delete(Category $category): void
     {
+        $category->setIsActive(false);
+
+        $this->entityManager->flush();
+
         $this->entityManager->remove($category);
 
         $this->entityManager->flush();

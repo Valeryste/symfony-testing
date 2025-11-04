@@ -115,17 +115,26 @@
                             </div>
                         </td>
                         <td>
-                            {% if product.isDeleted %}
-                                <span class="status-badge inactive">
-                                    <i class="fas fa-check-circle"></i>
+                            <div class="status-badges">
+                                {% if product.isActive %}
+                                    <span class="status-badge active">
+                                     <i class="fas fa-check-circle"></i>
+                                        Активен
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge inactive">
+                                        <i class="fas fa-times-circle"></i>
+                                        Неактивен
+                                    </span>
+                                {% endif %}
+
+                                {% if product.isDeleted %}
+                                    <span class="status-badge deleted">
+                                        <i class="fas fa-trash"></i>
                                         Удален
-                                </span>
-                            {% else %}
-                                <span class="status-badge active">
-                                    <i class="fas fa-check-circle"></i>
-                                        Действует
-                                </span>
-                            {% endif %}
+                                    </span>
+                                {% endif %}
+                            </div>
                         </td>
                         <td>
                             {% if product.isDeleted == null %}

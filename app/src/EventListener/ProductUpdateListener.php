@@ -13,7 +13,7 @@ use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Events;
 
 #[AsEntityListener(event: Events::postUpdate, method: 'onPostUpdate', entity: Product::class)]
-class ProductsUpdateListener
+class ProductUpdateListener
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

@@ -34,6 +34,9 @@ class Category extends BaseEntity
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'categories')]
     private Collection $products;
 
+    #[ORM\Column(name: 'is_active', nullable: false, options: ['default' => true])]
+    private bool $isActive = true;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -106,5 +109,15 @@ class Category extends BaseEntity
         }
 
         return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
     }
 }
