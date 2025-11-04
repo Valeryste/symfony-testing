@@ -62,6 +62,11 @@
                             {{ form_widget(updateForm.categories, {'attr': {'class': 'form-control'}}) }}
                             {{ form_errors(updateForm.categories) }}
                         </div>
+                        <div class="mb-3">
+                            {{ form_widget(updateForm.isActive, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(updateForm.isActive, 'активный продукт', {'label_attr': {'class': 'form-check-label'}}) }}
+                            {{ form_errors(updateForm.isActive) }}
+                        </div>
                     </div>
                 </div>
                 <div class="card mt-3">

@@ -5,12 +5,14 @@ namespace App\Form\Admin\Category;
 use App\Entity\Category;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
 
 class UpdateCategoryFormType extends AbstractType
 {
@@ -41,6 +43,13 @@ class UpdateCategoryFormType extends AbstractType
                 'class' => Category::class,
                 'choices' => $options['availableParents'],
                 'choice_label' => 'name'
+            ])
+            ->add('isActive', CheckboxType::class, [
+                'mapped' => true,
+                'required' => false,
+                'constraints' => [
+                    new Type(['type' => 'bool', 'message' => 'Value must be true или false']),
+                ],
             ]);
     }
 
