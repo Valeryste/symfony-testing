@@ -753,3 +753,13 @@
 .d-none {
     display: none !important;
 }
+
+.table tbody .category-node td:nth-child(2) {
+    text-align: left;
+}
+
+.category-node {
+    transform: scale(calc(1 - var(--level, 0) * 0.05));
+    transform-origin: left center;
+    margin-left: calc(var(--level, 0) * 3%);
+}
