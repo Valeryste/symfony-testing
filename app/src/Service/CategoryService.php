@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Category;
-use App\Enum\CategoryFilters;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;

@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Country;
-use App\Enum\CountryFilters;
 use App\Repository\CountryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;

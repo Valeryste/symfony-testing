@@ -4,9 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Entity\User;
-use App\Enum\ProductFilters;
-use App\Enum\UserFilters;
-use App\Enum\UserSorts;
+use App\Enum\Filter\UserFilters;
+use App\Enum\Sort\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;

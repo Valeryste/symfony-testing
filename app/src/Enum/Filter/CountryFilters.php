@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enum;
+namespace App\Enum\Filter;
 
 enum CountryFilters: string
 {

@@ -3,11 +3,10 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Enum\UserFilters;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 class UserService extends BaseService
 {

@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Entity\Country;
-use App\Enum\CountryFilters;
-use App\Enum\CountrySorts;
+use App\Enum\Filter\CountryFilters;
+use App\Enum\Sort\CountrySorts;
 use App\Form\Admin\Country\CreateCountryFormType;
 use App\Form\Admin\Country\UpdateCountryFormType;
 use App\Service\CountryService;

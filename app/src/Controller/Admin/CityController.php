@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Entity\City;
-use App\Enum\CityFilters;
-use App\Enum\CitySorts;
+use App\Enum\Filter\CityFilters;
+use App\Enum\Sort\CitySorts;
 use App\Form\Admin\City\CreateCityFormType;
 use App\Form\Admin\City\UpdateCityFormType;
 use App\Service\CityService;

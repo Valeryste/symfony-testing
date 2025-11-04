@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Entity\Category;
-use App\Enum\CategoryFilters;
-use App\Enum\CategorySorts;
+use App\Enum\Filter\CategoryFilters;
+use App\Enum\Sort\CategorySorts;
 use App\Form\Admin\Category\CreateCategoryFormType;
 use App\Form\Admin\Category\UpdateCategoryFormType;
 use App\Service\CategoryService;

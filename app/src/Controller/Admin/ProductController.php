@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\BaseController;
 use App\Entity\Product;
-use App\Enum\ProductFilters;
-use App\Enum\ProductSorts;
+use App\Enum\Filter\ProductFilters;
+use App\Enum\Sort\ProductSorts;
 use App\Form\Admin\Product\CreateProductFormType;
 use App\Form\Admin\Product\UpdateProductFormType;
 use App\Service\ProductService;

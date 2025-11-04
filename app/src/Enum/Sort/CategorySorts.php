@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enum;
+namespace App\Enum\Sort;
 
-enum UserSorts: string
+enum CategorySorts: string
 {
     case ID = 'id';
 

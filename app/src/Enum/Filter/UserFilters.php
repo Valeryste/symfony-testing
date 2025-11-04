@@ -1,9 +1,6 @@
 <?php
 
-namespace App\Enum;
-
-use App\Repository\RoleRepository;
-use Doctrine\ORM\EntityManager;
+namespace App\Enum\Filter;
 
 enum UserFilters: string
 {

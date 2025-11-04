@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Enum;
+namespace App\Enum\Filter;
 
-enum CategoryFilters: string
+enum ProductFilters: string
 {
     case WITH_DELETED = 'deletedAt';
 
-    case ONLY_ACTIVE = 'isActive';
+    case BY_CATEGORY = 'categories';
 
-    case BY_PARENT = 'parent';
+    case ONLY_ACTIVE = 'isActive';
 
     public static function getFilterCases(): array
     {
         return [
             self::WITH_DELETED,
             self::ONLY_ACTIVE,
-            self::BY_PARENT
+            self::BY_CATEGORY
         ];
     }
 
@@ -23,7 +23,7 @@ enum CategoryFilters: string
     {
         return match($this) {
             self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
-            self::BY_PARENT => 'select'
+            self::BY_CATEGORY => 'select'
         };
     }
 
@@ -31,7 +31,7 @@ enum CategoryFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
-            self::BY_PARENT => 'По родителю',
+            self::BY_CATEGORY => 'По категориям',
             self::ONLY_ACTIVE => 'Только активные'
         };
     }
@@ -40,15 +40,15 @@ enum CategoryFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
-            self::BY_PARENT => 'int',
-            self::ONLY_ACTIVE => 'bool',
+            self::BY_CATEGORY => 'array',
+            self::ONLY_ACTIVE => 'bool'
         };
     }
 
     public function getTemplateVariable(): string
     {
         return match($this) {
-            self::BY_PARENT => 'parentCategories'
+            self::BY_CATEGORY => 'categories'
         };
     }
 }

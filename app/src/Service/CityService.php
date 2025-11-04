@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\City;
-use App\Enum\CityFilters;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
 use Doctrine\ORM\EntityManagerInterface;
