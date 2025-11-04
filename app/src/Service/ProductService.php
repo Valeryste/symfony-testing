@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Product;
-use App\Enum\ProductFilters;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;

@@ -35,20 +35,20 @@ class Product extends BaseEntity
     /**
      * @var Collection<int, CountHistory>
      */
-    #[ORM\OneToMany(targetEntity: CountHistory::class, mappedBy: 'product_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: CountHistory::class, mappedBy: 'product', cascade: ['persist'], orphanRemoval: true)]
     private Collection $countHistory;
 
     /**
      * @var Collection<int, PriceHistory>
      */
-    #[ORM\OneToMany(targetEntity: PriceHistory::class, mappedBy: 'product_id', orphanRemoval: true)]
-    private Collection $priceHistories;
+    #[ORM\OneToMany(targetEntity: PriceHistory::class, mappedBy: 'product', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $priceHistory;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->countHistory = new ArrayCollection();
-        $this->priceHistories = new ArrayCollection();
+        $this->priceHistory = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,7 +131,7 @@ class Product extends BaseEntity
     {
         if (!$this->countHistory->contains($countHistory)) {
             $this->countHistory->add($countHistory);
-            $countHistory->setProductId($this);
+            $countHistory->setProduct($this);
         }
 
         return $this;
@@ -140,8 +140,8 @@ class Product extends BaseEntity
     public function removeCountHistory(CountHistory $countHistory): self
     {
         if ($this->countHistory->removeElement($countHistory)) {
-            if ($countHistory->getProductId() === $this) {
-                $countHistory->setProductId(null);
+            if ($countHistory->getProduct() === $this) {
+                $countHistory->setProduct(null);
             }
         }
 
@@ -151,16 +151,16 @@ class Product extends BaseEntity
     /**
      * @return Collection<int, PriceHistory>
      */
-    public function getPriceHistories(): Collection
+    public function getPriceHistory(): Collection
     {
-        return $this->priceHistories;
+        return $this->priceHistory;
     }
 
     public function addPriceHistory(PriceHistory $priceHistory): self
     {
-        if (!$this->priceHistories->contains($priceHistory)) {
-            $this->priceHistories->add($priceHistory);
-            $priceHistory->setProductId($this);
+        if (!$this->priceHistory->contains($priceHistory)) {
+            $this->priceHistory->add($priceHistory);
+            $priceHistory->setProduct($this);
         }
 
         return $this;
@@ -168,9 +168,9 @@ class Product extends BaseEntity
 
     public function removePriceHistory(PriceHistory $priceHistory): self
     {
-        if ($this->priceHistories->removeElement($priceHistory)) {
-            if ($priceHistory->getProductId() === $this) {
-                $priceHistory->setProductId(null);
+        if ($this->priceHistory->removeElement($priceHistory)) {
+            if ($priceHistory->getProduct() === $this) {
+                $priceHistory->setProduct(null);
             }
         }
 

@@ -14,9 +14,9 @@ class CountHistory extends BaseEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'countHistory')]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'countHistory')]
     #[ORM\JoinColumn(name: 'product_id', nullable: false)]
-    private ?Product $product_id = null;
+    private ?Product $product = null;
 
     #[ORM\Column]
     private ?int $count = null;
@@ -26,14 +26,14 @@ class CountHistory extends BaseEntity
         return $this->id;
     }
 
-    public function getProductId(): ?Product
+    public function getProduct(): ?Product
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(?Product $product_id): self
+    public function setProduct(?Product $product): self
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }
