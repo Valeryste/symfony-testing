@@ -20,17 +20,18 @@ trait PaginationTrait
         int   $limit = 10,
         array $filters = [],
         array $sorts = [],
+        array $search = []
     ): PaginationInterface
     {
 
         return $this->paginator->paginate(
-            target: $this->getListQuery($filters, $sorts),
+            target: $this->getListQuery($filters, $sorts, $search),
             page: $page,
             limit: $limit
         );
 
     }
 
-    abstract public function getListQuery(array $filters = [], array $sorts = []): Query;
+    abstract public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query;
 
 }

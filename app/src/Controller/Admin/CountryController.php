@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\BaseController;
 use App\Entity\Country;
 use App\Enum\Filter\CountryFilters;
+use App\Enum\Search\CountrySearch;
 use App\Enum\Sort\CountrySorts;
 use App\Form\Admin\Country\CreateCountryFormType;
 use App\Form\Admin\Country\UpdateCountryFormType;
@@ -28,16 +29,22 @@ class CountryController extends BaseController
     #[Route(name: 'admin_countries_index')]
     public function index(Request $request): Response
     {
-        $filtersFromRequest = $this->transformedFilters(
+        $transformedFilters = $this->transformedFilters(
             filters: $request->query->all()['filters'] ?? [],
             filtersEnumClass: CountryFilters::class
+        );
+
+        $transformedSearch = $this->transformedSearch(
+            search: $request->query->getString('search') ?? '',
+            searchEnumClass: CountrySearch::class
         );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
             'countries' => $this->countryService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filtersFromRequest,
-                sorts: $request->query->all()['sorts'] ?? []
+                filters: $transformedFilters,
+                sorts: $request->query->all()['sorts'] ?? [],
+                search: $transformedSearch
             ),
             'createForm' => $this->createForm(CreateCountryFormType::class),
             'filters' => CountryFilters::getFilterCases(),

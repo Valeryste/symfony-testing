@@ -43,7 +43,7 @@ abstract class BaseRepository extends ServiceEntityRepository
                 continue;
             }
 
-            if($fieldType === 'array') {
+            if ($fieldType === 'array') {
                 $joinAlias = "{$alias}_{$field}";
 
                 $queryBuilder
@@ -76,5 +76,24 @@ abstract class BaseRepository extends ServiceEntityRepository
         if (empty($sorts)) {
             $queryBuilder->orderBy("$alias.id", 'ASC');
         }
+    }
+
+    protected function setSearchInQuery(QueryBuilder $queryBuilder, array $search = []): void
+    {
+        $alias = $queryBuilder->getRootAliases()[0];
+
+        if (empty($search)) {
+            return;
+        }
+
+        $searchQuery = '%' . $search['value'] . '%';
+
+        foreach ($search['fields'] as $field) {
+            $queryBuilder->orWhere(
+                "$alias.$field LIKE :search"
+            );
+        }
+
+        $queryBuilder->setParameter('search', $searchQuery);
     }
 }

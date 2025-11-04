@@ -26,9 +26,11 @@ class CategoryRepository extends BaseRepository
 
     }
 
-    public function getListQuery(array $filters = [], array $sorts = []): Query
+    public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query
     {
         $query = $this->createQueryBuilder('c');
+
+        $this->setSearchInQuery($query, $search);
 
         $this->setFilterInQuery($query, $filters);
 

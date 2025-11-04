@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\BaseController;
 use App\Entity\User;
 use App\Enum\Filter\UserFilters;
+use App\Enum\Search\UserSearch;
 use App\Enum\Sort\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
@@ -27,16 +28,22 @@ class UserController extends BaseController
     #[Route(name: 'admin_users_index')]
     public function index(Request $request): Response
     {
-        $filtersFromRequest = $this->transformedFilters(
+        $transformedFilters = $this->transformedFilters(
             filters: $request->query->all()['filters'] ?? [],
             filtersEnumClass: UserFilters::class
+        );
+
+        $transformedSearch = $this->transformedSearch(
+            search: $request->query->getString('search') ?? '',
+            searchEnumClass: UserSearch::class
         );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
                 'users' => $this->userService->getList(
                     page: $request->query->getInt('page', 1),
-                    filters: $filtersFromRequest,
-                    sorts: $request->query->all()['sorts'] ?? []
+                    filters: $transformedFilters,
+                    sorts: $request->query->all()['sorts'] ?? [],
+                    search: $transformedSearch
                 ),
                 'filters' => UserFilters::getFilterCases(),
                 'sorts' => UserSorts::getSortCases(),

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\BaseController;
 use App\Entity\Product;
 use App\Enum\Filter\ProductFilters;
+use App\Enum\Search\ProductSearch;
 use App\Enum\Sort\ProductSorts;
 use App\Form\Admin\Product\CreateProductFormType;
 use App\Form\Admin\Product\UpdateProductFormType;
@@ -29,16 +30,22 @@ class ProductController extends BaseController
     #[Route(name: 'admin_products_index')]
     public function index(Request $request): Response
     {
-        $filtersFromRequest = $this->transformedFilters(
+        $transformedFilters = $this->transformedFilters(
             filters: $request->query->all()['filters'] ?? [],
             filtersEnumClass: ProductFilters::class
+        );
+
+        $transformedSearch = $this->transformedSearch(
+            search: $request->query->getInt('search') ?? '',
+            searchEnumClass: ProductSearch::class
         );
 
         return $this->render(self:: PATH_TO_TEMPLATES . 'index.html.twig', [
             'products' => $this->productService->getList(
                 page: $request->query->getInt('page', 1),
-                filters: $filtersFromRequest,
-                sorts: $request->query->all()['sorts'] ?? []
+                filters: $transformedFilters,
+                sorts: $request->query->all()['sorts'] ?? [],
+                search: $transformedSearch
             ),
             'filters' => ProductFilters::getFilterCases(),
             'sorts' => ProductSorts::getSortCases(),

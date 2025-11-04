@@ -8,7 +8,7 @@ class BaseController extends AbstractController
 {
     protected function transformedFilters(array $filters, string $filtersEnumClass): array
     {
-        if (!class_exists($filtersEnumClass) || !is_subclass_of($filtersEnumClass, \BackedEnum::class)) {
+        if (!enum_exists($filtersEnumClass)) {
             throw new \InvalidArgumentException('Invalid BackedEnum class provided');
         }
 
@@ -31,6 +31,23 @@ class BaseController extends AbstractController
                 $filters
             )
         );
+    }
+
+    protected function transformedSearch(string $searchEnumClass, string $search = '', ): array
+    {
+        if (!enum_exists($searchEnumClass)) {
+            throw new \InvalidArgumentException('Invalid BackedEnum class provided');
+        }
+
+        if(empty($search)) {
+            return [];
+        }
+
+        return [
+            'fields' => $searchEnumClass::getSearchCases(),
+            'value' => $search
+        ];
+
     }
 
 }

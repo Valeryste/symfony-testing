@@ -17,7 +17,7 @@ class CategoryService extends BaseService
     ) {
     }
 
-    public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
+    public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
     {
         if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->disable('softdeleteable');
@@ -27,7 +27,8 @@ class CategoryService extends BaseService
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
-            sorts: $sorts
+            sorts: $sorts,
+            search: $search
         );
 
         if ($this->hasFilter($filters, 'deletedAt', 1)) {

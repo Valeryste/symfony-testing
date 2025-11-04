@@ -17,9 +17,11 @@ class ProductRepository extends BaseRepository
     }
 
 
-    public function getListQuery(array $filters = [], array $sorts = []): Query
+    public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query
     {
         $query = $this->createQueryBuilder('p');
+
+        $this->setSearchInQuery($query, $search);
 
         $this->setFilterInQuery($query, $filters);
 

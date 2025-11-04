@@ -21,9 +21,11 @@ class UserRepository extends BaseRepository
         parent::__construct($registry, $paginator, User::class);
     }
 
-    public function getListQuery(array $filters = [], array $sorts = []): Query
+    public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query
     {
         $query = $this->createQueryBuilder('u');
+
+        $this->setSearchInQuery($query, $search);
 
         $this->setFilterInQuery($query, $filters);
 
