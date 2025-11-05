@@ -35,8 +35,8 @@ class CountryController extends BaseController
         );
 
         $transformedSearch = $this->transformedSearch(
-            search: $request->query->getString('search') ?? '',
-            searchEnumClass: CountrySearch::class
+            searchEnumClass: CountrySearch::class,
+            search: $request->query->getString('search') ?? ''
         );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [

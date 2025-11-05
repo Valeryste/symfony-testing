@@ -22,7 +22,6 @@ class CategoryController extends BaseController
     public function __construct(
         private readonly CategoryService $categoryService
     ) {
-
     }
 
     private const PATH_TO_TEMPLATES = 'admin/category/';
@@ -36,12 +35,12 @@ class CategoryController extends BaseController
         );
 
         $transformedSearch = $this->transformedSearch(
-            search: $request->query->getString('search') ?? '',
-            searchEnumClass: CategorySearch::class
+            searchEnumClass: CategorySearch::class,
+            search: $request->query->getString('search') ?? ''
         );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
-            'categories' =>   $this->categoryService->getList(
+            'categories' => $this->categoryService->getList(
                 page: $request->query->getInt('page', 1),
                 filters: $transformedFilters,
                 sorts: $request->query->all()['sorts'] ?? [],
@@ -68,7 +67,7 @@ class CategoryController extends BaseController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->categoryService->store($category);
 
             $this->addFlash('success', 'Category was successfully created');
@@ -98,18 +97,27 @@ class CategoryController extends BaseController
     #[Route('/{id}', name: 'admin_categories_update')]
     public function update(Request $request, Category $category): Response
     {
-        $form = $this->createForm(UpdateCategoryFormType::class, $category);
+        $form = $this->createForm(UpdateCategoryFormType::class, $category, [
+            'availableParents' => $this->categoryService->getAllExcept($category->getId())
+        ]);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->categoryService->update($category);
 
-            $this->addFlash('success', 'Category was successfully update');
+            $this->addFlash('success', 'Category was successfully updated');
 
             return $this->redirectToRoute('admin_categories_edit', [
                 'id' => $category->getId()
             ]);
+
+        }
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         $this->addFlash('error', 'Validation or create error');

@@ -11,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\PersistentCollection;
 
 #[AsEntityListener(event: Events::postUpdate, method: 'onPostUpdate', entity: Product::class)]
 class ProductUpdateListener
@@ -27,6 +28,15 @@ class ProductUpdateListener
     {
         $changeSet = $event->getObjectManager()->getUnitOfWork()->getEntityChangeSet($product);
 
+        $this->changeCount($changeSet, $product);
+
+        $this->changePrice($changeSet, $product);
+
+        $this->entityManager->flush();
+    }
+
+    private function changeCount(PersistentCollection|array $changeSet, Product $product): void
+    {
         if (isset($changeSet['count'])) {
             $newCount = $changeSet['count'][1];
 
@@ -39,7 +49,10 @@ class ProductUpdateListener
 
             $this->entityManager->persist($countHistory);
         }
+    }
 
+    private function changePrice(PersistentCollection|array $changeSet, Product $product): void
+    {
         if (isset($changeSet['price'])) {
             $oldPrice = (float)$changeSet['price'][0];
             $newPrice = (float)$changeSet['price'][1];
@@ -55,8 +68,5 @@ class ProductUpdateListener
                 $this->entityManager->persist($priceHistory);
             }
         }
-
-        $this->entityManager->flush();
-
     }
 }

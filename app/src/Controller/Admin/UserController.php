@@ -34,8 +34,8 @@ class UserController extends BaseController
         );
 
         $transformedSearch = $this->transformedSearch(
-            search: $request->query->getString('search') ?? '',
-            searchEnumClass: UserSearch::class
+            searchEnumClass: UserSearch::class,
+            search: $request->query->getString('search') ?? ''
         );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
