@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Admin\City;
+namespace App\Form\Admin\Shop;
 
 use App\Entity\City;
-use App\Entity\Country;
+use App\Entity\Shop;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class UpdateCityFormType extends AbstractType
+class CreateShopFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -35,19 +35,34 @@ class UpdateCityFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('country', EntityType::class, [
+            ->add('city', EntityType::class, [
                 'mapped' => true,
-                'class' => Country::class,
-                'required' => true,
+                'class' => City::class,
                 'choice_label' => 'name'
+            ])
+            ->add('address', TextType::class, [
+                'mapped' => true,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'Please enter a address']),
+                    new Length([
+                        'min' => 3,
+                        'max' => 255,
+                        'minMessage' => 'address must be at least 3 characters',
+                        'maxMessage' => 'address cannot be longer than 255 characters',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9\s\-\.,#]+$/',
+                        'message' => 'Address can only contain letters, numbers, spaces, hyphens, commas, periods and hash symbols',
+                    ]),
+                ],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => City::class,
+            'data_class' => Shop::class,
         ]);
     }
-
 }

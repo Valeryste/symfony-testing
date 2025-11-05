@@ -74,7 +74,7 @@ class ProductService extends BaseService
         $this->entityManager->flush();
     }
 
-    public function finCategoriesWithProducts(): array
+    public function findCategoriesWithProducts(): array
     {
         return $this->categoryRepository->findCategoriesWithProducts();
     }

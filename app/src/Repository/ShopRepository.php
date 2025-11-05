@@ -3,41 +3,30 @@
 namespace App\Repository;
 
 use App\Entity\Shop;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
-/**
- * @extends ServiceEntityRepository<Shop>
- */
-class ShopRepository extends ServiceEntityRepository
+class ShopRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry    $registry,
+        PaginatorInterface $paginator
+    )
     {
-        parent::__construct($registry, Shop::class);
+        parent::__construct($registry, $paginator, Shop::class);
     }
 
-    //    /**
-    //     * @return Shop[] Returns an array of Shop objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query
+    {
+        $query = $this->createQueryBuilder('s');
 
-    //    public function findOneBySomeField($value): ?Shop
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $this->setSearchInQuery($query, $search);
+
+        $this->setFilterInQuery($query, $filters);
+
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
+    }
 }

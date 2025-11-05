@@ -33,7 +33,7 @@ class BaseController extends AbstractController
         );
     }
 
-    protected function transformedSearch(string $searchEnumClass, string $search = '', ): array
+    protected function transformedSearch(string $searchEnumClass, string $search = ''): array
     {
         if (!enum_exists($searchEnumClass)) {
             throw new \InvalidArgumentException('Invalid BackedEnum class provided');

@@ -37,7 +37,7 @@ class ProductController extends BaseController
 
         $transformedSearch = $this->transformedSearch(
             searchEnumClass: ProductSearch::class,
-            search: $request->query->getInt('search') ?? ''
+            search: $request->query->getString('search') ?? ''
         );
 
         return $this->render(self:: PATH_TO_TEMPLATES . 'index.html.twig', [
@@ -49,7 +49,7 @@ class ProductController extends BaseController
             ),
             'filters' => ProductFilters::getFilterCases(),
             'sorts' => ProductSorts::getSortCases(),
-            'categories' => $this->productService->finCategoriesWithProducts()
+            'categories' => $this->productService->findCategoriesWithProducts()
         ]);
     }
 
