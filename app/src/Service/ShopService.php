@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Shop;
 use App\Repository\CityRepository;
+use App\Repository\CountryRepository;
 use App\Repository\ShopRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -17,7 +18,8 @@ class ShopService extends BaseService
     function __construct(
         private readonly ShopRepository         $shopRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly CityRepository      $cityRepository
+        private readonly CityRepository      $cityRepository,
+        private readonly CountryRepository $countryRepository
     )
     {
     }
@@ -88,6 +90,11 @@ class ShopService extends BaseService
         $this->entityManager->getFilters()->enable('softdeleteable');
 
         return $name;
+    }
+
+    public function getCountriesHavingShops(): array
+    {
+        return $this->countryRepository->getCountriesHavingShops();
     }
 
 }

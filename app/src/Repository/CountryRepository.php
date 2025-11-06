@@ -43,4 +43,15 @@ class CountryRepository extends BaseRepository
             ->getResult();
     }
 
+    public function getCountriesHavingShops(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.cities', 'city')
+            ->innerJoin('city.shops', 'shop')
+            ->groupBy('c.id')
+            ->getQuery()
+            ->getResult();
+
+    }
+
 }

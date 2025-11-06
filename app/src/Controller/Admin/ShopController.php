@@ -49,7 +49,8 @@ class ShopController extends BaseController
             ),
             'filters' => ShopFilters::getFilterCases(),
             'sorts' => ShopSorts::getSortCases(),
-            'cities' => $this->shopService->getCitiesHavingShops()
+            'cities' => $this->shopService->getCitiesHavingShops(),
+            'countries' => $this->shopService->getCountriesHavingShops()
         ]);
     }
 
