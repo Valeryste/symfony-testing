@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enum;
+namespace App\Enum\Sort;
 
-enum CountrySorts: string
+enum ProductSorts: string
 {
     case ID = 'id';
 

@@ -3,11 +3,10 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Enum\UserFilters;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 class UserService extends BaseService
 {
@@ -20,32 +19,21 @@ class UserService extends BaseService
     ) {
     }
 
-    public function getList(int $page, array $filters = [], array $sorts = []): PaginationInterface
+    public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
     {
-        if(isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
-
-        $transformedFilters = array_filter(
-            array_map(
-                function ($filterCase) use ($filters) {
-                    if (isset($filters[$filterCase->value])) {
-                        return [$filterCase, $filters[$filterCase->value]];
-                    }
-                    return null;
-                },
-                UserFilters::getFilterCases()
-            )
-        );
 
         $paginationUsers = $this->userRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
-            filters: $transformedFilters,
-            sorts: $sorts
+            filters: $filters,
+            sorts: $sorts,
+            search: $search
         );
 
-        if(isset($filters['with_deleted']) && $filters['with_deleted'] == 1) {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 

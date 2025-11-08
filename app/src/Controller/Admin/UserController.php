@@ -2,20 +2,21 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\BaseController;
 use App\Entity\User;
-use App\Enum\UserFilters;
-use App\Enum\UserSorts;
+use App\Enum\Filter\UserFilters;
+use App\Enum\Search\UserSearch;
+use App\Enum\Sort\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
 use App\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin')]
+#[Route('/admin/users')]
 #[IsGranted('ROLE_ADMIN')]
-class UserController extends AbstractController
+class UserController extends BaseController
 {
     private const PATH_TO_TEMPLATES = 'admin/user/';
 
@@ -24,18 +25,25 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[Route('/users', name: 'admin_users_index')]
+    #[Route(name: 'admin_users_index')]
     public function index(Request $request): Response
     {
-        $sorts = $request->query->all()['sorts'] ?? [];
+        $transformedFilters = $this->transformedFilters(
+            filters: $request->query->all()['filters'] ?? [],
+            filtersEnumClass: UserFilters::class
+        );
 
-        $filters = $request->query->all()['filters'] ?? [];
+        $transformedSearch = $this->transformedSearch(
+            searchEnumClass: UserSearch::class,
+            search: $request->query->getString('search') ?? ''
+        );
 
         return $this->render(self::PATH_TO_TEMPLATES . 'index.html.twig', [
                 'users' => $this->userService->getList(
                     page: $request->query->getInt('page', 1),
-                    filters: $filters,
-                    sorts: $sorts
+                    filters: $transformedFilters,
+                    sorts: $request->query->all()['sorts'] ?? [],
+                    search: $transformedSearch
                 ),
                 'filters' => UserFilters::getFilterCases(),
                 'sorts' => UserSorts::getSortCases(),
@@ -44,7 +52,7 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route('/users/{id}/edit', name: 'admin_users_edit', methods: 'GET')]
+    #[Route('/{id}/edit', name: 'admin_users_edit', methods: 'GET')]
     public function edit(User $user): Response
     {
         return $this->render(self::PATH_TO_TEMPLATES . 'edit.html.twig', [
@@ -53,7 +61,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}', name: 'admin_users_update', methods: ['POST'])]
+    #[Route('/{id}', name: 'admin_users_update', methods: ['POST'])]
     public function update(Request $request, User $user): Response
     {
         $form = $this->createForm(UpdateUserFormType::class, $user);
@@ -76,7 +84,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/users/{id}/delete', name: 'admin_users_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'admin_users_delete', methods: ['POST'])]
     public function delete(User $user): Response
     {
         $this->userService->delete($user);

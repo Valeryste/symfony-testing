@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PriceHistory;
+use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,14 @@ class PriceHistoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PriceHistory::class);
+    }
+
+    public function findLastByProduct(Product $product): ?PriceHistory
+    {
+        return $this->findOneBy(
+            ['product' => $product],
+            ['createdAt' => 'DESC']
+        );
     }
 
     //    /**

@@ -26,16 +26,16 @@ abstract class BaseRepository extends ServiceEntityRepository
     {
         $alias = $queryBuilder->getRootAliases()[0];
 
-        foreach ($filters as $key => $filter) {
-            $field = $filter[0]->getField();
-
-            $value = $filter[1];
+        foreach ($filters as $filter) {
+            $field = $filter['field'];
+            $value = $filter['value'];
+            $fieldType = $filter['fieldType'];
 
             if (empty($value)) {
                 continue;
             }
 
-            if ($filter[0]->getFieldType() === 'datetime') {
+            if ($fieldType === 'datetime') {
                 $condition = $value == 1 ? 'IS NOT NULL' : 'IS NUll';
 
                 $queryBuilder->andWhere("$alias.$field $condition");
@@ -43,9 +43,20 @@ abstract class BaseRepository extends ServiceEntityRepository
                 continue;
             }
 
+            if ($fieldType === 'array') {
+                $joinAlias = "{$alias}_{$field}";
+
+                $queryBuilder
+                    ->join("$alias.$field", $joinAlias)
+                    ->andWhere("$joinAlias.id IN (:filter_value_$field)")
+                    ->setParameter("filter_value_$field", $value);
+
+                continue;
+            }
+
             $queryBuilder
-                ->andWhere("$alias.$field = :filter_value_$key")
-                ->setParameter("filter_value_$key", $value);
+                ->andWhere("$alias.$field = :filter_value_$field")
+                ->setParameter("filter_value_$field", $value);
 
         }
     }
@@ -65,5 +76,24 @@ abstract class BaseRepository extends ServiceEntityRepository
         if (empty($sorts)) {
             $queryBuilder->orderBy("$alias.id", 'ASC');
         }
+    }
+
+    protected function setSearchInQuery(QueryBuilder $queryBuilder, array $search = []): void
+    {
+        $alias = $queryBuilder->getRootAliases()[0];
+
+        if (empty($search)) {
+            return;
+        }
+
+        $searchQuery = '%' . $search['value'] . '%';
+
+        foreach ($search['fields'] as $field) {
+            $queryBuilder->orWhere(
+                "$alias.$field LIKE :search"
+            );
+        }
+
+        $queryBuilder->setParameter('search', $searchQuery);
     }
 }
