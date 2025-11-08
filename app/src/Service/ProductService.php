@@ -16,8 +16,7 @@ class ProductService extends BaseService
         private readonly ProductRepository      $productRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly CategoryRepository     $categoryRepository
-    )
-    {
+    ) {
     }
 
 
