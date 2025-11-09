@@ -12,8 +12,7 @@ class CountrySoftDeleteListener
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager
-    )
-    {
+    ) {
     }
 
     public function onPreRemove(Country $country): void

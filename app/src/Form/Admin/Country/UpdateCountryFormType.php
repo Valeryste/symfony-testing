@@ -24,8 +24,8 @@ class UpdateCountryFormType extends AbstractType
                     new Length([
                         'min' => 3,
                         'max' => 255,
-                        'minMessage' => 'Username must be at least {{ limit }} characters',
-                        'maxMessage' => 'Username cannot be longer than {{ limit }} characters',
+                        'minMessage' => 'Username must be at least 3 characters',
+                        'maxMessage' => 'Username cannot be longer than 255 characters',
                     ]),
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9_]+$/',

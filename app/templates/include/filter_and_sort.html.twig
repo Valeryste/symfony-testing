@@ -11,16 +11,23 @@
                             {{ (app.request.query.all()['filters'][filter.value] ?? '') == '1' ? 'checked' : '' }}
                            onchange="this.value = this.checked ? '1' : '0'">
                     <label class="form-check-label fw-bold" for="filter_{{ filter.value }}">
-                        {{ filter.translateValueToRu }}
+                        {{ filter.outputInTemplate }}
                     </label>
                 </div>
 
             {% elseif filter.getType == 'select' %}
                 {% set variableName = filter.getTemplateVariable() %}
                 {% if attribute(_context, variableName) is defined %}
-                    {% include './include/filterSelect.html.twig' with {
+                    {% set isMultiple = false %}
+
+                    {% if filter.getFieldType is defined %}
+                        {% set isMultiple = filter.getFieldType == 'array' %}
+                    {% endif %}
+
+                    {% include '/include/filter_select.html.twig' with {
                         filter: filter,
-                        items: attribute(_context, variableName)
+                        items: attribute(_context, variableName),
+                        isMultiple: isMultiple
                     } %}
                 {% endif %}
             {% endif %}

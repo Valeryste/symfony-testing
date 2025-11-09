@@ -14,36 +14,36 @@ class PriceHistory extends BaseEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'priceHistories')]
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'priceHistory')]
     #[ORM\JoinColumn(name: 'product_id', nullable: false)]
-    private ?Product $product_id = null;
+    private ?Product $product = null;
 
-    #[ORM\Column]
-    private ?int $price = null;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?float $price = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProductId(): ?Product
+    public function getProduct(): ?Product
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(?Product $product_id): self
+    public function setProduct(?Product $product): self
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 

@@ -1,0 +1,82 @@
+{% macro render(categories, level = 0, isHidden = false) %}
+    {% import _self as self %}
+
+    {% for category in categories %}
+        {% set base_color = 255 - (level * 20) %}
+        {% set bg_color = 'rgb(' ~ base_color ~ ', ' ~ base_color ~ ', ' ~ base_color ~ ')' %}
+
+        <tr class="category-node {% if isHidden %}d-none{% endif %}"
+            data-level="{{ level }}"
+            style="background-color: {{ bg_color }}; --level: {{ level }}">
+            <td>
+                <strong>#{{ category.id }}</strong>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <span class="level-indent"></span>
+
+                    {% if category.children|length > 0 %}
+                        <span class="category-toggle me-2"
+                              data-category-id="{{ category.id }}"
+                              title="Показать дочерние категории"
+                              style="cursor: pointer;">
+                            📀
+                        </span>
+                    {% else %}
+                        <span class="me-2" style="width: 16px; display: inline-block;">📄</span>
+                    {% endif %}
+
+                    {{ category.name }}
+
+                    {% if category.children|length > 0 %}
+                        <span class="badge bg-secondary ms-2">{{ category.children|length }}</span>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                <div class="status-badges">
+                    {% if category.isActive %}
+                        <span class="status-badge active">
+                        <i class="fas fa-check-circle"></i>
+                        Активен
+                    </span>
+                    {% else %}
+                        <span class="status-badge inactive">
+                        <i class="fas fa-times-circle"></i>
+                        Неактивен
+                    </span>
+                    {% endif %}
+                    {% if category.isDeleted %}
+                        <span class="status-badge deleted">
+                        <i class="fas fa-trash"></i>
+                        Удален
+                    </span>
+                    {% endif %}
+                </div>
+            </td>
+            <td>
+                {% if not category.isDeleted %}
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="{{ path('admin_categories_edit', { 'id': category.id }) }}"
+                           class="btn btn-outline-primary" title="Редактировать">
+                            ✏️
+                        </a>
+                        <form method="POST"
+                              action="{{ path('admin_categories_delete', { 'id': category.id }) }}"
+                              style="display: inline;"
+                              onsubmit="return confirm('Вы уверены, что хотите удалить эту категорию?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="btn btn-outline-danger" title="Удалить">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+
+        {% if category.children|length > 0 %}
+            {{ self.render(category.children, level + 1, true) }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
