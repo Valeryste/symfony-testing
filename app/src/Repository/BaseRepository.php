@@ -35,30 +35,70 @@ abstract class BaseRepository extends ServiceEntityRepository
                 continue;
             }
 
-            if ($fieldType === 'datetime') {
-                $condition = $value == 1 ? 'IS NOT NULL' : 'IS NUll';
-
-                $queryBuilder->andWhere("$alias.$field $condition");
-
-                continue;
-            }
-
-            if ($fieldType === 'array') {
-                $joinAlias = "{$alias}_{$field}";
-
-                $queryBuilder
-                    ->join("$alias.$field", $joinAlias)
-                    ->andWhere("$joinAlias.id IN (:filter_value_$field)")
-                    ->setParameter("filter_value_$field", $value);
-
-                continue;
-            }
-
-            $queryBuilder
-                ->andWhere("$alias.$field = :filter_value_$field")
-                ->setParameter("filter_value_$field", $value);
-
+            $this->applyFilter(
+                queryBuilder: $queryBuilder,
+                alias: $alias,
+                field: $field,
+                fieldType: $fieldType,
+                value: $value
+            );
         }
+    }
+
+    private function applyFilter(
+        QueryBuilder $queryBuilder,
+        string $alias,
+        string $field,
+        string $fieldType,
+        $value,
+    ): void
+    {
+        if ($fieldType === 'datetime' && !in_array($value, [0, 1], true)) {
+            $condition = (int)$value === 1 ? 'IS NOT NULL' : 'IS NULL';
+
+            $queryBuilder->andWhere("$alias.$field $condition");
+            return;
+        }
+
+        if ($fieldType === 'array' || count(explode('.', $field)) > 1) {
+            $this->applyRelationFilter(
+                queryBuilder: $queryBuilder,
+                alias: $alias,
+                field: $field,
+                fieldType: $fieldType,
+                value: $value
+            );
+            return;
+        }
+
+        $queryBuilder
+            ->andWhere("$alias.$field = :{$alias}_{$field}_value")
+            ->setParameter("{$alias}_{$field}_value", $value);
+    }
+
+    private function applyRelationFilter(
+        QueryBuilder $queryBuilder,
+        string $alias,
+        string $field,
+        string $fieldType,
+        $value
+    ): void
+    {
+        $fields = explode('.', $field);
+
+        $operator = $fieldType === 'array' ? 'IN' : '=';
+
+        $currentAlias = $alias;
+
+        foreach ($fields as $field) {
+            $lastAlias = $currentAlias;
+            $currentAlias = "{$currentAlias}_$field";
+            $queryBuilder->join("$lastAlias.$field", $currentAlias);
+        }
+
+        $queryBuilder
+            ->andWhere("$currentAlias.id $operator (:{$currentAlias}_value)")
+            ->setParameter("{$currentAlias}_value", $value);
     }
 
     protected function setSortInQuery(QueryBuilder $queryBuilder, array $sorts = []): void
