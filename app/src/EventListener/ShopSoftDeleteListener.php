@@ -17,11 +17,8 @@ class ShopSoftDeleteListener
 
     public function onPreRemove(Shop $shop): void
     {
-        if (!empty($shop->getDeletedAt())) {
-            foreach ($shop->getEmployees() as $employee) {
-                $employee->setIsDismissed(true);
-                $this->entityManager->flush();
-            }
-        }
+        $shop->setIsOpen(false);
+
+        $this->entityManager->flush();
     }
 }

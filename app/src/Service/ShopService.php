@@ -72,10 +72,6 @@ class ShopService extends BaseService
 
     public function delete(Shop $shop): void
     {
-        $shop->setIsOpen(false);
-
-        $this->entityManager->flush();
-
         $this->entityManager->remove($shop);
 
         $this->entityManager->flush();
