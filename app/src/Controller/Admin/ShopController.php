@@ -124,6 +124,8 @@ class ShopController extends BaseController
     {
         $this->shopService->delete($shop);
 
+        $this->addFlash('success', 'Shop was successfully deleted');
+
         return $this->redirectToRoute('admin_shops_index');
     }
 

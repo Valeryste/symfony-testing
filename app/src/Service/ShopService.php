@@ -30,7 +30,7 @@ class ShopService extends BaseService
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationCities = $this->shopRepository->getPaginatedResults(
+        $paginationShops = $this->shopRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -43,7 +43,7 @@ class ShopService extends BaseService
         }
 
 
-        return $paginationCities;
+        return $paginationShops;
     }
 
     public function getCitiesHavingShops(): array

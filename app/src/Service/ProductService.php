@@ -27,7 +27,7 @@ class ProductService extends BaseService
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationCountries = $this->productRepository->getPaginatedResults(
+        $paginationProducts = $this->productRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -39,16 +39,12 @@ class ProductService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return $paginationCountries;
+        return $paginationProducts;
     }
 
 
     public function store(Product $product): Product
     {
-        $product->setIsActive(false);
-
-        $this->entityManager->flush();
-
         $this->entityManager->persist($product);
 
         $this->entityManager->flush();

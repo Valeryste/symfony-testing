@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\EmloyeeRepository;
+use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EmloyeeRepository::class)]
+#[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[ORM\Table('employees')]
 class Employee extends BaseEntity
 {
@@ -29,9 +29,12 @@ class Employee extends BaseEntity
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[ORM\Column(name: 'is_dismissed', nullable: false, options: ['default' => false])]
+    private bool $isDismissed = false;
+
     #[ORM\ManyToOne(inversedBy: 'employees')]
     #[ORM\JoinColumn(name: 'shop_id', nullable: false)]
-    private ?Shop $shop_id = null;
+    private ?Shop $shop = null;
 
     public function getId(): ?int
     {
@@ -98,14 +101,26 @@ class Employee extends BaseEntity
         return $this;
     }
 
-    public function getShopId(): ?Shop
+    public function getShop(): ?Shop
     {
-        return $this->shop_id;
+        return $this->shop;
     }
 
-    public function setShopId(?Shop $shop_id): self
+    public function setShop(?Shop $shop): self
     {
-        $this->shop_id = $shop_id;
+        $this->shop = $shop;
+
+        return $this;
+    }
+
+    public function isDismissed(): bool
+    {
+        return $this->isDismissed;
+    }
+
+    public function setIsDismissed(bool $isDismissed): self
+    {
+        $this->isDismissed = $isDismissed;
 
         return $this;
     }

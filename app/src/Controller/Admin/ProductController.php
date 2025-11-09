@@ -123,6 +123,8 @@ class ProductController extends BaseController
     {
         $this->productService->delete($product);
 
+        $this->addFlash('success', 'Product was successfully deleted');
+
         return $this->redirectToRoute('admin_products_index');
     }
 

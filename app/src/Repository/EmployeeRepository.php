@@ -2,24 +2,23 @@
 
 namespace App\Repository;
 
-use App\Entity\Shop;
+use App\Entity\Employee;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 
-class ShopRepository extends BaseRepository
+class EmployeeRepository extends BaseRepository
 {
     public function __construct(
-        ManagerRegistry    $registry,
+        ManagerRegistry $registry,
         PaginatorInterface $paginator
-    )
-    {
-        parent::__construct($registry, $paginator, Shop::class);
+    ) {
+        parent::__construct($registry, $paginator, Employee::class);
     }
 
     public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query
     {
-        $query = $this->createQueryBuilder('s');
+        $query = $this->createQueryBuilder('e');
 
         $this->setSearchInQuery($query, $search);
 
@@ -28,15 +27,5 @@ class ShopRepository extends BaseRepository
         $this->setSortInQuery($query, $sorts);
 
         return $query->getQuery();
-    }
-
-    public function getShopsHavingEmployee(): array
-    {
-        return $this->createQueryBuilder('s')
-            ->innerJoin('s.employees', 'employees')
-            ->groupBy('s.id')
-            ->orderBy('s.name', 'ASC')
-            ->getQuery()
-            ->getResult();
     }
 }

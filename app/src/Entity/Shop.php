@@ -28,7 +28,7 @@ class Shop extends BaseEntity
     /**
      * @var Collection<int, Employee>
      */
-    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'shop_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'shop', orphanRemoval: true)]
     private Collection $employees;
 
     #[ORM\ManyToOne(inversedBy: 'shops')]
@@ -91,7 +91,7 @@ class Shop extends BaseEntity
     {
         if (!$this->employees->contains($employee)) {
             $this->employees->add($employee);
-            $employee->setShopId($this);
+            $employee->setShop($this);
         }
 
         return $this;
@@ -100,8 +100,8 @@ class Shop extends BaseEntity
     public function removeEmployee(Employee $employee): self
     {
         if ($this->employees->removeElement($employee)) {
-            if ($employee->getShopId() === $this) {
-                $employee->setShopId(null);
+            if ($employee->getShop() === $this) {
+                $employee->setShop(null);
             }
         }
 

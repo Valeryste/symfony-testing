@@ -23,7 +23,7 @@ class CategoryService extends BaseService
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationCountries = $this->categoryRepository->getPaginatedResults(
+        $paginationCategories = $this->categoryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -35,7 +35,7 @@ class CategoryService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return $paginationCountries;
+        return $paginationCategories;
     }
 
     public function store(Category $category): Category

@@ -120,6 +120,8 @@ class CityController extends BaseController
     {
         $this->cityService->delete($city);
 
+        $this->addFlash('success', 'City was successfully deleted');
+
         return $this->redirectToRoute('admin_cities_index');
     }
 }
