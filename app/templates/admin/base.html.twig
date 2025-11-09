@@ -61,6 +61,14 @@
                         <span class="menu-text">Магазины</span>
                     </a>
                 </li>
+                <li class="menu-item {% if app.request.attributes.get('_route') starts with 'admin_employyes' %}active{% endif %}">
+                    <a href="{{ path('admin_employees_index') }}" class="menu-link">
+                    <span class="menu-icon">
+                        <i class="fas fa-city"></i>
+                    </span>
+                        <span class="menu-text">Сотрудники</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
