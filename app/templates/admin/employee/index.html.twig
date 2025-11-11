@@ -67,8 +67,8 @@
                 <thead>
                 <tr>
                     <th style="width: 5%; min-width: 10px;">ID</th>
-                    <th style="width: 15%; min-width: 20px;">name</th>
                     <th style="width: 15%; min-width: 20px;">shop</th>
+                    <th style="width: 15%; min-width: 20px;">name</th>
                     <th style="width: 15%; min-width: 20px;">surname</th>
                     <th style="width: 15%; min-width: 20px;">position</th>
                     <th style="width: 15%; min-width: 20px;">phone</th>
@@ -83,13 +83,13 @@
                         <td>
                             <div class="d-flex align-items-center justify-content-center">
                                 <i class="fas fa-user text-muted me-2"></i>
-                                {{ employee.name }}
+                                {{ employee_service.getShopName(employee) }}
                             </div>
                         </td>
                         <td>
                             <div class="d-flex align-items-center justify-content-center">
                                 <i class="fas fa-user text-muted me-2"></i>
-                                {{ employee_service.getShopName(employee) }}
+                                {{ employee.name }}
                             </div>
                         </td>
                         <td>
