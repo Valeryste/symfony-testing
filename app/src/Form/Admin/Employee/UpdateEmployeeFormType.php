@@ -34,8 +34,8 @@ class UpdateEmployeeFormType extends AbstractType
                         'maxMessage' => 'name cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_\s]+$/u',
-                        'message' => 'Name can only contain letters, numbers, underscores and spaces',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Name can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])
@@ -51,8 +51,8 @@ class UpdateEmployeeFormType extends AbstractType
                         'maxMessage' => 'surname cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_\s]+$/u',
-                        'message' => 'Surname can only contain letters, numbers, underscores and spaces',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Surname can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])
@@ -68,8 +68,8 @@ class UpdateEmployeeFormType extends AbstractType
                         'maxMessage' => 'position cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_\s]+$/u',
-                        'message' => 'Position can only contain letters, numbers, underscores and spaces',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Position can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])

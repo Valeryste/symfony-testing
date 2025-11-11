@@ -28,8 +28,8 @@ class UpdateCountryFormType extends AbstractType
                         'maxMessage' => 'Username cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_\s]+$/u',
-                        'message' => 'Name can only contain letters, numbers, underscores and spaces',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Name can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ]);

@@ -32,8 +32,8 @@ class UpdateShopFormType extends AbstractType
                         'maxMessage' => 'name cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_\s]+$/u',
-                        'message' => 'name can only contain letters, numbers, underscores and spaces',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Name can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])
