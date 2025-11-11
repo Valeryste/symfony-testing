@@ -9,6 +9,8 @@ class CountryFixtures extends BaseFixture
 {
     public const COUNT_COUNTRY = 10;
 
+    public const REFERENCE_NAME = 'country';
+
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < self::COUNT_COUNTRY; $i++) {
@@ -16,7 +18,7 @@ class CountryFixtures extends BaseFixture
 
             $country->setName($this->faker->country);
 
-            $this->addReference('country' . $i, $country);
+            $this->addReference(self::REFERENCE_NAME . $i, $country);
             $manager->persist($country);
         }
 

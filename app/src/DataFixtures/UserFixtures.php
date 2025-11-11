@@ -17,7 +17,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
 
         $user->setUsername('admin');
         $user->setPassword(password_hash('admin', PASSWORD_DEFAULT));
-        $user->setRole($this->getReference('role_admin', Role::class));
+        $user->setRole($this->getReference(RoleFixtures::ROLES['ADMIN'], Role::class));
         $user->setEmail('admin@example.com');
 
         $manager->persist($user);
@@ -27,7 +27,7 @@ class UserFixtures extends BaseFixture implements DependentFixtureInterface
 
             $user->setUsername($this->faker->userName);
             $user->setPassword(password_hash('test', PASSWORD_DEFAULT));
-            $user->setRole($this->getReference('role_user', Role::class));
+            $user->setRole($this->getReference(RoleFixtures::ROLES['USER'], Role::class));
             $user->setIsActive($this->faker->boolean(80));
             $user->setEmail($this->faker->email);
 

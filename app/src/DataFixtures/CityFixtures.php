@@ -11,12 +11,14 @@ class CityFixtures extends BaseFixture implements DependentFixtureInterface
 {
     public const COUNT_CITY = 20;
 
+    public const REFERENCE_NAME = 'city';
+
     public function load(ObjectManager $manager): void
     {
         $countries = [];
 
         for ($i = 0; $i < CountryFixtures::COUNT_COUNTRY; $i++) {
-            $countries[] = $this->getReference('country' . $i, Country::class);
+            $countries[] = $this->getReference(CountryFixtures::REFERENCE_NAME . $i, Country::class);
         }
 
         for ($i = 0; $i < self::COUNT_CITY; $i++) {
@@ -25,7 +27,7 @@ class CityFixtures extends BaseFixture implements DependentFixtureInterface
             $city->setName($this->faker->city);
             $city->setCountry($this->faker->randomElement($countries));
 
-            $this->addReference('city' . $i, $city);
+            $this->addReference(self::REFERENCE_NAME . $i, $city);
             $manager->persist($city);
         }
 

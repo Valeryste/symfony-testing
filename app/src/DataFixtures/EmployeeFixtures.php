@@ -24,7 +24,7 @@ class EmployeeFixtures extends BaseFixture implements DependentFixtureInterface
         $shops = [];
 
         for ($i = 0; $i < ShopFixtures::COUNT_SHOPS; $i++) {
-            $shops[] = $this->getReference('shop' . $i, Shop::class);
+            $shops[] = $this->getReference(ShopFixtures::REFERENCE_NAME . $i, Shop::class);
         }
 
         for ($i = 0; $i < self::COUNT_EMPLOYEES; $i++) {

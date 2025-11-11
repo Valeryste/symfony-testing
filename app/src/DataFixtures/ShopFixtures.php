@@ -11,12 +11,14 @@ class ShopFixtures extends BaseFixture implements DependentFixtureInterface
 {
     public const COUNT_SHOPS = 20;
 
+    public const REFERENCE_NAME = 'shop';
+
     public function load(ObjectManager $manager): void
     {
         $cities = [];
 
         for ($i = 0; $i < CityFixtures::COUNT_CITY; $i++) {
-            $cities[] = $this->getReference('city' . $i, City::class);
+            $cities[] = $this->getReference(CityFixtures::REFERENCE_NAME . $i, City::class);
         }
 
         for ($i = 0; $i < self::COUNT_SHOPS; $i++) {
@@ -27,7 +29,7 @@ class ShopFixtures extends BaseFixture implements DependentFixtureInterface
             $shop->setIsOpen($this->faker->boolean(80));
             $shop->setCity($this->faker->randomElement($cities));
 
-            $this->addReference('shop' . $i, $shop);
+            $this->addReference(self::REFERENCE_NAME . $i, $shop);
             $manager->persist($shop);
         }
 

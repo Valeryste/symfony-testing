@@ -11,12 +11,14 @@ class ProductFixtures extends BaseFixture implements DependentFixtureInterface
 {
     public const COUNT_PRODUCT = 10;
 
+    public const REFERENCE_NAME = 'shop';
+
     public function load(ObjectManager $manager): void
     {
         $categories = [];
 
         for ($i = 0; $i < CategoryFixtures::COUNT_CATEGORY; $i++) {
-            $categories[] = $this->getReference('category' . $i, Category::class);
+            $categories[] = $this->getReference(CategoryFixtures::REFERENCE_NAME . $i, Category::class);
         }
 
         for ($i = 0; $i < self::COUNT_PRODUCT; $i++) {
