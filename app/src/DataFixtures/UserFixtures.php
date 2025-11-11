@@ -4,11 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Role;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class UserFixtures extends Fixture implements DependentFixtureInterface
+class UserFixtures extends BaseFixture implements DependentFixtureInterface
 {
     private const COUNT_USERS = 10;
 
@@ -23,14 +22,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->persist($user);
 
-
         for($i = 0; $i < self::COUNT_USERS; $i++) {
             $user = new User();
 
-            $user->setUsername('user' . $i);
-            $user->setPassword(password_hash('user' . $i, PASSWORD_DEFAULT));
+            $user->setUsername($this->faker->userName);
+            $user->setPassword(password_hash('test', PASSWORD_DEFAULT));
             $user->setRole($this->getReference('role_user', Role::class));
-            $user->setEmail('user' . $i . '@test.ru');
+            $user->setIsActive($this->faker->boolean(80));
+            $user->setEmail($this->faker->email);
 
             $manager->persist($user);
         }

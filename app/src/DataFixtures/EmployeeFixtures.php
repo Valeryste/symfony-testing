@@ -4,34 +4,39 @@ namespace App\DataFixtures;
 
 use App\Entity\Employee;
 use App\Entity\Shop;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class EmployeeFixtures extends Fixture implements DependentFixtureInterface
+class EmployeeFixtures extends BaseFixture implements DependentFixtureInterface
 {
     private const COUNT_EMPLOYEES = 40;
 
+    private const POSITIONS = [
+        'salesman',
+        'manager',
+        'loader',
+        'director',
+        'driver'
+    ];
+
     public function load(ObjectManager $manager): void
     {
-        $shopReference = 0;
+        $shops = [];
+
+        for ($i = 0; $i < ShopFixtures::COUNT_SHOPS; $i++) {
+            $shops[] = $this->getReference('shop' . $i, Shop::class);
+        }
 
         for ($i = 0; $i < self::COUNT_EMPLOYEES; $i++) {
-            if($i % 2 == 0 && $i !== 0) {
-                $shopReference++;
-            }
-
             $employee = new Employee();
 
-            $samePart = 'employee' . $i;
-
-            $employee->setName($samePart);
-            $employee->setSurname($samePart .'surname');
-            $employee->setEmail($samePart . '@employee.com');
-            $employee->setPhone('+37533111111111');
-            $employee->setPosition('salesman');
-            $employee->setIsDismissed(false);
-            $employee->setShop($this->getReference('shop' . $shopReference, Shop::class));
+            $employee->setName($this->faker->firstName);
+            $employee->setSurname($this->faker->lastName);
+            $employee->setEmail($this->faker->email);
+            $employee->setPhone($this->faker->phoneNumber);
+            $employee->setPosition($this->faker->randomElement(self::POSITIONS));
+            $employee->setIsDismissed($this->faker->boolean(80));
+            $employee->setShop($this->faker->randomElement($shops));
 
             $manager->persist($employee);
         }

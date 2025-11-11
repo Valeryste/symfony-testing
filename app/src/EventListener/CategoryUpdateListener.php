@@ -51,7 +51,6 @@ class CategoryUpdateListener
         foreach ($children as $child) {
             $child->setIsActive(false);
 
-            $this->deactivateProductsOfCategory($child);
             $this->deactivateCategoryTree($child);
         }
     }
@@ -65,14 +64,5 @@ class CategoryUpdateListener
         }
 
         return false;
-    }
-
-    private function deactivateProductsOfCategory(Category $category): void
-    {
-        $products = $category->getProducts();
-
-        foreach ($products as $product) {
-            $product->setIsActive(false);
-        }
     }
 }

@@ -3,10 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends BaseFixture
 {
     public const COUNT_CATEGORY = 10;
 
@@ -15,10 +14,10 @@ class CategoryFixtures extends Fixture
         for ($i = 0; $i < self::COUNT_CATEGORY; $i++) {
             $category = new Category();
 
-            $category->setName('category' . $i);
-            $category->setIsActive(true);
+            $category->setName('Категория ' . $this->faker->unique()->word);
+            $category->setIsActive($this->faker->boolean(80));
 
-            $this->addReference($category->getName(), $category);
+            $this->addReference('category' . $i, $category);
             $manager->persist($category);
         }
 
