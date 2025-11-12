@@ -34,39 +34,13 @@ class CityRepository extends BaseRepository
         return $query->getQuery();
     }
 
-    //    /**
-    //     * @return City[] Returns an array of City objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?City
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
-    /*private function setSortInQuery(QueryBuilder $queryBuilder, array $sorting): void
+    public function getCitiesHavingShops(): array
     {
-        if ($sorting['value'] === 'NOT NULL' || $sorting['value'] === 'NULL') {
-            $queryBuilder->andWhere("c.{$sorting['field']} IS " . $filter['value']);
-        } else {
-            $queryBuilder
-                ->andWhere("c.{$filter['field']} = :filter_value")
-                ->setParameter('filter_value', $filter['value']);
-        }
-    }*/
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.shops', 'shops')
+            ->groupBy('s.id')
+            ->orderBy('s.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

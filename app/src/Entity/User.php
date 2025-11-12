@@ -126,16 +126,10 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         return $this->isActive;
     }
 
-    public function setIsActive(bool $is_active): void
+    public function setIsActive(bool $is_active): self
     {
         $this->isActive = $is_active;
-    }
 
-    #[ORM\PrePersist]
-    public function setIsActiveAtValue(): void
-    {
-        if ($this->id === null) {
-            $this->isActive = true;
-        }
+        return $this;
     }
 }

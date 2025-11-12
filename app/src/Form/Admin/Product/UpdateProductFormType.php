@@ -35,8 +35,8 @@ class UpdateProductFormType extends AbstractType
                         'maxMessage' => 'name cannot be longer than {{ limit }} characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z0-9_]+$/',
-                        'message' => 'name can only contain letters, numbers and underscores',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Name can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])

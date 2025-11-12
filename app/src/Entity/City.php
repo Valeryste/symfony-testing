@@ -22,7 +22,7 @@ class City extends BaseEntity
     /**
      * @var Collection<int, Shop>
      */
-    #[ORM\OneToMany(targetEntity: Shop::class, mappedBy: 'city_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Shop::class, mappedBy: 'city', orphanRemoval: true)]
     private Collection $shops;
 
     #[ORM\ManyToOne(inversedBy: 'cities')]

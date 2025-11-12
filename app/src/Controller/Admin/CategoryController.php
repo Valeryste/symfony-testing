@@ -133,6 +133,8 @@ class CategoryController extends BaseController
     {
         $this->categoryService->delete($category);
 
+        $this->addFlash('success', 'Category was successfully deleted');
+
         return $this->redirectToRoute('admin_categories_index');
     }
 }

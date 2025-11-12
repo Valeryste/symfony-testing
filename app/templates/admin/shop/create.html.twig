@@ -1,0 +1,60 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Создание магазина{% endblock %}
+
+{% block admin_content %}
+    <div>
+        <div>
+            <div class="card-body">
+                {{ form_start(createForm, {
+                    'action': path('admin_shops_store'),
+                    'attr': {
+                        'class': 'country-form',
+                        'data-turbo': 'false'
+                    }
+
+                }) }}
+                <div class="mb-2">
+                    {{ form_label(createForm.name, 'Название', {
+                        'label_attr': {'class': 'form-label small mb-1'}
+                    }) }}
+                    {{ form_widget(createForm.name, {
+                        'attr': {
+                            'class': 'form-control form-control-sm',
+                            'placeholder': 'Введите название'
+                        }
+                    }) }}
+                    {{ form_errors(createForm.name) }}
+                </div>
+                <div class="mb-2">
+                    {{ form_label(createForm.address, 'Адресс', {
+                        'label_attr': {'class': 'form-label small mb-1'}
+                    }) }}
+                    {{ form_widget(createForm.address, {
+                        'attr': {
+                            'class': 'form-control form-control-sm',
+                            'placeholder': 'Введите адресс'
+                        }
+                    }) }}
+                    {{ form_errors(createForm.address) }}
+                </div>
+                <div class="mb-2">
+                    {{ form_label(createForm.city, 'Города', {
+                        'label_attr': {'class': 'form-label small mb-1'}
+                    }) }}
+                    {{ form_widget(createForm.city, {
+                        'attr': {
+                            'class': 'form-control form-control-sm',
+                        }
+                    }) }}
+                    {{ form_errors(createForm.city) }}
+                </div>
+                <button type="submit" class="btn btn-success btn-sm w-100">
+                    ➕ Создать
+                </button>
+                {{ form_end(createForm) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

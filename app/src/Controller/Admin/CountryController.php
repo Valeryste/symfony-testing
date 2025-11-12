@@ -118,6 +118,8 @@ class CountryController extends BaseController
     {
         $this->countryService->delete($country);
 
+        $this->addFlash('success', 'Country was successfully deleted');
+
         return $this->redirectToRoute('admin_countries_index');
     }
 }

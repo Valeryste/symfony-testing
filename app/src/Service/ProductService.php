@@ -19,14 +19,13 @@ class ProductService extends BaseService
     ) {
     }
 
-
     public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
     {
         if ($this->hasFilter($filters, 'deletedAt', 1)) {
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationCountries = $this->productRepository->getPaginatedResults(
+        $paginationProducts = $this->productRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -38,16 +37,12 @@ class ProductService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return $paginationCountries;
+        return $paginationProducts;
     }
 
 
     public function store(Product $product): Product
     {
-        $product->setIsActive(false);
-
-        $this->entityManager->flush();
-
         $this->entityManager->persist($product);
 
         $this->entityManager->flush();
@@ -73,7 +68,7 @@ class ProductService extends BaseService
         $this->entityManager->flush();
     }
 
-    public function finCategoriesWithProducts(): array
+    public function findCategoriesWithProducts(): array
     {
         return $this->categoryRepository->findCategoriesWithProducts();
     }

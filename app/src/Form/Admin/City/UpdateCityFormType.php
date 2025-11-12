@@ -22,16 +22,16 @@ class UpdateCityFormType extends AbstractType
                 'mapped' => true,
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Please enter a username']),
+                    new NotBlank(['message' => 'Please enter a name']),
                     new Length([
                         'min' => 3,
                         'max' => 255,
-                        'minMessage' => 'Username must be at least 3 characters',
-                        'maxMessage' => 'Username cannot be longer than 255 characters',
+                        'minMessage' => 'name must be at least 3 characters',
+                        'maxMessage' => 'name cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z0-9_]+$/',
-                        'message' => 'Username can only contain letters, numbers and underscores',
+                        'pattern' => '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
+                        'message' => 'Name can contain letters, numbers, underscores with single spaces between words',
                     ]),
                 ],
             ])

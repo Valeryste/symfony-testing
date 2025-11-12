@@ -89,6 +89,8 @@ class UserController extends BaseController
     {
         $this->userService->delete($user);
 
+        $this->addFlash('success', 'User was successfully deleted');
+
         return $this->redirectToRoute('admin_users_index');
     }
 }

@@ -19,8 +19,8 @@ class Shop extends BaseEntity
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?bool $is_open = null;
+    #[ORM\Column(name: 'is_open', type: 'boolean', options: ['default' => true])]
+    private bool $isOpen = true;
 
     #[ORM\Column(length: 255)]
     private ?string $address = null;
@@ -28,12 +28,12 @@ class Shop extends BaseEntity
     /**
      * @var Collection<int, Employee>
      */
-    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'shop_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'shop', orphanRemoval: true)]
     private Collection $employees;
 
     #[ORM\ManyToOne(inversedBy: 'shops')]
     #[ORM\JoinColumn(name: 'city_id', nullable: false)]
-    private ?City $city_id = null;
+    private ?City $city = null;
 
     public function __construct()
     {
@@ -59,14 +59,12 @@ class Shop extends BaseEntity
 
     public function isOpen(): ?bool
     {
-        return $this->is_open;
+        return $this->isOpen;
     }
 
-    public function setIsOpen(bool $is_open): self
+    public function setIsOpen(bool $isOpen): void
     {
-        $this->is_open = $is_open;
-
-        return $this;
+        $this->isOpen = $isOpen;
     }
 
     public function getAddress(): ?string
@@ -93,7 +91,7 @@ class Shop extends BaseEntity
     {
         if (!$this->employees->contains($employee)) {
             $this->employees->add($employee);
-            $employee->setShopId($this);
+            $employee->setShop($this);
         }
 
         return $this;
@@ -102,22 +100,22 @@ class Shop extends BaseEntity
     public function removeEmployee(Employee $employee): self
     {
         if ($this->employees->removeElement($employee)) {
-            if ($employee->getShopId() === $this) {
-                $employee->setShopId(null);
+            if ($employee->getShop() === $this) {
+                $employee->setShop(null);
             }
         }
 
         return $this;
     }
 
-    public function getCityId(): ?City
+    public function getCity(): ?City
     {
-        return $this->city_id;
+        return $this->city;
     }
 
-    public function setCityId(?City $city_id): self
+    public function setCity(?City $city): self
     {
-        $this->city_id = $city_id;
+        $this->city = $city;
 
         return $this;
     }
