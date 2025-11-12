@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Web;
+namespace App\Controller\Web\Authentication;
 
 use App\DTO\RegisterFormDTO;
 use App\Form\RegistrationFormType;
