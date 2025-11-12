@@ -2,16 +2,21 @@
 
 namespace App\Enum\Filter;
 
+use phpDocumentor\Reflection\Types\Self_;
+
 enum EmployeeFilters: string
 {
     case WITH_DELETED = 'deletedAt';
 
     case BY_SHOP = 'shop';
 
+    case ONLY_DISMISSED = 'isDismissed';
+
     public static function getFilterCases(): array
     {
         return [
             self::WITH_DELETED,
+            self::ONLY_DISMISSED,
             self::BY_SHOP
         ];
     }
@@ -20,7 +25,8 @@ enum EmployeeFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
-            self::BY_SHOP => 'По магазину'
+            self::BY_SHOP => 'По магазину',
+            self::ONLY_DISMISSED => 'Только уволенные'
         };
     }
 
@@ -28,14 +34,15 @@ enum EmployeeFilters: string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
-            self::BY_SHOP =>  'int'
+            self::BY_SHOP =>  'int',
+            self::ONLY_DISMISSED => 'bool'
         };
     }
 
     public function getType(): string
     {
         return match($this) {
-            self::WITH_DELETED => 'checkbox',
+            self::WITH_DELETED, self::ONLY_DISMISSED => 'checkbox',
             self::BY_SHOP => 'select'
         };
     }
