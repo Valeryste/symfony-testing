@@ -10,7 +10,7 @@ class LoginRequest extends BaseRequest
 {
     #[Type(type: 'string')]
     #[NotBlank]
-    #[Regex(pattern: '/^[a-zA-Z0-9_]+$/')]
+    #[Regex(pattern: '/^[a-zA-Z0-9]+([_.-]?[a-zA-Z0-9])*$/')]
     protected string $username;
 
     #[Type(type: 'string')]

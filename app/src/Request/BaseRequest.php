@@ -32,7 +32,7 @@ abstract class BaseRequest
         }
 
         if (count($messages['errors']) > 0) {
-            $response = new JsonResponse($messages);
+            $response = new JsonResponse($messages, 422);
             $response->send();
 
             exit;
