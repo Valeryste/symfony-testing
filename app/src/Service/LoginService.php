@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DTO\LoginFormDTO;
 use App\Entity\User;
+use App\Exception\UserActiveException;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -25,8 +26,8 @@ class LoginService extends BaseService
             throw new \Exception('Invalid user');
         }
 
-        if(!$user->isActive()) {
-            throw new \Exception('User is blocked');
+        if (!$user->IsActive()) {
+            throw new UserActiveException('User account is no active', 403);
         }
 
         if (!$this->passwordHasher->isPasswordValid($user, $loginFormDTO->password)) {

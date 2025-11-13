@@ -8,13 +8,17 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class LoginRequest extends BaseRequest
 {
-    #[Type(type: 'string')]
-    #[NotBlank]
-    #[Regex(pattern: '/^[a-zA-Z0-9]+([_.-]?[a-zA-Z0-9])*$/')]
+    #[Type(type: 'string', message: 'Type should be string')]
+    #[NotBlank(message: 'field username is required')]
+    #[Regex(
+        pattern: '/^[a-zA-Z0-9]+([_.-]?[a-zA-Z0-9])*$/',
+        message: 'Username can only contain letters, numbers, and symbols . _ - between characters.
+         It must start and end with a letter or number.'
+    )]
     protected string $username;
 
-    #[Type(type: 'string')]
-    #[NotBlank]
+    #[Type(type: 'string', message: 'Type should be string')]
+    #[NotBlank(message: 'field username is required')]
     protected string $password;
 
     public function getUsername(): string

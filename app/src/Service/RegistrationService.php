@@ -14,7 +14,7 @@ class RegistrationService extends BaseService
     public function __construct(
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly RoleRepository              $roleRepository
+        private readonly RoleRepository              $roleRepository,
     )
     {
     }
