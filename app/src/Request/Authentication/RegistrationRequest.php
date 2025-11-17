@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Request;
+namespace App\Request\Authentication;
 
 use App\Entity\User;
+use App\Request\BaseRequest;
 use App\Validator\Constraints\UniqueEntityField;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;

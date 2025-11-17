@@ -4,7 +4,7 @@ namespace App\Controller\Api\Authentication;
 
 use App\Documentation\Attribute\ValidationErrorResponse;
 use App\DTO\Api\Authentication\LoginFormDTO;
-use App\Request\LoginRequest;
+use App\Request\Authentication\LoginRequest;
 use App\Service\JwtTokenService;
 use App\Service\LoginService;
 use Nelmio\ApiDocBundle\Attribute\Security;

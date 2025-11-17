@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Request;
+namespace App\Request\Authentication;
 
+use App\Request\BaseRequest;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
