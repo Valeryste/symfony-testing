@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Api\Authentication;
 
-use App\DTO\RegisterFormDTO;
+use App\Documentation\Attribute\ValidationErrorResponse;
+use App\DTO\Api\Authentication\RegisterFormDTO;
 use App\Request\RegistrationRequest;
 use App\Service\JwtTokenService;
 use App\Service\RegistrationService;
 use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use OpenApi\Attributes as OA;
 
 class RegisterController extends AbstractController
 {
@@ -50,27 +51,7 @@ class RegisterController extends AbstractController
             ]
         )
     )]
-    #[OA\Response(
-        response: 422,
-        description: 'Validation failed',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'validation failed'),
-                new OA\Property(
-                    property: 'errors',
-                    type: 'array',
-                    items: new OA\Items(
-                        properties: [
-                            new OA\Property(property: 'property', type: 'string', example: 'username'),
-                            new OA\Property(property: 'value', type: 'string', example: ''),
-                            new OA\Property(property: 'message', type: 'string', example: 'field username is required')
-                        ],
-                        type: 'object'
-                    )
-                )
-            ]
-        )
-    )]
+    #[ValidationErrorResponse]
     public function register(RegistrationRequest $request): JsonResponse
     {
         $data = [
@@ -79,7 +60,7 @@ class RegisterController extends AbstractController
             'email' => $request->getEmail()
         ];
 
-        try {
+        try{
             $user = $this->registrationService->register(new RegisterFormDTO(...$data));
 
             return $this->json([

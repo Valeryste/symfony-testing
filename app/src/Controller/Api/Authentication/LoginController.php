@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Api\Authentication;
 
-use App\DTO\LoginFormDTO;
+use App\Documentation\Attribute\ValidationErrorResponse;
+use App\DTO\Api\Authentication\LoginFormDTO;
 use App\Request\LoginRequest;
 use App\Service\JwtTokenService;
 use App\Service\LoginService;
@@ -67,27 +68,7 @@ class LoginController extends AbstractController
             ]
         )
     )]
-    #[OA\Response(
-        response: 422,
-        description: 'Validation failed',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'validation failed'),
-                new OA\Property(
-                    property: 'errors',
-                    type: 'array',
-                    items: new OA\Items(
-                        properties: [
-                            new OA\Property(property: 'property', type: 'string', example: 'username'),
-                            new OA\Property(property: 'value', type: 'string', example: ''),
-                            new OA\Property(property: 'message', type: 'string', example: 'field username is required')
-                        ],
-                        type: 'object'
-                    )
-                )
-            ]
-        )
-    )]
+    #[ValidationErrorResponse]
     public function login(LoginRequest $request): JsonResponse
     {
         $data = [
@@ -103,7 +84,7 @@ class LoginController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], $e->getCode());
+            ]);
         }
     }
 }

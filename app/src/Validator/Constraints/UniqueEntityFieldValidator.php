@@ -20,7 +20,7 @@ class UniqueEntityFieldValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, UniqueEntityField::class);
         }
 
-        if (empty($value)) {
+        if ($value === null || $value === '') {
             return;
         }
 

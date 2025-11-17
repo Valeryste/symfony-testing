@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\DTO\LoginFormDTO;
+use App\DTO\Api\Authentication\LoginFormDTO;
 use App\Entity\User;
 use App\Exception\UserActiveException;
 use App\Repository\UserRepository;

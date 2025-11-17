@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\DTO\RegisterFormDTO;
+use App\DTO\Api\Authentication\RegisterFormDTO;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\RoleRepository;

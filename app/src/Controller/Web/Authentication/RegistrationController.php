@@ -2,7 +2,7 @@
 
 namespace App\Controller\Web\Authentication;
 
-use App\DTO\RegisterFormDTO;
+use App\DTO\Api\Authentication\RegisterFormDTO;
 use App\Form\RegistrationFormType;
 use App\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

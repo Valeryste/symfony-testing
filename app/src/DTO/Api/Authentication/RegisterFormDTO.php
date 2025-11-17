@@ -1,6 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Api\Authentication;
+
+use App\DTO\BaseDTO;
 
 final class RegisterFormDTO extends BaseDTO
 {
