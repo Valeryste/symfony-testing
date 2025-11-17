@@ -6,7 +6,7 @@ use App\Controller\BaseController;
 use App\Documentation\Attribute\ForbiddenResponse;
 use App\Documentation\Attribute\UnauthorizedResponse;
 use App\Documentation\Attribute\ValidationErrorResponse;
-use App\DTO\Api\Admin\UpdateUserDTO;
+use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
 use App\Enum\Filter\UserFilters;
 use App\Enum\Search\UserSearch;
@@ -15,11 +15,11 @@ use App\Model\UserResponse;
 use App\Request\User\UpdateUserRequest;
 use App\Service\Api\ApiUserService;
 use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use OpenApi\Attributes as OA;
 
 #[Route('/api/admin/users')]
 #[IsGranted('ROLE_ADMIN')]
@@ -30,8 +30,7 @@ class UserController extends BaseController
 {
     public function __construct(
         private readonly ApiUserService $apiUserService,
-    )
-    {
+    ) {
     }
 
     #[Route(name: 'api_admin_users_index', methods: ['GET'])]
@@ -116,7 +115,7 @@ class UserController extends BaseController
 
     #[Route('/{id}/edit', name: 'api_admin_users_edit', methods: ['GET'])]
     #[OA\Get(
-        description: 'Returns user details with available roles for editing form',
+        description: 'Returns user details for editing form',
         summary: 'Get user details for editing'
     )]
     #[OA\Parameter(
@@ -144,8 +143,7 @@ class UserController extends BaseController
     #[Route('/{id}', name: 'api_admin_users_update', methods: ['PATCH'])]
     #[OA\Patch(
         description: 'Update user information. Only provided fields will be updated.',
-        summary: 'Update user',
-        tags: ['Admin Users']
+        summary: 'Update user'
     )]
     #[OA\Parameter(
         name: 'id',

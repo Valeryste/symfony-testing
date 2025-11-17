@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Api\Admin;
+namespace App\DTO\Api\Admin\User;
 
 use App\DTO\BaseDTO;
 

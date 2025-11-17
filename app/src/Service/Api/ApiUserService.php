@@ -2,7 +2,7 @@
 
 namespace App\Service\Api;
 
-use App\DTO\Api\Admin\UpdateUserDTO;
+use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
 use App\Model\RoleResponse;
 use App\Model\UserListResponse;
@@ -37,7 +37,11 @@ class ApiUserService extends BaseService
             search: $search
         );
 
-        $response = new UserListResponse(
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
+            $this->entityManager->getFilters()->enable('softdeleteable');
+        }
+
+        return new UserListResponse(
             currentPage: $paginationUsers->getCurrentPageNumber(),
             totalCount: $paginationUsers->getTotalItemCount(),
             users: array_map(
@@ -46,13 +50,6 @@ class ApiUserService extends BaseService
                 },
                 $paginationUsers->getItems())
         );
-
-
-        if ($this->hasFilter($filters, 'deletedAt', 1)) {
-            $this->entityManager->getFilters()->enable('softdeleteable');
-        }
-
-        return $response;
     }
 
     public function getUserToResponse(User $user): UserResponse

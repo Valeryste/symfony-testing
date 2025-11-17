@@ -57,12 +57,12 @@ class UpdateUserRequest extends BaseRequest
     #[ValidRole]
     protected ?int $roleId = null;
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }

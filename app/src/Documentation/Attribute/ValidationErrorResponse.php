@@ -8,7 +8,7 @@ use OpenApi\Attributes as OA;
 #[Attribute(Attribute::TARGET_METHOD)]
 class ValidationErrorResponse extends OA\Response
 {
-    public function __construct()
+    public function __construct(string $field = 'username')
     {
         parent::__construct(
             response: 422,
@@ -21,9 +21,9 @@ class ValidationErrorResponse extends OA\Response
                         type: 'array',
                         items: new OA\Items(
                             properties: [
-                                new OA\Property(property: 'property', type: 'string', example: 'username'),
+                                new OA\Property(property: 'property', type: 'string', example: $field),
                                 new OA\Property(property: 'value', type: 'string', example: ''),
-                                new OA\Property(property: 'message', type: 'string', example: 'field username is required')
+                                new OA\Property(property: 'message', type: 'string', example: 'field ' . $field . ' is required')
                             ],
                             type: 'object'
                         )
