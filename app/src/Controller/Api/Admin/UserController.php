@@ -137,7 +137,7 @@ class UserController extends BaseController
     public function edit(User $user): JsonResponse
     {
         return $this->json([
-            $this->apiUserService->getUser($user)
+            $this->apiUserService->getUserToResponse($user)
         ]);
     }
 
