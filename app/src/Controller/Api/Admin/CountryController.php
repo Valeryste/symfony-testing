@@ -123,15 +123,11 @@ class CountryController extends BaseController
         )
     )]
     #[ValidationErrorResponse(field: 'name')]
-    public function store(StoreCountryRequest $storeCountryRequest): JsonResponse
+    public function store(StoreCountryRequest $request): JsonResponse
     {
-        $data = [
-            'name' => $storeCountryRequest->getName()
-        ];
-
         try {
             return $this->json([
-                    $this->apiCountryService->store(new StoreCountryDTO(...$data))
+                    $this->apiCountryService->store(new StoreCountryDTO(...$request->toArray()))
                 ]
             );
         } catch (\Exception $e) {
@@ -141,7 +137,7 @@ class CountryController extends BaseController
         }
     }
 
-    #[Route('/{id}/edit', name: 'api_admin_countries_edit', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'api_admin_countries_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns country details for editing form',
         summary: 'Get country details for editing'
@@ -161,7 +157,7 @@ class CountryController extends BaseController
             type: 'object'
         )
     )]
-    public function edit(Country $country): JsonResponse
+    public function show(Country $country): JsonResponse
     {
         return $this->json(
             $this->apiCountryService->getCountryToResponse($country)
@@ -205,14 +201,12 @@ class CountryController extends BaseController
     #[ValidationErrorResponse(field: 'name')]
     public function update(UpdateCountryRequest $request, Country $country): JsonResponse
     {
-        $data = [
-            'name' => $request->getName(),
-        ];
-
         try {
             return $this->json([
                 'message' => 'User updated successfully',
-                'country' => $this->apiCountryService->update(new UpdateCountryDTO(...$data), $country)
+                'country' => $this->apiCountryService->update(
+                    new UpdateCountryDTO(...$request->toArray()),
+                    $country)
             ]);
         } catch (\Exception $e) {
             return $this->json([

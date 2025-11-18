@@ -71,13 +71,8 @@ class LoginController extends AbstractController
     #[ValidationErrorResponse]
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = [
-            'username' => $request->getUsername(),
-            'password' => $request->getPassword()
-        ];
-
         try {
-            $user = $this->loginService->login(new LoginFormDTO(...$data));
+            $user = $this->loginService->login(new LoginFormDTO(...$request->toArray()));
 
             return $this->json($this->jwtTokenService->createAuthResponse($user));
 

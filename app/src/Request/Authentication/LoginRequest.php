@@ -32,4 +32,10 @@ class LoginRequest extends BaseRequest
         return $this->password;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'username' => $this->username
+        ];
+    }
 }

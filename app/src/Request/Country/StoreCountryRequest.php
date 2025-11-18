@@ -36,4 +36,11 @@ class StoreCountryRequest extends BaseRequest
     {
         return $this->name;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name
+        ];
+    }
 }

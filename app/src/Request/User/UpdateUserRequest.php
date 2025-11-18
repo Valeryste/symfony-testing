@@ -77,4 +77,13 @@ class UpdateUserRequest extends BaseRequest
         return $this->roleId;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'username' => $this->username,
+            'email' => $this->email,
+            'isActive' => $this->isActive,
+            'roleId' => $this->roleId
+        ];
+    }
 }

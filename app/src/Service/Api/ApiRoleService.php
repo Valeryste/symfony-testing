@@ -12,7 +12,6 @@ class ApiRoleService extends BaseService
     public function __construct(
         private readonly RoleRepository $roleRepository
     ) {
-
     }
 
     public function getList(): array
@@ -32,5 +31,4 @@ class ApiRoleService extends BaseService
             name: $role->getName()
         );
     }
-
 }

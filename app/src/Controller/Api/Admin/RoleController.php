@@ -24,7 +24,6 @@ class RoleController extends BaseController
     public function __construct(
         private readonly ApiRoleService $apiRoleService
     ) {
-
     }
 
     #[Route(name: 'api_admin_roles', methods: ['GET'])]
@@ -46,5 +45,4 @@ class RoleController extends BaseController
             $this->apiRoleService->getList()
         );
     }
-
 }

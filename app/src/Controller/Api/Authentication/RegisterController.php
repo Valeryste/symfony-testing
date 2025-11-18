@@ -54,14 +54,8 @@ class RegisterController extends AbstractController
     #[ValidationErrorResponse]
     public function register(RegistrationRequest $request): JsonResponse
     {
-        $data = [
-            'username' => $request->getUsername(),
-            'plainPassword' => $request->getPassword(),
-            'email' => $request->getEmail()
-        ];
-
         try{
-            $user = $this->registrationService->register(new RegisterFormDTO(...$data));
+            $user = $this->registrationService->register(new RegisterFormDTO(...$request->toArray()));
 
             return $this->json([
                 'message' => 'Registration successful',

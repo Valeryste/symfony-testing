@@ -57,4 +57,6 @@ abstract class BaseRequest
     {
         return true;
     }
+
+    protected abstract function toArray(): array;
 }

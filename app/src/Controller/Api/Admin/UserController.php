@@ -113,7 +113,7 @@ class UserController extends BaseController
     }
 
 
-    #[Route('/{id}/edit', name: 'api_admin_users_edit', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'api_admin_users_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns user details for editing form',
         summary: 'Get user details for editing'
@@ -133,7 +133,7 @@ class UserController extends BaseController
             type: 'object'
         )
     )]
-    public function edit(User $user): JsonResponse
+    public function show(User $user): JsonResponse
     {
         return $this->json([
             $this->apiUserService->getUserToResponse($user)
@@ -180,17 +180,13 @@ class UserController extends BaseController
     #[ValidationErrorResponse]
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $data = [
-            'username' => $request->getUsername(),
-            'email' => $request->getEmail(),
-            'isActive' => $request->isActive(),
-            'roleId' => $request->getRoleId()
-        ];
-
         try {
             return $this->json([
                 'message' => 'User updated successfully',
-                'user' => $this->apiUserService->update(new UpdateUserDTO(...$data), $user)
+                'user' => $this->apiUserService->update(
+                    new UpdateUserDTO(...$request->toArray()),
+                    $user
+                )
             ]);
         } catch (\Exception $e) {
             return $this->json([
