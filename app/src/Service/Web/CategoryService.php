@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Web;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 

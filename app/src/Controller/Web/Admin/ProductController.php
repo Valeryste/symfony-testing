@@ -9,7 +9,7 @@ use App\Enum\Search\ProductSearch;
 use App\Enum\Sort\ProductSorts;
 use App\Form\Admin\Product\CreateProductFormType;
 use App\Form\Admin\Product\UpdateProductFormType;
-use App\Service\ProductService;
+use App\Service\Web\ProductService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

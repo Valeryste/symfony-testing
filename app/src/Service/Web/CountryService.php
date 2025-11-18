@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Web;
 
-use App\Entity\User;
-use App\Repository\RoleRepository;
-use App\Repository\UserRepository;
+use App\Entity\Country;
+use App\Repository\CountryRepository;
+use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
-class UserService extends BaseService
+class CountryService extends BaseService
 {
     private const PAGINATION_LIMIT = 10;
 
     public function __construct(
-        private readonly UserRepository         $userRepository,
+        private readonly CountryRepository      $countryRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly RoleRepository         $roleRepository
     ) {
     }
 
@@ -25,7 +24,7 @@ class UserService extends BaseService
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationUsers = $this->userRepository->getPaginatedResults(
+        $paginationCountries = $this->countryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -37,32 +36,32 @@ class UserService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return $paginationUsers;
+        return $paginationCountries;
     }
 
-    public function update(User $user): User
+    public function store(Country $country): Country
     {
-        $user->setUpdatedAt(new \DateTime());
+        $this->entityManager->persist($country);
 
         $this->entityManager->flush();
 
-        return $user;
+        return $country;
     }
 
-    public function delete(User $user): void
+
+    public function update(Country $country): Country
     {
-        $user->setIsActive(false);
+        $country->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();
 
-        $this->entityManager->remove($user);
-
-        $this->entityManager->flush();
-
+        return $country;
     }
 
-    public function getAllRole(): array
+    public function delete(Country $country): void
     {
-        return $this->roleRepository->findAll();
+        $this->entityManager->remove($country);
+
+        $this->entityManager->flush();
     }
 }

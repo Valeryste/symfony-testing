@@ -8,7 +8,7 @@ use App\Enum\Filter\UserFilters;
 use App\Enum\Search\UserSearch;
 use App\Enum\Sort\UserSorts;
 use App\Form\Admin\User\UpdateUserFormType;
-use App\Service\UserService;
+use App\Service\Web\UserService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

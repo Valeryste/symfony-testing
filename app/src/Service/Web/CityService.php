@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Web;
 
 use App\Entity\City;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
+use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 

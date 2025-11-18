@@ -9,7 +9,7 @@ use App\Enum\Search\ShopSearch;
 use App\Enum\Sort\ShopSorts;
 use App\Form\Admin\Shop\CreateShopFormType;
 use App\Form\Admin\Shop\UpdateShopFormType;
-use App\Service\ShopService;
+use App\Service\Web\ShopService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

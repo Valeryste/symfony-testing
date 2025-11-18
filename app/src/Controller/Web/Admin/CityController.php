@@ -9,7 +9,7 @@ use App\Enum\Search\CitySearch;
 use App\Enum\Sort\CitySorts;
 use App\Form\Admin\City\CreateCityFormType;
 use App\Form\Admin\City\UpdateCityFormType;
-use App\Service\CityService;
+use App\Service\Web\CityService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

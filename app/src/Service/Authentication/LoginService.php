@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Authentication;
 
 use App\DTO\Api\Authentication\LoginFormDTO;
 use App\Entity\User;
 use App\Exception\UserActiveException;
 use App\Repository\UserRepository;
+use App\Service\BaseService;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoginService extends BaseService

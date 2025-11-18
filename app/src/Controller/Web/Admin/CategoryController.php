@@ -9,7 +9,7 @@ use App\Enum\Search\CategorySearch;
 use App\Enum\Sort\CategorySorts;
 use App\Form\Admin\Category\CreateCategoryFormType;
 use App\Form\Admin\Category\UpdateCategoryFormType;
-use App\Service\CategoryService;
+use App\Service\Web\CategoryService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

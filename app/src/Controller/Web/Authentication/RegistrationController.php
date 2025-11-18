@@ -4,7 +4,7 @@ namespace App\Controller\Web\Authentication;
 
 use App\DTO\Api\Authentication\RegisterFormDTO;
 use App\Form\RegistrationFormType;
-use App\Service\RegistrationService;
+use App\Service\Authentication\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

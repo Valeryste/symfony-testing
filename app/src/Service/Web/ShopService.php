@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Web;
 
 use App\Entity\Shop;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
 use App\Repository\ShopRepository;
+use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 

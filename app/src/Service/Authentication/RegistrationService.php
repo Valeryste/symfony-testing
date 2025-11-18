@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Authentication;
 
 use App\DTO\Api\Authentication\RegisterFormDTO;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\RoleRepository;
+use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 

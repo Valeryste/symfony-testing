@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Web;
 
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
