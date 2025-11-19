@@ -10,8 +10,8 @@ use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
 use App\Enum\Filter\UserFilters;
 use App\Enum\Search\UserSearch;
-use App\Model\UserListResponse;
-use App\Model\UserResponse;
+use App\Model\User\UserListResponse;
+use App\Model\User\UserResponse;
 use App\Request\User\UpdateUserRequest;
 use App\Service\Api\ApiUserService;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -171,7 +171,7 @@ class UserController extends BaseController
             properties: [
                 new OA\Property(property: 'message', type: 'string', example: 'User updated successfully'),
                 new OA\Property(
-                    property: 'data',
+                    property: 'user',
                     ref: new Model(type: UserResponse::class)
                 )
             ]
@@ -219,10 +219,16 @@ class UserController extends BaseController
     )]
     public function delete(User $user): JsonResponse
     {
-        $this->apiUserService->delete($user);
+        try {
+            $this->apiUserService->delete($user);
 
-        return $this->json([
-            'message' => 'User deleted successfully'
-        ]);
+            return $this->json([
+                'message' => 'User deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -24,4 +24,4 @@ services:
     # please note that last definitions always *replace* previous ones
 twig:
     globals:
-        employee_service: '@App\Service\EmployeeService'
+        employee_service: '@App\Service\Web\EmployeeService'

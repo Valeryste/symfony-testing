@@ -5,13 +5,13 @@ namespace App\Controller\Api\Admin;
 use App\Controller\BaseController;
 use App\Documentation\Attribute\ForbiddenResponse;
 use App\Documentation\Attribute\UnauthorizedResponse;
-use App\Model\RoleListResponse;
+use App\Model\Role\RoleListResponse;
 use App\Service\Api\ApiRoleService;
 use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use OpenApi\Attributes as OA;
 
 #[Route('/api/admin/roles')]
 #[IsGranted('ROLE_ADMIN')]

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Role;
 
-use OpenApi\Attributes as OA;
 use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 
 class RoleListResponse
 {

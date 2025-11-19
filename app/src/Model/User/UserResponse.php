@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\User;
 
+use App\Model\Role\RoleResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 

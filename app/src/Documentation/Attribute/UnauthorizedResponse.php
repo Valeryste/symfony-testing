@@ -14,7 +14,7 @@ class UnauthorizedResponse extends OA\Response
             description: 'Unauthorized - JWT token missing or invalid',
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'message', type: 'string', example: 'JWT Token not found')
+                    new OA\Property(property: 'error', type: 'string', example: 'JWT Token not found')
                 ]
             )
         );

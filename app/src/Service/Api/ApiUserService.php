@@ -4,9 +4,9 @@ namespace App\Service\Api;
 
 use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
-use App\Model\RoleResponse;
-use App\Model\UserListResponse;
-use App\Model\UserResponse;
+use App\Model\Role\RoleResponse;
+use App\Model\User\UserListResponse;
+use App\Model\User\UserResponse;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Service\BaseService;
@@ -74,12 +74,12 @@ class ApiUserService extends BaseService
         $user->setUsername($updateUserDTO->username ?? $user->getUsername());
         $user->setIsActive($updateUserDTO->isActive ?? $user->isActive());
 
-        if ($updateUserDTO->roleId !== null) {
-            $role = $this->roleRepository->findOneBy(['id' => $updateUserDTO->roleId]);
-            if ($role) {
+        if (isset($updateUserDTO->roleId)) {
+            if ($role = $this->roleRepository->find($updateUserDTO->roleId)) {
                 $user->setRole($role);
             }
         }
+
         $user->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();

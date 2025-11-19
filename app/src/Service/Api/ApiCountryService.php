@@ -5,8 +5,8 @@ namespace App\Service\Api;
 use App\DTO\Api\Admin\Country\StoreCountryDTO;
 use App\DTO\Api\Admin\Country\UpdateCountryDTO;
 use App\Entity\Country;
-use App\Model\CountryListResponse;
-use App\Model\CountryResponse;
+use App\Model\Country\CountryListResponse;
+use App\Model\Country\CountryResponse;
 use App\Repository\CountryRepository;
 use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,8 +43,8 @@ class ApiCountryService extends BaseService
             currentPage: $paginationCountries->getCurrentPageNumber(),
             totalCount: $paginationCountries->getTotalItemCount(),
             countries: array_map(
-                function ($user) {
-                    return $this->getCountryToResponse($user);
+                function ($country) {
+                    return $this->getCountryToResponse($country);
                 },
                 $paginationCountries->getItems())
         );

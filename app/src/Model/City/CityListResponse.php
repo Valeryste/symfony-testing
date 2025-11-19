@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\City;
 
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-class UserListResponse
+class CityListResponse
 {
     public function __construct(
         #[OA\Property(type: 'integer', example: 1)]
@@ -15,12 +15,11 @@ class UserListResponse
         public readonly int $totalCount,
 
         #[OA\Property(
-            property: 'users',
+            property: 'cities',
             type: 'array',
-            items: new OA\Items(ref: new Model(type: UserResponse::class))
+            items: new OA\Items(ref: new Model(type: CityResponse::class))
         )]
-        public readonly array $users
+        public readonly array $countries
     ) {
     }
-
 }
