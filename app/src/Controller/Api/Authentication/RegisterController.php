@@ -59,7 +59,7 @@ class RegisterController extends AbstractController
 
             return $this->json([
                 'message' => 'Registration successful',
-                ... $this->jwtTokenService->createAuthResponse($user)
+                ...$this->jwtTokenService->createAuthResponse($user)
             ], 201);
 
         } catch (\Exception $e) {
