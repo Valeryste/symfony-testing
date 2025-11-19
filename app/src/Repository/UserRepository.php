@@ -26,9 +26,7 @@ class UserRepository extends BaseRepository
         $query = $this->createQueryBuilder('u');
 
         $this->setSearchInQuery($query, $search);
-
         $this->setFilterInQuery($query, $filters);
-
         $this->setSortInQuery($query, $sorts);
 
         return $query->getQuery();

@@ -25,9 +25,7 @@ class CountryRepository extends BaseRepository
         $query = $this->createQueryBuilder('c');
 
         $this->setSearchInQuery($query, $search);
-
         $this->setFilterInQuery($query, $filters);
-
         $this->setSortInQuery($query, $sorts);
 
         return $query->getQuery();

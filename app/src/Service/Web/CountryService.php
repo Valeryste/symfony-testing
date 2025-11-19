@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Service\Web;
+
+use App\Entity\Country;
+use App\Repository\CountryRepository;
+use App\Service\BaseService;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+
+class CountryService extends BaseService
+{
+    private const PAGINATION_LIMIT = 10;
+
+    public function __construct(
+        private readonly CountryRepository      $countryRepository,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
+    public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
+    {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
+            $this->entityManager->getFilters()->disable('softdeleteable');
+        }
+
+        $paginationCountries = $this->countryRepository->getPaginatedResults(
+            page: $page,
+            limit: self::PAGINATION_LIMIT,
+            filters: $filters,
+            sorts: $sorts,
+            search: $search
+        );
+
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
+            $this->entityManager->getFilters()->enable('softdeleteable');
+        }
+
+        return $paginationCountries;
+    }
+
+    public function store(Country $country): Country
+    {
+        $this->entityManager->persist($country);
+
+        $this->entityManager->flush();
+
+        return $country;
+    }
+
+
+    public function update(Country $country): Country
+    {
+        $country->setUpdatedAt(new \DateTime());
+
+        $this->entityManager->flush();
+
+        return $country;
+    }
+
+    public function delete(Country $country): void
+    {
+        $this->entityManager->remove($country);
+
+        $this->entityManager->flush();
+    }
+}

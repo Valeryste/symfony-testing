@@ -126,9 +126,9 @@ class User extends BaseEntity implements UserInterface, PasswordAuthenticatedUse
         return $this->isActive;
     }
 
-    public function setIsActive(bool $is_active): self
+    public function setIsActive(bool $isActive): self
     {
-        $this->isActive = $is_active;
+        $this->isActive = $isActive;
 
         return $this;
     }

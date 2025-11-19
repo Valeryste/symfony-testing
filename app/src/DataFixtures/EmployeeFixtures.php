@@ -35,7 +35,7 @@ class EmployeeFixtures extends BaseFixture implements DependentFixtureInterface
             $employee->setEmail($this->faker->email);
             $employee->setPhone($this->faker->phoneNumber);
             $employee->setPosition($this->faker->randomElement(self::POSITIONS));
-            $employee->setIsDismissed($this->faker->boolean(80));
+            $employee->setIsDismissed($this->faker->boolean(20));
             $employee->setShop($this->faker->randomElement($shops));
 
             $manager->persist($employee);

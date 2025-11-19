@@ -32,7 +32,7 @@ class RegistrationFormType extends AbstractType
                         'maxMessage' => 'Username cannot be longer than {{ limit }} characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z0-9_]+$/',
+                        'pattern' => '/^[a-zA-Z0-9]+([_.-]?[a-zA-Z0-9])*$/',
                         'message' => 'Username can only contain letters, numbers and underscores',
                     ]),
                 ],

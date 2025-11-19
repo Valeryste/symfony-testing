@@ -33,7 +33,7 @@ class UpdateUserFormType extends AbstractType
                         'maxMessage' => 'Username cannot be longer than 255 characters',
                     ]),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z0-9_]+$/',
+                        'pattern' => '/^[a-zA-Z0-9]+([_.-]?[a-zA-Z0-9])*$/',
                         'message' => 'Name can only contain Latin letters, numbers, underscores',
                     ]),
                 ],

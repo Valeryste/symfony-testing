@@ -2,8 +2,8 @@
 
 namespace App\Twig;
 
-use App\Service\CityService;
-use App\Service\ShopService;
+use App\Service\Web\CityService;
+use App\Service\Web\ShopService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

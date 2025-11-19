@@ -81,14 +81,4 @@ class Role
 
         return $this;
     }
-
-    public static function getManager(): string
-    {
-        return self::MANAGER;
-    }
-
-    public static function getAdmin(): string
-    {
-        return self::ADMIN;
-    }
 }
