@@ -10,19 +10,22 @@ enum ShopFilters: string
 
     case BY_COUNTRY = 'city.country';
 
+    case ONLY_OPEN = 'isOpen';
+
     public static function getFilterCases(): array
     {
         return [
             self::WITH_DELETED,
             self::BY_CITY,
-            self::BY_COUNTRY
+            self::BY_COUNTRY,
+            self::ONLY_OPEN
         ];
     }
 
     public function getType(): string
     {
         return match($this) {
-            self::WITH_DELETED => 'checkbox',
+            self::WITH_DELETED, self::ONLY_OPEN => 'checkbox',
             self::BY_CITY, self::BY_COUNTRY => 'select',
         };
     }
@@ -32,7 +35,8 @@ enum ShopFilters: string
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
             self::BY_CITY => 'По городу',
-            self::BY_COUNTRY => 'По стране'
+            self::BY_COUNTRY => 'По стране',
+            self::ONLY_OPEN => 'Только '
         };
     }
 
@@ -41,7 +45,8 @@ enum ShopFilters: string
         return match($this) {
             self::WITH_DELETED => 'datetime',
             self::BY_CITY => 'int',
-            self::BY_COUNTRY => 'county'
+            self::BY_COUNTRY => 'county',
+            self::ONLY_OPEN => 'bool'
         };
     }
 

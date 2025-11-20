@@ -3,6 +3,7 @@
 namespace App\Request\City;
 
 use App\Request\BaseRequest;
+use App\Validator\Constraints\ValidCountry;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -29,6 +30,7 @@ class StoreCityRequest extends BaseRequest
     #[Type(type: 'integer', message: 'Country must be an integer')]
     #[Positive(message: 'country ID must be a positive number')]
     #[NotBlank(message: 'country is required')]
+    #[ValidCountry]
     protected int $countryId;
 
     public function toArray(): array

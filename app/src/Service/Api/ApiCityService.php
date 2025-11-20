@@ -7,7 +7,6 @@ use App\DTO\Api\Admin\City\UpdateCityDTO;
 use App\Entity\City;
 use App\Model\City\CityListResponse;
 use App\Model\City\CityResponse;
-use App\Model\Country\CountryResponse;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
 use App\Service\BaseService;
@@ -47,23 +46,18 @@ class ApiCityService extends BaseService
             totalCount: $paginationCities->getTotalItemCount(),
             countries: array_map(
                 function ($city) {
-                    return $this->getCityToResponse($city);
+                    return self::getCityToResponse($city);
                 },
                 $paginationCities->getItems())
         );
     }
 
-    public function getCityToResponse(City $city): CityResponse
+    public static function getCityToResponse(City $city): CityResponse
     {
         return new CityResponse(
             id: $city->getId(),
             name: $city->getName(),
-            country: new CountryResponse(
-                id: $city->getCountry()->getId(),
-                name: $city->getCountry()->getName(),
-                createdAt: $city->getCountry()->getCreatedAt(),
-                updatedAt: $city->getCountry()->getUpdatedAt()
-            ),
+            country: ApiCountryService::getCountryToResponse($city->getCountry()),
             createdAt: $city->getCreatedAt(),
             updatedAt: $city->getUpdatedAt()
         );
@@ -80,7 +74,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->getCityToResponse($city);
+        return self::getCityToResponse($city);
     }
 
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
@@ -97,7 +91,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->getCityToResponse($city);
+        return self::getCityToResponse($city);
     }
 
     public function delete(City $city): void

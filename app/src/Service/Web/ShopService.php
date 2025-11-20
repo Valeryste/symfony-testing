@@ -12,8 +12,7 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 
 class ShopService extends BaseService
 {
-    private
-    const PAGINATION_LIMIT = 10;
+    private const PAGINATION_LIMIT = 10;
 
     public
     function __construct(
@@ -21,8 +20,7 @@ class ShopService extends BaseService
         private readonly EntityManagerInterface $entityManager,
         private readonly CityRepository      $cityRepository,
         private readonly CountryRepository $countryRepository
-    )
-    {
+    ) {
     }
 
     public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
@@ -93,5 +91,4 @@ class ShopService extends BaseService
     {
         return $this->countryRepository->getCountriesHavingShops();
     }
-
 }

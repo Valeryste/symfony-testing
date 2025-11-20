@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Service\Api;
+
+use App\DTO\Api\Admin\Shop\StoreShopDTO;
+use App\DTO\Api\Admin\Shop\UpdateShopDTO;
+use App\Entity\Shop;
+use App\Model\Shop\ShopListResponse;
+use App\Model\Shop\ShopResponse;
+use App\Repository\CityRepository;
+use App\Repository\ShopRepository;
+use App\Service\BaseService;
+use Doctrine\ORM\EntityManagerInterface;
+
+class ApiShopService extends BaseService
+{
+    private const PAGINATION_LIMIT = 10;
+
+    public
+    function __construct(
+        private readonly ShopRepository         $shopRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CityRepository $cityRepository
+    ) {
+    }
+
+    public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): ShopListResponse
+    {
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
+            $this->entityManager->getFilters()->disable('softdeleteable');
+        }
+
+        $paginationShops = $this->shopRepository->getPaginatedResults(
+            page: $page,
+            limit: self::PAGINATION_LIMIT,
+            filters: $filters,
+            sorts: $sorts,
+            search: $search
+        );
+
+        if ($this->hasFilter($filters, 'deletedAt', 1)) {
+            $this->entityManager->getFilters()->enable('softdeleteable');
+        }
+
+        return new ShopListResponse(
+            currentPage: $paginationShops->getCurrentPageNumber(),
+            totalCount: $paginationShops->getTotalItemCount(),
+            shops: array_map(
+                function ($shop) {
+                    return self::getShopToResponse($shop);
+                },
+                $paginationShops->getItems())
+        );
+    }
+
+    public static function getShopToResponse(Shop $shop): ShopResponse
+    {
+        return new ShopResponse(
+            id: $shop->getId(),
+            name: $shop->getName(),
+            address: $shop->getAddress(),
+            isOpen: $shop->isOpen(),
+            city: ApiCityService::getCityToResponse($shop->getCity()),
+            createdAt: $shop->getCreatedAt(),
+            updatedAt: $shop->getUpdatedAt()
+        );
+    }
+
+    public function store(StoreShopDTO $storeShopDTO): ShopResponse
+    {
+        $shop = new Shop();
+
+        $shop->setName($storeShopDTO->name);
+        $shop->setIsOpen($storeShopDTO->isOpen);
+        $shop->setAddress($storeShopDTO->address);
+        $shop->setCity($this->cityRepository->find($storeShopDTO->cityId));
+
+        $this->entityManager->persist($shop);
+
+        $this->entityManager->flush();
+
+        return self::getShopToResponse($shop);
+    }
+
+    public function update(UpdateShopDTO $updateShopDTO, Shop $shop): ShopResponse
+    {
+        $shop->setName($updateShopDTO->name ?? $shop->getName());
+        $shop->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen());
+        $shop->setAddress($updateShopDTO->address ?? $shop->getAddress());
+        $shop->setCity($this->cityRepository->find($updateShopDTO->cityId));
+
+        if (!empty($updateShopDTO->cityId)) {
+            if ($city = $this->cityRepository->find($updateShopDTO->cityId)) {
+                $shop->setCity($city);
+            }
+        }
+        $shop->setUpdatedAt(new \DateTime());
+
+        $this->entityManager->flush();
+
+        return self::getShopToResponse($shop);
+    }
+
+    public function delete(Shop $shop): void
+    {
+        $this->entityManager->remove($shop);
+
+        $this->entityManager->flush();
+    }
+}

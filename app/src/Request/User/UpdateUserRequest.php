@@ -33,7 +33,6 @@ class UpdateUserRequest extends BaseRequest
     )]
     protected ?string $username = null;
 
-
     #[Type(type: 'string', message: 'Type should be string')]
     #[Length(
         min: 3,

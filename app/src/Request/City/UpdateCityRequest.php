@@ -3,6 +3,7 @@
 namespace App\Request\City;
 
 use App\Request\BaseRequest;
+use App\Validator\Constraints\ValidCountry;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -26,6 +27,7 @@ class UpdateCityRequest extends BaseRequest
 
     #[Type(type: 'integer', message: 'Country must be an integer')]
     #[Positive(message: 'country ID must be a positive number')]
+    #[ValidCountry]
     protected ?int $countryId = null;
 
     public function toArray(): array

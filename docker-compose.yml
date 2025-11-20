@@ -17,7 +17,7 @@ services:
     build:
       context: ./php
     ports:
-      - '9000:9000'
+      - '9001:9000'
     volumes:
       - ./app:/var/www/symfony-testing
     depends_on:

@@ -183,6 +183,15 @@ class CityController extends BaseController
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
+    #[OA\RequestBody(
+        description: 'City data to store',
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'name', type: 'string', example: 'Grodno',  nullable: true),
+            ]
+        )
+    )]
     #[OA\Response(
         response: 200,
         description: 'City updated successfully',
