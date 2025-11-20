@@ -73,17 +73,19 @@ class ApiUserService extends BaseService
         return self::toResponse($user);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function update(UpdateUserDTO $updateUserDTO, User $user): UserResponse
     {
         $user->setEmail($updateUserDTO->email ?? $user->getEmail());
         $user->setUsername($updateUserDTO->username ?? $user->getUsername());
         $user->setIsActive($updateUserDTO->isActive ?? $user->isActive());
 
-        if (isset($updateUserDTO->roleId)) {
-            if ($role = $this->roleRepository->find($updateUserDTO->roleId)) {
-                $user->setRole($role);
-            }
+        if ($role = $this->roleRepository->find($updateUserDTO->roleId)) {
+            throw new \Exception('Country with ID: ' . $updateUserDTO->roleId . ' does not exist in DB');
         }
+
 
         $user->setUpdatedAt(new \DateTime());
 

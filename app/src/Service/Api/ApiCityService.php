@@ -68,12 +68,20 @@ class ApiCityService extends BaseService
         return self::toResponse($city);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function store(StoreCityDTO $storeCityDTO): CityResponse
     {
         $city = new City();
 
         $city->setName($storeCityDTO->name);
-        $city->setCountry($this->countryRepository->find($storeCityDTO->countryId));
+
+        if (!($country = $this->countryRepository->find($storeCityDTO->countryId))) {
+            throw new \Exception('Country with ID: ' . $storeCityDTO->countryId . ' does not exist in DB');
+        }
+
+        $city->setCountry($country);
 
         $this->entityManager->persist($city);
 
@@ -82,15 +90,18 @@ class ApiCityService extends BaseService
         return self::toResponse($city);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
     {
         $city->setName($updateCityDTO->name ?? $city->getName());
 
-        if (isset($updateCityDTO->countryId)) {
-            if ($country = $this->countryRepository->find($updateCityDTO->countryId)) {
-                $city->setCountry($country);
-            }
+        if (!($country = $this->countryRepository->find($updateCityDTO->countryId))) {
+            throw new \Exception('City with ID: ' . $updateCityDTO->countryId . ' does not exist in DB');
         }
+
+        $city->setCountry($country);
 
         $city->setUpdatedAt(new \DateTime());
 

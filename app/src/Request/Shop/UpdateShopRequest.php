@@ -3,7 +3,6 @@
 namespace App\Request\Shop;
 
 use App\Request\BaseRequest;
-use App\Validator\Constraints\ValidCity;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -42,7 +41,6 @@ class UpdateShopRequest extends BaseRequest
 
     #[Type(type: 'integer', message: 'City must be an integer')]
     #[Positive(message: 'city ID must be a positive number')]
-    #[ValidCity]
     protected ?int $cityId = null;
 
     public function toArray(): array

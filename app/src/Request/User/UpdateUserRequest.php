@@ -5,7 +5,6 @@ namespace App\Request\User;
 use App\Entity\User;
 use App\Request\BaseRequest;
 use App\Validator\Constraints\UniqueEntityField;
-use App\Validator\Constraints\ValidRole;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -53,7 +52,6 @@ class UpdateUserRequest extends BaseRequest
 
     #[Type(type: 'integer', message: 'Role must be an integer')]
     #[Positive(message: 'role ID must be a positive number')]
-    #[ValidRole]
     protected ?int $roleId = null;
 
     public function getUsername(): ?string

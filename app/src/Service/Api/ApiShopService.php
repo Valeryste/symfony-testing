@@ -20,7 +20,7 @@ class ApiShopService extends BaseService
     function __construct(
         private readonly ShopRepository         $shopRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly CityRepository $cityRepository
+        private readonly CityRepository         $cityRepository
     ) {
     }
 
@@ -71,6 +71,9 @@ class ApiShopService extends BaseService
         return self::toResponse($shop);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function store(StoreShopDTO $storeShopDTO): ShopResponse
     {
         $shop = new Shop();
@@ -78,7 +81,12 @@ class ApiShopService extends BaseService
         $shop->setName($storeShopDTO->name);
         $shop->setIsOpen($storeShopDTO->isOpen);
         $shop->setAddress($storeShopDTO->address);
-        $shop->setCity($this->cityRepository->find($storeShopDTO->cityId));
+
+        if (!($city = $this->cityRepository->find($storeShopDTO->cityId))) {
+            throw new \Exception('City with ID: ' . $storeShopDTO->cityId . ' does not exist in DB');
+        }
+
+        $shop->setCity($city);
 
         $this->entityManager->persist($shop);
 
@@ -87,19 +95,22 @@ class ApiShopService extends BaseService
         return self::toResponse($shop);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function update(UpdateShopDTO $updateShopDTO, Shop $shop): ShopResponse
     {
         $shop->setName($updateShopDTO->name ?? $shop->getName());
         $shop->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen());
         $shop->setAddress($updateShopDTO->address ?? $shop->getAddress());
-        $shop->setCity($this->cityRepository->find($updateShopDTO->cityId));
-
-        if (!empty($updateShopDTO->cityId)) {
-            if ($city = $this->cityRepository->find($updateShopDTO->cityId)) {
-                $shop->setCity($city);
-            }
-        }
         $shop->setUpdatedAt(new \DateTime());
+
+        if (!($city = $this->cityRepository->find($updateShopDTO->cityId))) {
+            throw new \Exception('City with ID: ' . $updateShopDTO->cityId . ' does not exist in DB');
+        }
+
+        $shop->setCity($city);
+
 
         $this->entityManager->flush();
 

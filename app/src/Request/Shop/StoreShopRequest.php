@@ -3,7 +3,6 @@
 namespace App\Request\Shop;
 
 use App\Request\BaseRequest;
-use App\Validator\Constraints\ValidCity;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -46,7 +45,6 @@ class StoreShopRequest extends BaseRequest
     #[Type(type: 'integer', message: 'City must be an integer')]
     #[Positive(message: 'city ID must be a positive number')]
     #[NotBlank(message: 'cityId name is required')]
-    #[ValidCity]
     protected int $cityId;
 
     public function toArray(): array
