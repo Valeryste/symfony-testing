@@ -48,7 +48,8 @@ class ApiCityService extends BaseService
                 function ($city) {
                     return self::toResponse($city);
                 },
-                $paginationCities->getItems())
+                $paginationCities->getItems()
+            )
         );
     }
 

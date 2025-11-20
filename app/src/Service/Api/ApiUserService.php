@@ -48,7 +48,8 @@ class ApiUserService extends BaseService
                 function ($user) {
                     return $this->toResponse($user);
                 },
-                $paginationUsers->getItems())
+                $paginationUsers->getItems()
+            )
         );
     }
 

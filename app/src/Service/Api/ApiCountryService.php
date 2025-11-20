@@ -46,7 +46,8 @@ class ApiCountryService extends BaseService
                 function ($country) {
                     return self::toResponse($country);
                 },
-                $paginationCountries->getItems())
+                $paginationCountries->getItems()
+            )
         );
     }
 

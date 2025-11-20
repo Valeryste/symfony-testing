@@ -20,7 +20,6 @@ class EmployeeService extends BaseService
     ) {
     }
 
-
     public function getList(int $page, array $filters = [], array $sorts = [], array $search = []): PaginationInterface
     {
         if ($this->hasFilter($filters, 'deletedAt', 1)) {
@@ -83,5 +82,4 @@ class EmployeeService extends BaseService
 
         return $shopName;
     }
-
 }

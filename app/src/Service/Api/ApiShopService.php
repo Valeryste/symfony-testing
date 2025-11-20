@@ -49,7 +49,8 @@ class ApiShopService extends BaseService
                 function ($shop) {
                     return self::toResponse($shop);
                 },
-                $paginationShops->getItems())
+                $paginationShops->getItems()
+            )
         );
     }
 

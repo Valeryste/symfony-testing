@@ -203,7 +203,6 @@ class CountryController extends BaseController
     {
         try {
             return $this->json([
-                'message' => 'User updated successfully',
                 'country' => $this->apiCountryService->update(
                     new UpdateCountryDTO(...$request->toArray()),
                     $country)

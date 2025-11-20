@@ -234,7 +234,6 @@ class ShopController extends BaseController
             $updatedShop = $this->apiShopService->update(new UpdateShopDTO(...$request->toArray()), $shop);
 
             return $this->json([
-                'message' => 'Shop updated successfully',
                 'shop' => $updatedShop
             ]);
         } catch (\Exception $e) {
