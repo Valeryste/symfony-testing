@@ -186,7 +186,7 @@ class ShopController extends BaseController
     public function show(Shop $shop): JsonResponse
     {
         return $this->json(
-            $this->apiShopService->getShopToResponse($shop)
+            $this->apiShopService->show($shop)
         );
     }
 

@@ -46,13 +46,13 @@ class ApiUserService extends BaseService
             totalCount: $paginationUsers->getTotalItemCount(),
             users: array_map(
                 function ($user) {
-                    return $this->getUserToResponse($user);
+                    return $this->toResponse($user);
                 },
                 $paginationUsers->getItems())
         );
     }
 
-    public function getUserToResponse(User $user): UserResponse
+    public function toResponse(User $user): UserResponse
     {
         return new UserResponse(
             id: $user->getId(),
@@ -66,6 +66,11 @@ class ApiUserService extends BaseService
             createdAt: $user->getCreatedAt(),
             updatedAt: $user->getUpdatedAt()
         );
+    }
+
+    public function show(User $user): UserResponse
+    {
+        return self::toResponse($user);
     }
 
     public function update(UpdateUserDTO $updateUserDTO, User $user): UserResponse
@@ -84,7 +89,7 @@ class ApiUserService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->getUserToResponse($user);
+        return $this->toResponse($user);
     }
 
     public function delete(User $user): void

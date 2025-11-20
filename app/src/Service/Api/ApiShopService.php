@@ -47,23 +47,28 @@ class ApiShopService extends BaseService
             totalCount: $paginationShops->getTotalItemCount(),
             shops: array_map(
                 function ($shop) {
-                    return self::getShopToResponse($shop);
+                    return self::toResponse($shop);
                 },
                 $paginationShops->getItems())
         );
     }
 
-    public static function getShopToResponse(Shop $shop): ShopResponse
+    public static function toResponse(Shop $shop): ShopResponse
     {
         return new ShopResponse(
             id: $shop->getId(),
             name: $shop->getName(),
             address: $shop->getAddress(),
             isOpen: $shop->isOpen(),
-            city: ApiCityService::getCityToResponse($shop->getCity()),
+            city: ApiCityService::toResponse($shop->getCity()),
             createdAt: $shop->getCreatedAt(),
             updatedAt: $shop->getUpdatedAt()
         );
+    }
+
+    public function show(Shop $shop): ShopResponse
+    {
+        return self::toResponse($shop);
     }
 
     public function store(StoreShopDTO $storeShopDTO): ShopResponse
@@ -79,7 +84,7 @@ class ApiShopService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::getShopToResponse($shop);
+        return self::toResponse($shop);
     }
 
     public function update(UpdateShopDTO $updateShopDTO, Shop $shop): ShopResponse
@@ -98,7 +103,7 @@ class ApiShopService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::getShopToResponse($shop);
+        return self::toResponse($shop);
     }
 
     public function delete(Shop $shop): void

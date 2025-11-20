@@ -46,21 +46,26 @@ class ApiCityService extends BaseService
             totalCount: $paginationCities->getTotalItemCount(),
             countries: array_map(
                 function ($city) {
-                    return self::getCityToResponse($city);
+                    return self::toResponse($city);
                 },
                 $paginationCities->getItems())
         );
     }
 
-    public static function getCityToResponse(City $city): CityResponse
+    public static function toResponse(City $city): CityResponse
     {
         return new CityResponse(
             id: $city->getId(),
             name: $city->getName(),
-            country: ApiCountryService::getCountryToResponse($city->getCountry()),
+            country: ApiCountryService::toResponse($city->getCountry()),
             createdAt: $city->getCreatedAt(),
             updatedAt: $city->getUpdatedAt()
         );
+    }
+
+    public function show(City $city): CityResponse
+    {
+        return self::toResponse($city);
     }
 
     public function store(StoreCityDTO $storeCityDTO): CityResponse
@@ -74,7 +79,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::getCityToResponse($city);
+        return self::toResponse($city);
     }
 
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
@@ -91,7 +96,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::getCityToResponse($city);
+        return self::toResponse($city);
     }
 
     public function delete(City $city): void

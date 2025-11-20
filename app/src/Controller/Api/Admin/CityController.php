@@ -167,7 +167,7 @@ class CityController extends BaseController
     public function show(City $city): JsonResponse
     {
         return $this->json(
-            $this->apiCityService->getCityToResponse($city)
+            $this->apiCityService->show($city)
         );
     }
 

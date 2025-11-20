@@ -160,7 +160,7 @@ class CountryController extends BaseController
     public function show(Country $country): JsonResponse
     {
         return $this->json(
-            $this->apiCountryService->getCountryToResponse($country)
+            $this->apiCountryService->show($country)
         );
     }
 

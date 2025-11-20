@@ -136,7 +136,7 @@ class UserController extends BaseController
     public function show(User $user): JsonResponse
     {
         return $this->json([
-            $this->apiUserService->getUserToResponse($user)
+            $this->apiUserService->show($user)
         ]);
     }
 

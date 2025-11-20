@@ -18,13 +18,13 @@ class ApiRoleService extends BaseService
     {
         return array_map(
             function ($role) {
-                return $this->getRoleToResponse($role);
+                return $this->toResponse($role);
             },
             $this->roleRepository->findAll()
         );
     }
 
-    public function getRoleToResponse(Role $role): RoleResponse
+    public function toResponse(Role $role): RoleResponse
     {
         return new RoleResponse(
             id: $role->getId(),
