@@ -113,7 +113,7 @@ class UserController extends BaseController
     }
 
 
-    #[Route('/{id}/show', name: 'api_admin_users_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_users_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns user details for editing form',
         summary: 'Get user details for editing'

@@ -144,7 +144,7 @@ class CityController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_cities_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_cities_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns city details',
         summary: 'Get city details'

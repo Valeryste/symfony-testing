@@ -137,7 +137,7 @@ class CountryController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_countries_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_countries_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns country details',
         summary: 'Get country details'

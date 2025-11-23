@@ -158,7 +158,7 @@ class EmployeeController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_employees_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_employees_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns employee details',
         summary: 'Get employee details'
