@@ -88,7 +88,8 @@ class UpdateEmployeeRequest extends BaseRequest
             'phone' => $this->phone,
             'email' => $this->email,
             'position' => $this->position,
-            'shopId' => $this->shopId
+            'shopId' => $this->shopId,
+            'isDismissed' => $this->isDismissed
         ];
     }
 }
