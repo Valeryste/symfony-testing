@@ -129,8 +129,7 @@ class EmployeeController extends BaseController
                 new OA\Property(property: 'email', type: 'string', example: 'john.doe@example.com'),
                 new OA\Property(property: 'phone', type: 'string', example: '+1234567890'),
                 new OA\Property(property: 'position', type: 'string', example: 'Manager'),
-                new OA\Property(property: 'shopId', type: 'integer', example: 1),
-                new OA\Property(property: 'isDismissed', type: 'boolean', example: true),
+                new OA\Property(property: 'shopId', type: 'integer', example: 1)
             ]
         )
     )]
