@@ -44,13 +44,14 @@ class ApiCountryService extends BaseService
             totalCount: $paginationCountries->getTotalItemCount(),
             countries: array_map(
                 function ($country) {
-                    return $this->getCountryToResponse($country);
+                    return self::toResponse($country);
                 },
-                $paginationCountries->getItems())
+                $paginationCountries->getItems()
+            )
         );
     }
 
-    public function getCountryToResponse(Country $country): CountryResponse
+    public static function toResponse(Country $country): CountryResponse
     {
         return new CountryResponse(
             id: $country->getId(),
@@ -58,6 +59,11 @@ class ApiCountryService extends BaseService
             createdAt: $country->getCreatedAt(),
             updatedAt: $country->getUpdatedAt()
         );
+    }
+
+    public function show(Country $country): CountryResponse
+    {
+        return self::toResponse($country);
     }
 
     public function store(StoreCountryDTO $storeCountryDTO): CountryResponse
@@ -70,9 +76,8 @@ class ApiCountryService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->getCountryToResponse($country);
+        return self::toResponse($country);
     }
-
 
     public function update(UpdateCountryDTO $updateCountryDTO, Country $country): CountryResponse
     {
@@ -81,7 +86,7 @@ class ApiCountryService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->getCountryToResponse($country);
+        return self::toResponse($country);
     }
 
     public function delete(Country $country): void

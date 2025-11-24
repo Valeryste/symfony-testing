@@ -77,7 +77,7 @@ class CreateEmployeeFormType extends AbstractType
                     new Length([
                         'min' => 10,
                         'max' => 15,
-                        'minMessage' => 'Phone number must be at least {{ limit }} digits',
+                        'minMessage' => 'Phone number must be at least 10 digits',
                     ]),
                     new Regex([
                         'pattern' => '/^\+?[0-9\s\-\(\)]+$/',

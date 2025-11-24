@@ -113,7 +113,7 @@ class UserController extends BaseController
     }
 
 
-    #[Route('/{id}/show', name: 'api_admin_users_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_users_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns user details for editing form',
         summary: 'Get user details for editing'
@@ -136,7 +136,7 @@ class UserController extends BaseController
     public function show(User $user): JsonResponse
     {
         return $this->json([
-            $this->apiUserService->getUserToResponse($user)
+            $this->apiUserService->show($user)
         ]);
     }
 
@@ -191,7 +191,7 @@ class UserController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 401);
+            ], $e->getCode());
         }
     }
 

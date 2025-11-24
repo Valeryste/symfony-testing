@@ -133,11 +133,11 @@ class CountryController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 401);
+            ], $e->getCode());
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_countries_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_countries_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns country details',
         summary: 'Get country details'
@@ -160,7 +160,7 @@ class CountryController extends BaseController
     public function show(Country $country): JsonResponse
     {
         return $this->json(
-            $this->apiCountryService->getCountryToResponse($country)
+            $this->apiCountryService->show($country)
         );
     }
 
@@ -203,7 +203,6 @@ class CountryController extends BaseController
     {
         try {
             return $this->json([
-                'message' => 'User updated successfully',
                 'country' => $this->apiCountryService->update(
                     new UpdateCountryDTO(...$request->toArray()),
                     $country)
@@ -211,7 +210,7 @@ class CountryController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 401);
+            ], $e->getCode());
         }
     }
 

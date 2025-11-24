@@ -6,16 +6,16 @@ use App\Controller\BaseController;
 use App\Documentation\Attribute\ForbiddenResponse;
 use App\Documentation\Attribute\UnauthorizedResponse;
 use App\Documentation\Attribute\ValidationErrorResponse;
-use App\DTO\Api\Admin\City\StoreCityDTO;
-use App\DTO\Api\Admin\City\UpdateCityDTO;
-use App\Entity\City;
-use App\Enum\Filter\CityFilters;
-use App\Enum\Search\CitySearch;
-use App\Model\City\CityListResponse;
-use App\Model\City\CityResponse;
-use App\Request\City\StoreCityRequest;
-use App\Request\City\UpdateCityRequest;
-use App\Service\Api\ApiCityService;
+use App\DTO\Api\Admin\Shop\StoreShopDTO;
+use App\DTO\Api\Admin\Shop\UpdateShopDTO;
+use App\Entity\Shop;
+use App\Enum\Filter\ShopFilters;
+use App\Enum\Search\ShopSearch;
+use App\Model\Shop\ShopListResponse;
+use App\Model\Shop\ShopResponse;
+use App\Request\Shop\StoreShopRequest;
+use App\Request\Shop\UpdateShopRequest;
+use App\Service\Api\ApiShopService;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,21 +24,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use OpenApi\Attributes as OA;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('api/admin/cities')]
-#[OA\Tag(name: 'Admin Cities')]
+#[Route('api/admin/shops')]
+#[OA\Tag(name: 'Admin Shops')]
 #[ForbiddenResponse]
 #[UnauthorizedResponse]
-class CityController extends BaseController
+class ShopController extends BaseController
 {
     public function __construct(
-        private readonly ApiCityService $apiCityService
+        private readonly ApiShopService $apiShopService
     ) {
     }
 
-    #[Route(name: 'api_admin_cities_index', methods: ['GET'])]
+    #[Route(name: 'api_admin_shops_index', methods: ['GET'])]
     #[OA\Get(
-        description: 'Returns paginated list of cities. Supports filtering by various fields, sorting and search.',
-        summary: 'Get paginated cities with filtering, sorting and search',
+        description: 'Returns paginated list of shops. Supports filtering by various fields, sorting and search.',
+        summary: 'Get paginated shops with filtering, sorting and search',
         parameters: [
             new OA\Parameter(
                 name: 'page',
@@ -62,7 +62,21 @@ class CityController extends BaseController
                 schema: new OA\Schema(type: 'integer')
             ),
             new OA\Parameter(
-                name: 'filters[country]',
+                name: 'filters[city]',
+                description: 'Filter by city ID',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer')
+            ),
+            new OA\Parameter(
+                name: 'filters[city.country]',
+                description: 'Filter by city->country',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'boolean')
+            ),
+            new OA\Parameter(
+                name: 'filters[isOpen]',
                 description: 'Filter by country ID',
                 in: 'query',
                 required: false,
@@ -74,14 +88,14 @@ class CityController extends BaseController
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'string', enum: ['asc', 'desc'])
-            ),
+            )
         ]
     )]
     #[OA\Response(
         response: 200,
-        description: 'Cities list retrieved successfully',
+        description: 'Shops list retrieved successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: CityListResponse::class),
+            ref: new Model(type: ShopListResponse::class),
             type: 'object'
         )
     )]
@@ -89,16 +103,16 @@ class CityController extends BaseController
     {
         $transformedFilters = $this->transformedFilters(
             filters: $request->query->all()['filters'] ?? [],
-            filtersEnumClass: CityFilters::class
+            filtersEnumClass: ShopFilters::class
         );
 
         $transformedSearch = $this->transformedSearch(
-            searchEnumClass: CitySearch::class,
+            searchEnumClass: ShopSearch::class,
             search: $request->query->getString('search') ?? ''
         );
 
         return $this->json(
-            $this->apiCityService->getList(
+            $this->apiShopService->getList(
                 page: $request->query->getInt('page', 1),
                 filters: $transformedFilters,
                 sorts: $request->query->all()['sorts'] ?? [],
@@ -107,35 +121,40 @@ class CityController extends BaseController
         );
     }
 
-    #[Route(name: 'api_admin_cities_store', methods: ['POST'])]
+    #[Route(name: 'api_admin_shops_store', methods: ['POST'])]
     #[OA\Post(
-        description: 'Adding a new city',
-        summary: 'Adding a new city'
+        description: 'Adding a new shop',
+        summary: 'Adding a new shop'
     )]
     #[OA\RequestBody(
-        description: 'City data to store',
+        description: 'Shop data to store',
         required: true,
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'name', type: 'string', example: 'Grodno'),
+                new OA\Property(property: 'name', type: 'string', example: 'Main Shop'),
+                new OA\Property(property: 'address', type: 'string', example: '123 Main Street'),
+                new OA\Property(property: 'cityId', type: 'integer', example: 1),
+                new OA\Property(property: 'isOpen', type: 'boolean', example: true),
             ]
         )
     )]
     #[OA\Response(
         response: 201,
-        description: 'City was store successfully',
+        description: 'Shop was stored successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: CityResponse::class),
+            ref: new Model(type: ShopResponse::class),
             type: 'object'
         )
     )]
     #[ValidationErrorResponse(field: 'name')]
-    public function store(StoreCityRequest $request): JsonResponse
+    public function store(StoreShopRequest $request): JsonResponse
     {
         try {
-            return $this->json([
-                    $this->apiCityService->store(new StoreCityDTO(...$request->toArray()))
-                ]
+            $shop = $this->apiShopService->store(new StoreShopDTO(...$request->toArray()));
+
+            return $this->json(
+                $shop,
+                201
             );
         } catch (\Exception $e) {
             return $this->json([
@@ -144,73 +163,78 @@ class CityController extends BaseController
         }
     }
 
-    #[Route('/{id}', name: 'api_admin_cities_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'api_admin_shops_show', methods: ['GET'])]
     #[OA\Get(
-        description: 'Returns city details',
-        summary: 'Get city details'
+        description: 'Returns shop details',
+        summary: 'Get shop details'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'City ID',
+        description: 'Shop ID',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\Response(
         response: 200,
-        description: 'City details retrieved successfully',
+        description: 'Shop details retrieved successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: CityResponse::class),
+            ref: new Model(type: ShopResponse::class),
             type: 'object'
         )
     )]
-    public function show(City $city): JsonResponse
+    public function show(Shop $shop): JsonResponse
     {
         return $this->json(
-            $this->apiCityService->show($city)
+            $this->apiShopService->show($shop)
         );
     }
 
-    #[Route('/{id}', name: 'api_admin_cities_update', methods: ['PATCH'])]
+    #[Route('/{id}', name: 'api_admin_shops_update', methods: ['PATCH'])]
     #[OA\Patch(
-        description: 'Update city information. Only provided fields will be updated.',
-        summary: 'Update city'
+        description: 'Update shop information. Only provided fields will be updated.',
+        summary: 'Update shop'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'City ID',
+        description: 'Shop ID',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\RequestBody(
-        description: 'City data to store',
+        description: 'Shop data to update',
         required: true,
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'name', type: 'string', example: 'Grodno',  nullable: true),
+                new OA\Property(property: 'name', type: 'string', example: 'Updated Shop Name'),
+                new OA\Property(property: 'address', type: 'string', example: '456 Updated Street'),
+                new OA\Property(property: 'cityId', type: 'integer', example: 2),
+                new OA\Property(property: 'isOpen', type: 'boolean', example: false),
             ]
         )
     )]
     #[OA\Response(
         response: 200,
-        description: 'City updated successfully',
+        description: 'Shop updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'City updated successfully'),
+                new OA\Property(property: 'message', type: 'string', example: 'Shop updated successfully'),
                 new OA\Property(
-                    property: 'city',
-                    ref: new Model(type: CityResponse::class)
+                    property: 'shop',
+                    ref: new Model(type: ShopResponse::class)
                 )
             ]
         )
     )]
-    public function update(UpdateCityRequest $request, City $city): JsonResponse
+    #[ValidationErrorResponse(field: 'name')]
+    public function update(UpdateShopRequest $request, Shop $shop): JsonResponse
     {
-        try{
+        try {
+            $updatedShop = $this->apiShopService->update(new UpdateShopDTO(...$request->toArray()), $shop);
+
             return $this->json([
-                'message' => 'User updated successfully',
-                'user' => $this->apiCityService->update(new UpdateCityDTO(...$request->toArray()), $city)
+                'shop' => $updatedShop
             ]);
         } catch (\Exception $e) {
             return $this->json([
@@ -219,34 +243,34 @@ class CityController extends BaseController
         }
     }
 
-    #[Route('/{id}', name: 'api_admin_cities_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_admin_shops_delete', methods: ['DELETE'])]
     #[OA\Delete(
-        description: 'Soft delete city by ID.',
-        summary: 'Delete city'
+        description: 'Soft delete shop by ID.',
+        summary: 'Delete shop'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'City ID to delete',
+        description: 'Shop ID to delete',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\Response(
         response: 200,
-        description: 'City deleted successfully',
+        description: 'Shop deleted successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'City deleted successfully')
+                new OA\Property(property: 'message', type: 'string', example: 'Shop deleted successfully')
             ]
         )
     )]
-    public function delete(City $city): JsonResponse
+    public function delete(Shop $shop): JsonResponse
     {
-        try{
-            $this->apiCityService->delete($city);
+        try {
+            $this->apiShopService->delete($shop);
 
             return $this->json([
-                'message' => 'City deleted successfully'
+                'message' => 'Shop deleted successfully'
             ]);
         } catch (\Exception $e) {
             return $this->json([

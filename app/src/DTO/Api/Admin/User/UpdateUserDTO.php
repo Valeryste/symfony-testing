@@ -4,7 +4,7 @@ namespace App\DTO\Api\Admin\User;
 
 use App\DTO\BaseDTO;
 
-class UpdateUserDTO extends BaseDTO
+final class UpdateUserDTO extends BaseDTO
 {
     public function __construct(
         public readonly ?string $username,
@@ -12,6 +12,5 @@ class UpdateUserDTO extends BaseDTO
         public readonly ?int $roleId,
         public readonly ?bool $isActive
     ) {
-
     }
 }
