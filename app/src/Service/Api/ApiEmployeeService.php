@@ -11,6 +11,7 @@ use App\Repository\EmployeeRepository;
 use App\Repository\ShopRepository;
 use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 
 class ApiEmployeeService extends BaseService
 {
@@ -105,9 +106,10 @@ class ApiEmployeeService extends BaseService
         $employee->setSurname($updateEmployeeDTO->surname ?? $employee->getSurname());
         $employee->setPhone($updateEmployeeDTO->phone ?? $employee->getPhone());
         $employee->setPosition($updateEmployeeDTO->position ?? $employee->getPosition());
-        $this->setEmployeeShop($employee, $updateEmployeeDTO->shopId);
-
         $employee->setUpdatedAt(new \DateTime());
+        if(!empty($updateEmployeeDTO->shopId)) {
+            $this->setEmployeeShop($employee, $updateEmployeeDTO->shopId);
+        }
 
         $this->entityManager->flush();
 
@@ -122,14 +124,13 @@ class ApiEmployeeService extends BaseService
     }
 
     /**
-     * @throws \Exception
+     * @throws EntityNotFoundException
      */
-    private function setEmployeeShop(Employee $employee, ?int $shopId): void
+    private function setEmployeeShop(Employee $employee, int $shopId): void
     {
         if (!($shop = $this->shopRepository->find($shopId))) {
-            throw new \Exception('Shop with ID: ' . $shopId . ' does not exist in DB');
+            throw new EntityNotFoundException('Shop with ID: ' . $shopId . ' not found', 404);
         }
-
         $employee->setShop($shop);
     }
 }

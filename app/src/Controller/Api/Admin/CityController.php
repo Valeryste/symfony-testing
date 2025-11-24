@@ -140,7 +140,7 @@ class CityController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 401);
+            ], $e->getCode());
         }
     }
 
@@ -215,7 +215,7 @@ class CityController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 401);
+            ], $e->getCode());
         }
     }
 

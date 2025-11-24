@@ -11,6 +11,7 @@ use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
 use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 
 class ApiCityService extends BaseService
 {
@@ -77,12 +78,7 @@ class ApiCityService extends BaseService
         $city = new City();
 
         $city->setName($storeCityDTO->name);
-
-        if (!($country = $this->countryRepository->find($storeCityDTO->countryId))) {
-            throw new \Exception('Country with ID: ' . $storeCityDTO->countryId . ' does not exist in DB');
-        }
-
-        $city->setCountry($country);
+        $this->setCountryCity($city, $storeCityDTO->countryId);
 
         $this->entityManager->persist($city);
 
@@ -97,14 +93,10 @@ class ApiCityService extends BaseService
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
     {
         $city->setName($updateCityDTO->name ?? $city->getName());
-
-        if (!($country = $this->countryRepository->find($updateCityDTO->countryId))) {
-            throw new \Exception('City with ID: ' . $updateCityDTO->countryId . ' does not exist in DB');
-        }
-
-        $city->setCountry($country);
-
         $city->setUpdatedAt(new \DateTime());
+        if (!empty($updateCityDTO->countryId)) {
+            $this->setCountryCity($city, $updateCityDTO->countryId);
+        }
 
         $this->entityManager->flush();
 
@@ -116,5 +108,17 @@ class ApiCityService extends BaseService
         $this->entityManager->remove($city);
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    private function setCountryCity(City $city, int $countryId): void
+    {
+        if (!($country = $this->countryRepository->find($countryId))) {
+            throw new EntityNotFoundException('Country with ID: ' . $countryId . ' not found', 404);
+        }
+
+        $city->setCountry($country);
     }
 }

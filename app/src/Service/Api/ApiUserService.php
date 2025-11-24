@@ -11,6 +11,7 @@ use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 
 class ApiUserService extends BaseService
 {
@@ -82,13 +83,10 @@ class ApiUserService extends BaseService
         $user->setEmail($updateUserDTO->email ?? $user->getEmail());
         $user->setUsername($updateUserDTO->username ?? $user->getUsername());
         $user->setIsActive($updateUserDTO->isActive ?? $user->isActive());
-
-        if ($role = $this->roleRepository->find($updateUserDTO->roleId)) {
-            throw new \Exception('Country with ID: ' . $updateUserDTO->roleId . ' does not exist in DB');
-        }
-
-
         $user->setUpdatedAt(new \DateTime());
+        if (!empty($updateUserDTO->roleId)) {
+           $this->setRoleUser($user, $updateUserDTO->roleId);
+        }
 
         $this->entityManager->flush();
 
@@ -104,5 +102,17 @@ class ApiUserService extends BaseService
         $this->entityManager->remove($user);
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     */
+    private function setRoleUser(User $user, int $roleId): void
+    {
+        if (!($role = $this->roleRepository->find($roleId))) {
+            throw new EntityNotFoundException('Role with ID: ' . $roleId . ' not found', 404);
+        }
+
+        $user->setRole($role);
     }
 }

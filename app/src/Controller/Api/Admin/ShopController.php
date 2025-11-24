@@ -159,7 +159,7 @@ class ShopController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 400);
+            ], $e->getCode());
         }
     }
 
@@ -239,7 +239,7 @@ class ShopController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 400);
+            ], $e->getCode());
         }
     }
 

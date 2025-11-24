@@ -154,7 +154,7 @@ class EmployeeController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 400);
+            ], $e->getCode());
         }
     }
 
@@ -238,7 +238,7 @@ class EmployeeController extends BaseController
         } catch (\Exception $e) {
             return $this->json([
                 'error' => $e->getMessage()
-            ], 400);
+            ], $e->getCode());
         }
     }
 
