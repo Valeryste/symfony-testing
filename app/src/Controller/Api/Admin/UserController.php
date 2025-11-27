@@ -169,7 +169,6 @@ class UserController extends BaseController
         description: 'User updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'User updated successfully'),
                 new OA\Property(
                     property: 'user',
                     ref: new Model(type: UserResponse::class)
@@ -182,7 +181,6 @@ class UserController extends BaseController
     {
         try {
             return $this->json([
-                'message' => 'User updated successfully',
                 'user' => $this->apiUserService->update(
                     new UpdateUserDTO(...$request->toArray()),
                     $user

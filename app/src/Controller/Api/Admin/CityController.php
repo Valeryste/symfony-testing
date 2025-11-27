@@ -197,7 +197,6 @@ class CityController extends BaseController
         description: 'City updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'City updated successfully'),
                 new OA\Property(
                     property: 'city',
                     ref: new Model(type: CityResponse::class)
@@ -209,8 +208,7 @@ class CityController extends BaseController
     {
         try{
             return $this->json([
-                'message' => 'User updated successfully',
-                'user' => $this->apiCityService->update(new UpdateCityDTO(...$request->toArray()), $city)
+                'city' => $this->apiCityService->update(new UpdateCityDTO(...$request->toArray()), $city)
             ]);
         } catch (\Exception $e) {
             return $this->json([

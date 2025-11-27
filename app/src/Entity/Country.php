@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
 #[ORM\Table('countries')]
-#[UniqueEntity(fields: ['name'], message: 'country with that name already exists')]
+#[UniqueEntity(fields: ['name'], message: 'Country with that name already exists')]
 class Country extends BaseEntity
 {
     #[ORM\Id]

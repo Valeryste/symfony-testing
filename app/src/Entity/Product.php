@@ -6,9 +6,11 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table('products')]
+#[UniqueEntity(fields: ['name'], message: 'Product with that name already exists')]
 class Product extends BaseEntity
 {
     #[ORM\Id]
@@ -113,6 +115,15 @@ class Product extends BaseEntity
         return $this;
     }
 
+    public function addCategories(array $categories): self
+    {
+        foreach ($categories as $category) {
+            $this->addCategory($category);
+        }
+
+        return $this;
+    }
+
     public function removeCategory(Category $category): self
     {
         if ($this->categories->removeElement($category)) {
@@ -196,8 +207,10 @@ class Product extends BaseEntity
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): void
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
     }
 }

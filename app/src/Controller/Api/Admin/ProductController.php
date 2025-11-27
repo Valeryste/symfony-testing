@@ -6,16 +6,16 @@ use App\Controller\BaseController;
 use App\Documentation\Attribute\ForbiddenResponse;
 use App\Documentation\Attribute\UnauthorizedResponse;
 use App\Documentation\Attribute\ValidationErrorResponse;
-use App\DTO\Api\Admin\Shop\StoreShopDTO;
-use App\DTO\Api\Admin\Shop\UpdateShopDTO;
-use App\Entity\Shop;
-use App\Enum\Filter\ShopFilters;
-use App\Enum\Search\ShopSearch;
-use App\Model\Shop\ShopListResponse;
-use App\Model\Shop\ShopResponse;
-use App\Request\Shop\StoreShopRequest;
-use App\Request\Shop\UpdateShopRequest;
-use App\Service\Api\ApiShopService;
+use App\DTO\Api\Admin\Product\StoreProductDTO;
+use App\DTO\Api\Admin\Product\UpdateProductDTO;
+use App\Entity\Product;
+use App\Enum\Filter\ProductFilters;
+use App\Enum\Search\ProductSearch;
+use App\Model\Product\ProductListResponse;
+use App\Model\Product\ProductResponse;
+use App\Request\Product\StoreProductRequest;
+use App\Request\Product\UpdateProductRequest;
+use App\Service\Api\ApiProductService;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,21 +24,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use OpenApi\Attributes as OA;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('api/admin/shops')]
-#[OA\Tag(name: 'Admin Shops')]
+#[Route('api/admin/products')]
+#[OA\Tag(name: 'Admin Products')]
 #[ForbiddenResponse]
 #[UnauthorizedResponse]
-class ShopController extends BaseController
+class ProductController extends BaseController
 {
     public function __construct(
-        private readonly ApiShopService $apiShopService
+        private readonly ApiProductService $apiProductService
     ) {
     }
 
-    #[Route(name: 'api_admin_shops_index', methods: ['GET'])]
+    #[Route(name: 'api_admin_products_index', methods: ['GET'])]
     #[OA\Get(
-        description: 'Returns paginated list of shops. Supports filtering by various fields, sorting and search.',
-        summary: 'Get paginated shops with filtering, sorting and search',
+        description: 'Returns paginated list of products. Supports filtering by various fields, sorting and search.',
+        summary: 'Get paginated products with filtering, sorting and search',
         parameters: [
             new OA\Parameter(
                 name: 'page',
@@ -49,38 +49,31 @@ class ShopController extends BaseController
             ),
             new OA\Parameter(
                 name: 'search',
-                description: 'Search term for name',
+                description: 'Search term for product name',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'string')
             ),
             new OA\Parameter(
                 name: 'filters[deletedAt]',
-                description: 'Filter by deleted',
+                description: 'Filter by deleted status',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'integer')
             ),
             new OA\Parameter(
-                name: 'filters[city]',
-                description: 'Filter by city ID',
+                name: 'filters[categories]',
+                description: 'Filter by category IDs',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'integer')
             ),
             new OA\Parameter(
-                name: 'filters[city.country]',
-                description: 'Filter by city->country',
+                name: 'filters[isActive]',
+                description: 'Filter by active status',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'boolean')
-            ),
-            new OA\Parameter(
-                name: 'filters[isOpen]',
-                description: 'Filter by country ID',
-                in: 'query',
-                required: false,
-                schema: new OA\Schema(type: 'integer')
             ),
             new OA\Parameter(
                 name: 'sorts[id]',
@@ -93,9 +86,9 @@ class ShopController extends BaseController
     )]
     #[OA\Response(
         response: 200,
-        description: 'Shops list retrieved successfully',
+        description: 'Products list retrieved successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: ShopListResponse::class),
+            ref: new Model(type: ProductListResponse::class),
             type: 'object'
         )
     )]
@@ -103,16 +96,16 @@ class ShopController extends BaseController
     {
         $transformedFilters = $this->transformedFilters(
             filters: $request->query->all()['filters'] ?? [],
-            filtersEnumClass: ShopFilters::class
+            filtersEnumClass: ProductFilters::class
         );
 
         $transformedSearch = $this->transformedSearch(
-            searchEnumClass: ShopSearch::class,
+            searchEnumClass: ProductSearch::class,
             search: $request->query->getString('search') ?? ''
         );
 
         return $this->json(
-            $this->apiShopService->getList(
+            $this->apiProductService->getList(
                 page: $request->query->getInt('page', 1),
                 filters: $transformedFilters,
                 sorts: $request->query->all()['sorts'] ?? [],
@@ -121,39 +114,44 @@ class ShopController extends BaseController
         );
     }
 
-    #[Route(name: 'api_admin_shops_store', methods: ['POST'])]
+    #[Route(name: 'api_admin_products_store', methods: ['POST'])]
     #[OA\Post(
-        description: 'Adding a new shop',
-        summary: 'Adding a new shop'
+        description: 'Adding a new product',
+        summary: 'Adding a new product'
     )]
     #[OA\RequestBody(
-        description: 'Shop data to store',
+        description: 'Product data to store',
         required: true,
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'name', type: 'string', example: 'Main Shop'),
-                new OA\Property(property: 'address', type: 'string', example: '123 Main Street'),
-                new OA\Property(property: 'cityId', type: 'integer', example: 1),
-                new OA\Property(property: 'isOpen', type: 'boolean', example: true),
+                new OA\Property(property: 'name', type: 'string', example: 'iPhone 15'),
+                new OA\Property(property: 'price', type: 'number', format: 'float', example: 999.99),
+                new OA\Property(property: 'count', type: 'integer', example: 50),
+                new OA\Property(
+                    property: 'categoryIds',
+                    type: 'array',
+                    items: new OA\Items(type: 'integer'),
+                    example: [1, 2, 3]
+                )
             ]
         )
     )]
     #[OA\Response(
         response: 201,
-        description: 'Shop was stored successfully',
+        description: 'Product was stored successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: ShopResponse::class),
+            ref: new Model(type: ProductResponse::class),
             type: 'object'
         )
     )]
     #[ValidationErrorResponse(field: 'name')]
-    public function store(StoreShopRequest $request): JsonResponse
+    public function store(StoreProductRequest $request): JsonResponse
     {
         try {
-            $shop = $this->apiShopService->store(new StoreShopDTO(...$request->toArray()));
+            $product = $this->apiProductService->store(new StoreProductDTO(...$request->toArray()));
 
             return $this->json(
-                $shop,
+                $product,
                 201
             );
         } catch (\Exception $e) {
@@ -163,77 +161,84 @@ class ShopController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_shops_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_products_show', methods: ['GET'])]
     #[OA\Get(
-        description: 'Returns shop details',
-        summary: 'Get shop details'
+        description: 'Returns product details',
+        summary: 'Get product details'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'Shop ID',
+        description: 'Product ID',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\Response(
         response: 200,
-        description: 'Shop details retrieved successfully',
+        description: 'Product details retrieved successfully',
         content: new OA\JsonContent(
-            ref: new Model(type: ShopResponse::class),
+            ref: new Model(type: ProductResponse::class),
             type: 'object'
         )
     )]
-    public function show(Shop $shop): JsonResponse
+    public function show(Product $product): JsonResponse
     {
         return $this->json(
-            $this->apiShopService->show($shop)
+            $this->apiProductService->show($product)
         );
     }
 
-    #[Route('/{id}', name: 'api_admin_shops_update', methods: ['PATCH'])]
+    #[Route('/{id}', name: 'api_admin_products_update', methods: ['PATCH'])]
     #[OA\Patch(
-        description: 'Update shop information. Only provided fields will be updated.',
-        summary: 'Update shop'
+        description: 'Update product information. Only provided fields will be updated.',
+        summary: 'Update product'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'Shop ID',
+        description: 'Product ID',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\RequestBody(
-        description: 'Shop data to update',
+        description: 'Product data to update',
         required: true,
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'name', type: 'string', example: 'Updated Shop Name'),
-                new OA\Property(property: 'address', type: 'string', example: '456 Updated Street'),
-                new OA\Property(property: 'cityId', type: 'integer', example: 2),
-                new OA\Property(property: 'isOpen', type: 'boolean', example: false),
+                new OA\Property(property: 'name', type: 'string', example: 'iPhone 15 Pro', nullable: true),
+                new OA\Property(property: 'price', type: 'number', format: 'float', example: 1199.99, nullable: true),
+                new OA\Property(property: 'count', type: 'integer', example: 25, nullable: true),
+                new OA\Property(property: 'isActive', type: 'boolean', example: false, nullable: true),
+                new OA\Property(
+                    property: 'categoryIds',
+                    type: 'array',
+                    items: new OA\Items(type: 'integer'),
+                    example: [2, 4],
+                    nullable: true
+                )
             ]
         )
     )]
     #[OA\Response(
         response: 200,
-        description: 'Shop updated successfully',
+        description: 'Product updated successfully',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(
-                    property: 'shop',
-                    ref: new Model(type: ShopResponse::class)
+                    property: 'product',
+                    ref: new Model(type: ProductResponse::class)
                 )
             ]
         )
     )]
     #[ValidationErrorResponse(field: 'name')]
-    public function update(UpdateShopRequest $request, Shop $shop): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
         try {
-            $updatedShop = $this->apiShopService->update(new UpdateShopDTO(...$request->toArray()), $shop);
+            $updatedProduct = $this->apiProductService->update(new UpdateProductDTO(...$request->toArray()), $product);
 
             return $this->json([
-                'shop' => $updatedShop
+                'product' => $updatedProduct
             ]);
         } catch (\Exception $e) {
             return $this->json([
@@ -242,34 +247,34 @@ class ShopController extends BaseController
         }
     }
 
-    #[Route('/{id}', name: 'api_admin_shops_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_admin_products_delete', methods: ['DELETE'])]
     #[OA\Delete(
-        description: 'Soft delete shop by ID.',
-        summary: 'Delete shop'
+        description: 'Soft delete product by ID.',
+        summary: 'Delete product'
     )]
     #[OA\Parameter(
         name: 'id',
-        description: 'Shop ID to delete',
+        description: 'Product ID to delete',
         in: 'path',
         required: true,
         schema: new OA\Schema(type: 'integer', example: 1)
     )]
     #[OA\Response(
         response: 200,
-        description: 'Shop deleted successfully',
+        description: 'Product deleted successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Shop deleted successfully')
+                new OA\Property(property: 'message', type: 'string', example: 'Product deleted successfully')
             ]
         )
     )]
-    public function delete(Shop $shop): JsonResponse
+    public function delete(Product $product): JsonResponse
     {
         try {
-            $this->apiShopService->delete($shop);
+            $this->apiProductService->delete($product);
 
             return $this->json([
-                'message' => 'Shop deleted successfully'
+                'message' => 'Product deleted successfully'
             ]);
         } catch (\Exception $e) {
             return $this->json([

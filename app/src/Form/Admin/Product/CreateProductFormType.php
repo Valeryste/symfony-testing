@@ -59,13 +59,13 @@ class CreateProductFormType extends AbstractType
                     new NotBlank(['message' => 'Please enter a price']),
                     new Range([
                         'min' => 0.01,
-                        'max' => 999999.99,
-                        'notInRangeMessage' => 'count must be at least least 0.01 and cannot be longer than 999999.99',
+                        'max' => 99999999.99,
+                        'notInRangeMessage' => 'Price must be between 0 and 99,999,999.99',
                         'invalidMessage' => 'Please enter a valid price',
                     ]),
                     new Type([
                         'type' => 'float',
-                        'message' => 'The value {{ value }} is not a valid decimal number.',
+                        'message' => 'The value is not a valid decimal number.',
                     ])
                 ]
             ])
