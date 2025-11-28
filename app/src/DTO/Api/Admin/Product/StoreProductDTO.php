@@ -4,7 +4,7 @@ namespace App\DTO\Api\Admin\Product;
 
 use App\DTO\BaseDTO;
 
-class StoreProductDTO extends BaseDTO
+final class StoreProductDTO extends BaseDTO
 {
     public function __construct(
         public readonly string $name,

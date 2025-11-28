@@ -2,6 +2,8 @@
 
 namespace App\Model\Product;
 
+use App\Model\Category\CategoryItemResponse;
+use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
 class ProductResponse
@@ -18,6 +20,13 @@ class ProductResponse
 
         #[OA\Property(type: 'int', example: 8559)]
         public readonly int $count,
+
+        #[OA\Property(
+            property: 'categories',
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: CategoryItemResponse::class))
+        )]
+        public readonly array $categories,
 
         #[OA\Property(type: 'bool', example: true)]
         public readonly bool $isActive,

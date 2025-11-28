@@ -5,6 +5,7 @@ namespace App\Service\Api;
 use App\DTO\Api\Admin\Product\StoreProductDTO;
 use App\DTO\Api\Admin\Product\UpdateProductDTO;
 use App\Entity\Product;
+use App\Model\Category\CategoryItemResponse;
 use App\Model\Product\ProductItemResponse;
 use App\Model\Product\ProductListResponse;
 use App\Model\Product\ProductResponse;
@@ -63,6 +64,13 @@ class ApiProductService extends BaseService
             name: $product->getName(),
             price: $product->getPrice(),
             count: $product->getCount(),
+            categories: $product->getCategories()->map(function ($child) {
+                return new CategoryItemResponse(
+                    id: $child->getId(),
+                    name: $child->getName(),
+                    isActive: $child->isActive()
+                );
+            })->getValues(),
             isActive: $product->isActive(),
             createdAt: $product->getCreatedAt(),
             updatedAt: $product->getUpdatedAt()
