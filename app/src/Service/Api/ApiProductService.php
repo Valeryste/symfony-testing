@@ -65,11 +65,7 @@ class ApiProductService extends BaseService
             price: $product->getPrice(),
             count: $product->getCount(),
             categories: $product->getCategories()->map(function ($child) {
-                return new CategoryItemResponse(
-                    id: $child->getId(),
-                    name: $child->getName(),
-                    isActive: $child->isActive()
-                );
+                return CategoryItemResponse::fromEntity($child);
             })->getValues(),
             isActive: $product->isActive(),
             createdAt: $product->getCreatedAt(),

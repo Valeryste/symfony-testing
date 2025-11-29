@@ -2,6 +2,7 @@
 
 namespace App\Model\Category;
 
+use App\Entity\Category;
 use OpenApi\Attributes as OA;
 
 class CategoryItemResponse
@@ -16,5 +17,14 @@ class CategoryItemResponse
         #[OA\Property(type: 'bool', example: true)]
         public readonly bool $isActive,
     ) {
+    }
+
+    public static function fromEntity(Category $category): self
+    {
+        return new self(
+            id: $category->getId(),
+            name: $category->getName(),
+            isActive: $category->isActive()
+        );
     }
 }
