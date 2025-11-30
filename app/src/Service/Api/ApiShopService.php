@@ -5,7 +5,6 @@ namespace App\Service\Api;
 use App\DTO\Api\Admin\Shop\StoreShopDTO;
 use App\DTO\Api\Admin\Shop\UpdateShopDTO;
 use App\Entity\Shop;
-use App\Model\City\CityResponse;
 use App\Model\Shop\ShopListResponse;
 use App\Model\Shop\ShopResponse;
 use App\Repository\CityRepository;

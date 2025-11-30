@@ -5,8 +5,6 @@ namespace App\Service\Api;
 use App\DTO\Api\Admin\Product\StoreProductDTO;
 use App\DTO\Api\Admin\Product\UpdateProductDTO;
 use App\Entity\Product;
-use App\Model\Category\CategoryItemResponse;
-use App\Model\Product\ProductItemResponse;
 use App\Model\Product\ProductListResponse;
 use App\Model\Product\ProductResponse;
 use App\Repository\CategoryRepository;

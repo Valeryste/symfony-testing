@@ -2,7 +2,6 @@
 
 namespace App\Service\Api;
 
-use App\Entity\Role;
 use App\Model\Role\RoleResponse;
 use App\Repository\RoleRepository;
 use App\Service\BaseService;

@@ -4,7 +4,6 @@ namespace App\Service\Api;
 
 use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
-use App\Model\Role\RoleResponse;
 use App\Model\User\UserListResponse;
 use App\Model\User\UserResponse;
 use App\Repository\RoleRepository;
