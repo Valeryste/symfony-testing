@@ -42,32 +42,12 @@ class ApiCityService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new CityListResponse(
-            currentPage: $paginationCities->getCurrentPageNumber(),
-            totalCount: $paginationCities->getTotalItemCount(),
-            countries: array_map(
-                function ($city) {
-                    return self::toResponse($city);
-                },
-                $paginationCities->getItems()
-            )
-        );
-    }
-
-    public static function toResponse(City $city): CityResponse
-    {
-        return new CityResponse(
-            id: $city->getId(),
-            name: $city->getName(),
-            country: ApiCountryService::toResponse($city->getCountry()),
-            createdAt: $city->getCreatedAt(),
-            updatedAt: $city->getUpdatedAt()
-        );
+        return CityListResponse::fromPagination($paginationCities);
     }
 
     public function show(City $city): CityResponse
     {
-        return self::toResponse($city);
+        return CityResponse::fromEntity($city);
     }
 
     /**
@@ -84,7 +64,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($city);
+        return CityResponse::fromEntity($city);
     }
 
     /**
@@ -100,7 +80,7 @@ class ApiCityService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($city);
+        return CityResponse::fromEntity($city);
     }
 
     public function delete(City $city): void

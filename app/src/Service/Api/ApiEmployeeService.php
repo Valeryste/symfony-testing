@@ -42,37 +42,12 @@ class ApiEmployeeService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new EmployeeListResponse(
-            currentPage: $paginationEmployees->getCurrentPageNumber(),
-            totalCount: $paginationEmployees->getTotalItemCount(),
-            employees: array_map(
-                function ($employee) {
-                    return self::toResponse($employee);
-                },
-                $paginationEmployees->getItems()
-            )
-        );
-    }
-
-    public static function toResponse(Employee $employee): EmployeeResponse
-    {
-        return new EmployeeResponse(
-            id: $employee->getId(),
-            name: $employee->getName(),
-            surname: $employee->getSurname(),
-            phone: $employee->getPhone(),
-            position: $employee->getPosition(),
-            email: $employee->getEmail(),
-            isDismissed: $employee->isDismissed(),
-            shop: ApiShopService::toResponse($employee->getShop()),
-            createdAt: $employee->getCreatedAt(),
-            updatedAt: $employee->getUpdatedAt()
-        );
+        return EmployeeListResponse::fromPagination($paginationEmployees);
     }
 
     public function show(Employee $employee): EmployeeResponse
     {
-        return self::toResponse($employee);
+        return EmployeeResponse::fromEntity($employee);
     }
 
     /**
@@ -93,7 +68,7 @@ class ApiEmployeeService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($employee);
+        return EmployeeResponse::fromEntity($employee);
     }
 
     /**
@@ -113,7 +88,7 @@ class ApiEmployeeService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($employee);
+        return EmployeeResponse::fromEntity($employee);
     }
 
     public function delete(Employee $employee): void

@@ -2,6 +2,7 @@
 
 namespace App\Model\City;
 
+use App\Entity\City;
 use App\Model\Country\CountryResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -27,5 +28,16 @@ class CityResponse
         #[OA\Property(type: 'string', format: 'date-time', example: '2025-11-12T06:39:22+00:00|null', nullable: true)]
         public readonly ?\DateTime $updatedAt
     ) {
+    }
+
+    public static function fromEntity(City $city): self
+    {
+        return new self(
+            id: $city->getId(),
+            name: $city->getName(),
+            country: CountryResponse::fromEntity($city->getCountry()),
+            createdAt: $city->getCreatedAt(),
+            updatedAt: $city->getUpdatedAt()
+        );
     }
 }

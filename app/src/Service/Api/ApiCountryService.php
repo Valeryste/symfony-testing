@@ -39,31 +39,12 @@ class ApiCountryService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new CountryListResponse(
-            currentPage: $paginationCountries->getCurrentPageNumber(),
-            totalCount: $paginationCountries->getTotalItemCount(),
-            countries: array_map(
-                function ($country) {
-                    return self::toResponse($country);
-                },
-                $paginationCountries->getItems()
-            )
-        );
-    }
-
-    public static function toResponse(Country $country): CountryResponse
-    {
-        return new CountryResponse(
-            id: $country->getId(),
-            name: $country->getName(),
-            createdAt: $country->getCreatedAt(),
-            updatedAt: $country->getUpdatedAt()
-        );
+        return CountryListResponse::fromPagination($paginationCountries);
     }
 
     public function show(Country $country): CountryResponse
     {
-        return self::toResponse($country);
+        return CountryResponse::fromEntity($country);
     }
 
     public function store(StoreCountryDTO $storeCountryDTO): CountryResponse
@@ -76,7 +57,7 @@ class ApiCountryService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($country);
+        return CountryResponse::fromEntity($country);
     }
 
     public function update(UpdateCountryDTO $updateCountryDTO, Country $country): CountryResponse
@@ -86,7 +67,7 @@ class ApiCountryService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($country);
+        return CountryResponse::fromEntity($country);
     }
 
     public function delete(Country $country): void

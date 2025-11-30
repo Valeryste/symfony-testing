@@ -2,6 +2,7 @@
 
 namespace App\Model\Employee;
 
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
@@ -21,5 +22,19 @@ class EmployeeListResponse
         )]
         public readonly array $employees
     ) {
+    }
+
+    public static function fromPagination(PaginationInterface $pagination): self
+    {
+        return new self(
+            currentPage: $pagination->getCurrentPageNumber(),
+            totalCount: $pagination->getTotalItemCount(),
+            employees: array_map(
+                function ($employee) {
+                    return EmployeeResponse::fromEntity($employee);
+                },
+                $pagination->getItems()
+            )
+        );
     }
 }

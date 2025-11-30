@@ -2,6 +2,7 @@
 
 namespace App\Model\Role;
 
+use App\Entity\Role;
 use OpenApi\Attributes as OA;
 
 class RoleResponse
@@ -13,6 +14,13 @@ class RoleResponse
         #[OA\Property(property: 'name', type: 'string', example: 'ADMIN')]
         public readonly string $name,
     ) {
+    }
 
+    public static function fromEntity(Role $role): self
+    {
+        return new self(
+            id: $role->getId(),
+            name: $role->getName()
+        );
     }
 }

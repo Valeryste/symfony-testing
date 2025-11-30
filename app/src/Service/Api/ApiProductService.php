@@ -44,38 +44,12 @@ class ApiProductService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new ProductListResponse(
-            currentPage: $paginationProducts->getCurrentPageNumber(),
-            totalCount: $paginationProducts->getTotalItemCount(),
-            products: array_map(function ($product){
-                return new ProductItemResponse(
-                    id: $product->getId(),
-                    name: $product->getName(),
-                    price: $product->getPrice()
-                );
-            }, $paginationProducts->getItems())
-        );
-    }
-
-    private static function toResponse(Product $product): ProductResponse
-    {
-        return new ProductResponse(
-            id: $product->getId(),
-            name: $product->getName(),
-            price: $product->getPrice(),
-            count: $product->getCount(),
-            categories: $product->getCategories()->map(function ($child) {
-                return CategoryItemResponse::fromEntity($child);
-            })->getValues(),
-            isActive: $product->isActive(),
-            createdAt: $product->getCreatedAt(),
-            updatedAt: $product->getUpdatedAt()
-        );
+        return ProductListResponse::fromPagination($paginationProducts);
     }
 
     public function show(Product $product): ProductResponse
     {
-        return self::toResponse($product);
+        return ProductResponse::fromEntity($product);
     }
 
     public function store(StoreProductDTO $storeProductDTO): ProductResponse
@@ -93,7 +67,7 @@ class ApiProductService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($product);
+        return ProductResponse::fromEntity($product);
     }
 
     public function update(UpdateProductDTO $updateProductDTO, Product $product): ProductResponse
@@ -109,7 +83,7 @@ class ApiProductService extends BaseService
 
         $this->entityManager->flush();
 
-        return self::toResponse($product);
+        return ProductResponse::fromEntity($product);
     }
 
     public function delete(Product $product): void

@@ -42,37 +42,12 @@ class ApiUserService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new UserListResponse(
-            currentPage: $paginationUsers->getCurrentPageNumber(),
-            totalCount: $paginationUsers->getTotalItemCount(),
-            users: array_map(
-                function ($user) {
-                    return $this->toResponse($user);
-                },
-                $paginationUsers->getItems()
-            )
-        );
-    }
-
-    public function toResponse(User $user): UserResponse
-    {
-        return new UserResponse(
-            id: $user->getId(),
-            username: $user->getUsername(),
-            email: $user->getEmail(),
-            isActive: $user->isActive(),
-            role: new RoleResponse(
-                id: $user->getRole()->getId(),
-                name: $user->getRole()->getName(),
-            ),
-            createdAt: $user->getCreatedAt(),
-            updatedAt: $user->getUpdatedAt()
-        );
+        return UserListResponse::fromPagination($paginationUsers);
     }
 
     public function show(User $user): UserResponse
     {
-        return self::toResponse($user);
+        return UserResponse::fromEntity($user);
     }
 
     /**
@@ -90,7 +65,7 @@ class ApiUserService extends BaseService
 
         $this->entityManager->flush();
 
-        return $this->toResponse($user);
+        return UserResponse::fromEntity($user);
     }
 
     public function delete(User $user): void

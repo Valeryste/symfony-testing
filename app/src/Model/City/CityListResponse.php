@@ -2,11 +2,16 @@
 
 namespace App\Model\City;
 
+use App\Interface\PaginatedResponseInterface;
+use App\Trait\PaginatedResponseTrait;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-class CityListResponse
+class CityListResponse implements PaginatedResponseInterface
 {
+    //use PaginatedResponseTrait;
+
     public function __construct(
         #[OA\Property(type: 'integer', example: 1)]
         public readonly int $currentPage,
@@ -19,7 +24,21 @@ class CityListResponse
             type: 'array',
             items: new OA\Items(ref: new Model(type: CityResponse::class))
         )]
-        public readonly array $countries
+        public readonly array $cities
     ) {
+    }
+
+    public static function fromPagination(PaginationInterface $pagination): self
+    {
+        return new self(
+            currentPage: $pagination->getCurrentPageNumber(),
+            totalCount: $pagination->getTotalItemCount(),
+            cities: array_map(
+                function ($city) {
+                    return CityResponse::fromEntity($city);
+                },
+                $pagination->getItems()
+            )
+        );
     }
 }

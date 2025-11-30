@@ -24,14 +24,17 @@ class CategoryListResponse
     ) {
     }
 
-    public static function fromPagination(PaginationInterface $paginationCategories): self
+    public static function fromPagination(PaginationInterface $pagination): self
     {
         return new self(
-            currentPage: $paginationCategories->getCurrentPageNumber(),
-            totalCount: $paginationCategories->getTotalItemCount(),
-            categories: array_map(function ($category) {
-                return CategoryItemResponse::fromEntity($category);
-            }, $paginationCategories->getItems())
+            currentPage: $pagination->getCurrentPageNumber(),
+            totalCount: $pagination->getTotalItemCount(),
+            categories: array_map(
+                function ($category) {
+                    return CategoryItemResponse::fromEntity($category);
+                },
+                $pagination->getItems()
+            )
         );
     }
 }

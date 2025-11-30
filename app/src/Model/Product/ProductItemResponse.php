@@ -2,6 +2,7 @@
 
 namespace App\Model\Product;
 
+use App\Entity\Product;
 use OpenApi\Attributes as OA;
 
 class ProductItemResponse
@@ -16,5 +17,14 @@ class ProductItemResponse
         #[OA\Property(type: 'float', example: 19793.20)]
         public readonly float $price
     ) {
+    }
+
+    public static function fromEntity(Product $product): self
+    {
+        return new self(
+            id: $product->getId(),
+            name: $product->getName(),
+            price: $product->getPrice()
+        );
     }
 }

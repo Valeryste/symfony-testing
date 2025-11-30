@@ -2,6 +2,7 @@
 
 namespace App\Model\Product;
 
+use App\Entity\Product;
 use App\Model\Category\CategoryItemResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -37,5 +38,21 @@ class ProductResponse
         #[OA\Property(type: 'string', format: 'date-time', example: '2025-11-12T06:39:22+00:00|null', nullable: true)]
         public readonly ?\DateTime $updatedAt
     ) {
+    }
+
+    public static function fromEntity(Product $product): static
+    {
+        return new static(
+            id: $product->getId(),
+            name: $product->getName(),
+            price: $product->getPrice(),
+            count: $product->getCount(),
+            categories: $product->getCategories()->map(function ($child) {
+                return CategoryItemResponse::fromEntity($child);
+            })->getValues(),
+            isActive: $product->isActive(),
+            createdAt: $product->getCreatedAt(),
+            updatedAt: $product->getUpdatedAt()
+        );
     }
 }

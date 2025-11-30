@@ -163,7 +163,7 @@ class ShopController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_shops_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_shops_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns shop details',
         summary: 'Get shop details'
