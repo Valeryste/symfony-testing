@@ -55,10 +55,11 @@ class ApiUserService extends BaseService
      */
     public function update(UpdateUserDTO $updateUserDTO, User $user): UserResponse
     {
-        $user->setEmail($updateUserDTO->email ?? $user->getEmail());
-        $user->setUsername($updateUserDTO->username ?? $user->getUsername());
-        $user->setIsActive($updateUserDTO->isActive ?? $user->isActive());
-        $user->setUpdatedAt(new \DateTime());
+        $user->setEmail($updateUserDTO->email ?? $user->getEmail())
+            ->setUsername($updateUserDTO->username ?? $user->getUsername())
+            ->setIsActive($updateUserDTO->isActive ?? $user->isActive())
+            ->setUpdatedAt(new \DateTime());
+
         if (!empty($updateUserDTO->roleId)) {
            $this->setRoleUser($user, $updateUserDTO->roleId);
         }

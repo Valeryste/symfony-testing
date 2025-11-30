@@ -57,11 +57,11 @@ class ApiEmployeeService extends BaseService
     {
         $employee = new Employee();
 
-        $employee->setName($storeEmployeeDTO->name);
-        $employee->setEmail($storeEmployeeDTO->email);
-        $employee->setSurname($storeEmployeeDTO->surname);
-        $employee->setPhone($storeEmployeeDTO->phone);
-        $employee->setPosition($storeEmployeeDTO->position);
+        $employee->setName($storeEmployeeDTO->name)
+            ->setEmail($storeEmployeeDTO->email)
+            ->setSurname($storeEmployeeDTO->surname)
+            ->setPhone($storeEmployeeDTO->phone)
+            ->setPosition($storeEmployeeDTO->position);
         $this->setEmployeeShop($employee, $storeEmployeeDTO->shopId);
 
         $this->entityManager->persist($employee);
@@ -76,12 +76,12 @@ class ApiEmployeeService extends BaseService
      */
     public function update(UpdateEmployeeDTO $updateEmployeeDTO, Employee $employee): EmployeeResponse
     {
-        $employee->setName($updateEmployeeDTO->name ?? $employee->getName());
-        $employee->setEmail($updateEmployeeDTO->email ?? $employee->getEmail());
-        $employee->setSurname($updateEmployeeDTO->surname ?? $employee->getSurname());
-        $employee->setPhone($updateEmployeeDTO->phone ?? $employee->getPhone());
-        $employee->setPosition($updateEmployeeDTO->position ?? $employee->getPosition());
-        $employee->setUpdatedAt(new \DateTime());
+        $employee->setName($updateEmployeeDTO->name ?? $employee->getName())
+            ->setEmail($updateEmployeeDTO->email ?? $employee->getEmail())
+            ->setSurname($updateEmployeeDTO->surname ?? $employee->getSurname())
+            ->setPhone($updateEmployeeDTO->phone ?? $employee->getPhone())
+            ->setPosition($updateEmployeeDTO->position ?? $employee->getPosition())
+            ->setUpdatedAt(new \DateTime());
         if(!empty($updateEmployeeDTO->shopId)) {
             $this->setEmployeeShop($employee, $updateEmployeeDTO->shopId);
         }

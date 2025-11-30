@@ -72,8 +72,9 @@ class ApiCityService extends BaseService
      */
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
     {
-        $city->setName($updateCityDTO->name ?? $city->getName());
-        $city->setUpdatedAt(new \DateTime());
+        $city->setName($updateCityDTO->name ?? $city->getName())
+            ->setUpdatedAt(new \DateTime());
+
         if (!empty($updateCityDTO->countryId)) {
             $this->setCountryCity($city, $updateCityDTO->countryId);
         }

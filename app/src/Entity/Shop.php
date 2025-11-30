@@ -62,9 +62,11 @@ class Shop extends BaseEntity
         return $this->isOpen;
     }
 
-    public function setIsOpen(bool $isOpen): void
+    public function setIsOpen(bool $isOpen): self
     {
         $this->isOpen = $isOpen;
+
+        return $this;
     }
 
     public function getAddress(): ?string

@@ -58,9 +58,9 @@ class ApiShopService extends BaseService
     {
         $shop = new Shop();
 
-        $shop->setName($storeShopDTO->name);
-        $shop->setIsOpen($storeShopDTO->isOpen);
-        $shop->setAddress($storeShopDTO->address);
+        $shop->setName($storeShopDTO->name)
+            ->setIsOpen($storeShopDTO->isOpen)
+            ->setAddress($storeShopDTO->address);
         $this->setCityShop($shop, $storeShopDTO->cityId);
 
         $this->entityManager->persist($shop);
@@ -75,10 +75,11 @@ class ApiShopService extends BaseService
      */
     public function update(UpdateShopDTO $updateShopDTO, Shop $shop): ShopResponse
     {
-        $shop->setName($updateShopDTO->name ?? $shop->getName());
-        $shop->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen());
-        $shop->setAddress($updateShopDTO->address ?? $shop->getAddress());
-        $shop->setUpdatedAt(new \DateTime());
+        $shop->setName($updateShopDTO->name ?? $shop->getName())
+            ->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen())
+            ->setAddress($updateShopDTO->address ?? $shop->getAddress())
+            ->setUpdatedAt(new \DateTime());
+
         if (!empty($updateShopDTO->cityId)) {
            $this->setCityShop($shop, $updateShopDTO->cityId);
         }

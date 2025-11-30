@@ -56,9 +56,10 @@ class ApiProductService extends BaseService
     {
         $product = new Product();
 
-        $product->setName($storeProductDTO->name);
-        $product->setPrice($storeProductDTO->price);
-        $product->setCount($storeProductDTO->count);
+        $product->setName($storeProductDTO->name)
+            ->setPrice($storeProductDTO->price)
+            ->setCount($storeProductDTO->count);
+
         if(!empty($storeProductDTO->categoryIds)) {
             $this->setCategoriesProduct($product, $storeProductDTO->categoryIds);
         }
@@ -72,14 +73,15 @@ class ApiProductService extends BaseService
 
     public function update(UpdateProductDTO $updateProductDTO, Product $product): ProductResponse
     {
-        $product->setName($updateProductDTO->name ?? $product->getName());
-        $product->setPrice($updateProductDTO->price ?? $product->getPrice());
-        $product->setCount($updateProductDTO->count ?? $product->getCount());
-        $product->setIsActive($updateProductDTO->isActive ?? $product->isActive());
+        $product->setName($updateProductDTO->name ?? $product->getName())
+            ->setPrice($updateProductDTO->price ?? $product->getPrice())
+            ->setCount($updateProductDTO->count ?? $product->getCount())
+            ->setIsActive($updateProductDTO->isActive ?? $product->isActive())
+            ->setUpdatedAt(new \DateTime());
+
         if(!empty($updateProductDTO->categoryIds)) {
             $this->setCategoriesProduct($product, $updateProductDTO->categoryIds);
         }
-        $product->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();
 
