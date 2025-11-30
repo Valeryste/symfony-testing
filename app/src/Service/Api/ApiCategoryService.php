@@ -7,6 +7,7 @@ use App\DTO\Api\Admin\Category\UpdateCategoryDTO;
 use App\Entity\Category;
 use App\Model\Category\CategoryListResponse;
 use App\Model\Category\CategoryResponse;
+use App\Model\Category\ChildrenResponse;
 use App\Repository\CategoryRepository;
 use App\Service\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -92,12 +93,9 @@ class ApiCategoryService extends BaseService
         $this->entityManager->flush();
     }
 
-    public function getChildren(Category $category): array
+    public function getChildren(Category $category): ChildrenResponse
     {
-        $children = $category->getChildren();
-        return $children->map(
-            fn($child) : CategoryResponse => CategoryResponse::fromEntity($child)
-        )->toArray();
+        return ChildrenResponse::fromEntity($category);
     }
 
     /**

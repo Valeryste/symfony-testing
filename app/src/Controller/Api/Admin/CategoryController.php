@@ -13,6 +13,7 @@ use App\Enum\Filter\CategoryFilters;
 use App\Enum\Search\CategorySearch;
 use App\Model\Category\CategoryListResponse;
 use App\Model\Category\CategoryResponse;
+use App\Model\Category\ChildrenResponse;
 use App\Request\Category\StoreCategoryRequest;
 use App\Request\Category\UpdateCategoryRequest;
 use App\Service\Api\ApiCategoryService;
@@ -276,6 +277,25 @@ class CategoryController extends BaseController
     }
 
     #[Route('/{id}/children', name: 'api_categories_children', methods: ['GET'])]
+    #[OA\Get(
+        description: 'Get all child categories for a specific category',
+        summary: 'Get category children'
+    )]
+    #[OA\Parameter(
+        name: 'id',
+        description: 'Category ID',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer', example: 1)
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'List of child categories retrieved successfully',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: ChildrenResponse::class))
+        )
+    )]
     public function getChildren(Category $category): JsonResponse
     {
         return $this->json($this->apiCategoryService->getChildren($category));
