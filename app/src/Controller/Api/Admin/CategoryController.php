@@ -274,4 +274,10 @@ class CategoryController extends BaseController
             ], 500);
         }
     }
+
+    #[Route('/{id}/children', name: 'api_categories_children', methods: ['GET'])]
+    public function getChildren(Category $category): JsonResponse
+    {
+        return $this->json($this->apiCategoryService->getChildren($category));
+    }
 }

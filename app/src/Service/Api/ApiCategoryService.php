@@ -92,6 +92,14 @@ class ApiCategoryService extends BaseService
         $this->entityManager->flush();
     }
 
+    public function getChildren(Category $category): array
+    {
+        $children = $category->getChildren();
+        return $children->map(
+            fn($child) : CategoryResponse => CategoryResponse::fromEntity($child)
+        )->toArray();
+    }
+
     /**
      * @throws EntityNotFoundException|InvalidArgumentException
      */

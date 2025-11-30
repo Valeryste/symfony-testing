@@ -46,7 +46,7 @@ class CategoryResponse
             name: $category->getName(),
             parent: $category->getParent() ? CategoryItemResponse::fromEntity($category->getParent()) : null,
             children: $category->getChildren()->map(function ($child) {
-                CategoryItemResponse::fromEntity($child->getParent());
+                return CategoryItemResponse::fromEntity($child);
             })->getValues(),
             isActive: $category->isActive(),
             createdAt: $category->getCreatedAt(),
