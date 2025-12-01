@@ -2,16 +2,12 @@
 
 namespace App\Model\City;
 
-use App\Interface\PaginatedResponseInterface;
-use App\Trait\PaginatedResponseTrait;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-class CityListResponse implements PaginatedResponseInterface
+class CityListResponse
 {
-    //use PaginatedResponseTrait;
-
     public function __construct(
         #[OA\Property(type: 'integer', example: 1)]
         public readonly int $currentPage,
