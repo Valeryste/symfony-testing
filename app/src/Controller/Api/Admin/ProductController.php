@@ -66,7 +66,10 @@ class ProductController extends BaseController
                 description: 'Filter by category IDs',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'integer')
+                schema: new OA\Schema(
+                    type: 'array',
+                    items: new OA\Items(type: 'integer')
+                ),
             ),
             new OA\Parameter(
                 name: 'filters[isActive]',
