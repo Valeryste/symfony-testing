@@ -19,7 +19,7 @@ class ApiCategoryService extends BaseService
     private const PAGINATION_LIMIT = 10;
 
     public function __construct(
-        private readonly CategoryRepository $categoryRepository,
+        private readonly CategoryRepository     $categoryRepository,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
@@ -109,10 +109,27 @@ class ApiCategoryService extends BaseService
             throw new EntityNotFoundException('Category with ID: ' . $parentId . ' not found', 404);
         }
 
-        if($parentCategory->getId() === $category->getId()) {
+        if ($parentCategory->getId() === $category->getId()) {
             throw new InvalidArgumentException('Category cannot be parent to itself', 409);
         }
 
+        if ($this->isCircularReference($category, $parentCategory)) {
+            throw new InvalidArgumentException('Сircular reference detected: category cannot be parent to its own ancestor', 409);
+        }
+
         $category->setParent($parentCategory);
+    }
+
+    private function isCircularReference(Category $currentCategory, Category $potentialParent): bool
+    {
+        while ($potentialParent->getParent() !== null) {
+            if ($potentialParent->getParent()->getId() === $currentCategory->getId()) {
+                return true;
+            }
+
+            $potentialParent = $potentialParent->getParent();
+        }
+
+        return false;
     }
 }
