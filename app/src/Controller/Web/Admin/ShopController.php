@@ -47,7 +47,7 @@ class ShopController extends BaseController
                 sorts: $request->query->all()['sorts'] ?? [],
                 search: $transformedSearch
             ),
-            'filters' => ShopFilters::getFilterCases(),
+            'filters' => ShopFilters::getAvailableFilters(),
             'sorts' => ShopSorts::getSortCases(),
             'cities' => $this->shopService->getCitiesHavingShops(),
             'countries' => $this->shopService->getCountriesHavingShops()

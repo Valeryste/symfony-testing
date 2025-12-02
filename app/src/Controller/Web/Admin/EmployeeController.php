@@ -47,7 +47,7 @@ class EmployeeController extends BaseController
                 sorts: $request->query->all()['sorts'] ?? [],
                 search: $transformedSearch
             ),
-            'filters' => EmployeeFilters::getFilterCases(),
+            'filters' => EmployeeFilters::getAvailableFilters(),
             'sorts' => EmployeeSorts::getSortCases(),
             'shops' => $this->employeeService->getShopsHavingEmployee()
         ]);

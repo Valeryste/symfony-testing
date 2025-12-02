@@ -2,7 +2,9 @@
 
 namespace App\Enum\Filter;
 
-enum ShopFilters: string
+use App\Interface\FilterEnumInterface;
+
+enum ShopFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
@@ -12,7 +14,7 @@ enum ShopFilters: string
 
     case ONLY_OPEN = 'isOpen';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -22,7 +24,7 @@ enum ShopFilters: string
         ];
     }
 
-    public function getType(): string
+    public function getInputType(): string
     {
         return match($this) {
             self::WITH_DELETED, self::ONLY_OPEN => 'checkbox',
@@ -30,27 +32,45 @@ enum ShopFilters: string
         };
     }
 
-    public function outputInTemplate(): string
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
+            self::ONLY_OPEN => 'Только открытые',
             self::BY_CITY => 'По городу',
-            self::BY_COUNTRY => 'По стране',
-            self::ONLY_OPEN => 'Только '
+            self::BY_COUNTRY => 'По стране'
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
             self::BY_CITY => 'int',
-            self::BY_COUNTRY => 'county',
+            self::BY_COUNTRY => 'country',
             self::ONLY_OPEN => 'bool'
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getEntityField(): string
+    {
+        return match($this) {
+            self::WITH_DELETED => 'deletedAt',
+            self::BY_CITY => 'city',
+            self::BY_COUNTRY => 'city.country',
+            self::ONLY_OPEN => 'isOpen'
+        };
+    }
+
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
     {
         return match($this) {
             self::BY_CITY => 'cities',
@@ -58,5 +78,4 @@ enum ShopFilters: string
             default => '',
         };
     }
-
 }

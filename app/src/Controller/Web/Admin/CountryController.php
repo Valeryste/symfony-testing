@@ -47,7 +47,7 @@ class CountryController extends BaseController
                 search: $transformedSearch
             ),
             'createForm' => $this->createForm(CreateCountryFormType::class),
-            'filters' => CountryFilters::getFilterCases(),
+            'filters' => CountryFilters::getAvailableFilters(),
             'sorts' => CountrySorts::getSortCases()
         ]);
     }

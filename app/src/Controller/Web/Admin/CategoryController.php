@@ -46,7 +46,7 @@ class CategoryController extends BaseController
                 sorts: $request->query->all()['sorts'] ?? [],
                 search: $transformedSearch
             ),
-            'filters' => CategoryFilters::getFilterCases(),
+            'filters' => CategoryFilters::getAvailableFilters(),
             'sorts' => CategorySorts::getSortCases(),
             'parentCategories' => $this->categoryService->getAllParents()
         ]);

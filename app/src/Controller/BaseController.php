@@ -12,25 +12,24 @@ class BaseController extends AbstractController
             throw new \InvalidArgumentException('Invalid BackedEnum class provided');
         }
 
-        return array_filter(
-            array_map(
-                function ($key, $filter) use ($filtersEnumClass) {
-                    $enumCase = $filtersEnumClass::tryFrom($key);
+        $result = [];
 
-                    if (!$enumCase) {
-                        return null;
-                    }
+        foreach ($filters as $key => $value) {
+            $enumCase = $filtersEnumClass::tryFrom($key);
 
-                    return [
-                        'field' => $key,
-                        'value' => $filter,
-                        'fieldType' => $enumCase->getFieldType()
-                    ];
-                },
-                array_keys($filters),
-                $filters
-            )
-        );
+            if (!$enumCase) {
+                continue;
+            }
+
+            $result[] = [
+                'field' => $enumCase->getEntityField(),
+                'value' => $value,
+                'fieldType' => $enumCase->getEntityFieldType(),
+                'operator' => $enumCase->getOperator($value)
+            ];
+        }
+
+        return $result;
     }
 
     protected function transformedSearch(string $searchEnumClass, string $search = ''): array

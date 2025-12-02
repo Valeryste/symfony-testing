@@ -2,7 +2,9 @@
 
 namespace App\Enum\Filter;
 
-enum ProductFilters: string
+use App\Interface\FilterEnumInterface;
+
+enum ProductFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
@@ -10,7 +12,7 @@ enum ProductFilters: string
 
     case ONLY_ACTIVE = 'isActive';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -19,7 +21,7 @@ enum ProductFilters: string
         ];
     }
 
-    public function getType(): string
+    public function getInputType(): string
     {
         return match($this) {
             self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
@@ -27,7 +29,7 @@ enum ProductFilters: string
         };
     }
 
-    public function outputInTemplate(): string
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
@@ -36,7 +38,7 @@ enum ProductFilters: string
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
@@ -45,7 +47,25 @@ enum ProductFilters: string
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getEntityField(): string
+    {
+        return match($this) {
+            self::WITH_DELETED => 'createdAt',
+            self::BY_CATEGORIES => 'categories',
+            self::ONLY_ACTIVE => 'isActive'
+        };
+    }
+
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            self::BY_CATEGORIES => 'IN',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
     {
         return match($this) {
             self::BY_CATEGORIES => 'categories'

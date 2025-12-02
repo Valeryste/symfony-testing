@@ -2,7 +2,9 @@
 
 namespace App\Enum\Filter;
 
-enum CategoryFilters: string
+use App\Interface\FilterEnumInterface;
+
+enum CategoryFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
@@ -10,7 +12,7 @@ enum CategoryFilters: string
 
     case BY_PARENT = 'parent';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -19,7 +21,7 @@ enum CategoryFilters: string
         ];
     }
 
-    public function getType(): string
+    public function getInputType(): string
     {
         return match($this) {
             self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
@@ -27,7 +29,7 @@ enum CategoryFilters: string
         };
     }
 
-    public function outputInTemplate(): string
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
@@ -36,7 +38,7 @@ enum CategoryFilters: string
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
@@ -45,10 +47,28 @@ enum CategoryFilters: string
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getEntityField(): string
     {
         return match($this) {
-            self::BY_PARENT => 'parentCategories'
+            self::WITH_DELETED => 'deletedAt',
+            self::ONLY_ACTIVE => 'isActive',
+            self::BY_PARENT => 'parent'
+        };
+    }
+
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
+    {
+        return match($this) {
+            self::BY_PARENT => 'parentCategories',
+            default => ''
         };
     }
 }

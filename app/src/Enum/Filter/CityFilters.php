@@ -2,13 +2,15 @@
 
 namespace App\Enum\Filter;
 
-enum CityFilters: string
+use App\Interface\FilterEnumInterface;
+
+enum CityFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
     case BY_COUNTRY = 'country';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -16,7 +18,7 @@ enum CityFilters: string
         ];
     }
 
-    public function getType(): string
+    public function getInputType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'checkbox',
@@ -24,7 +26,7 @@ enum CityFilters: string
         };
     }
 
-    public function outputInTemplate(): string
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
@@ -32,7 +34,7 @@ enum CityFilters: string
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
@@ -40,7 +42,23 @@ enum CityFilters: string
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getEntityField(): string
+    {
+        return match($this) {
+            self::WITH_DELETED => 'deletedAt',
+            self::BY_COUNTRY => 'country'
+        };
+    }
+
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
     {
         return match($this) {
             self::BY_COUNTRY => 'countries',

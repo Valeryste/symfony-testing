@@ -30,6 +30,7 @@ abstract class BaseRepository extends ServiceEntityRepository
             $field = $filter['field'];
             $value = $filter['value'];
             $fieldType = $filter['fieldType'];
+            $operator = $filter['operator'];
 
             if (empty($value)) {
                 continue;
@@ -40,7 +41,8 @@ abstract class BaseRepository extends ServiceEntityRepository
                 alias: $alias,
                 field: $field,
                 fieldType: $fieldType,
-                value: $value
+                value: $value,
+                operator: $operator
             );
         }
     }
@@ -50,13 +52,12 @@ abstract class BaseRepository extends ServiceEntityRepository
         string $alias,
         string $field,
         string $fieldType,
-        $value,
+        mixed $value,
+        string $operator
     ): void
     {
-        if ($fieldType === 'datetime' && !in_array($value, [0, 1], true)) {
-            $condition = (int)$value === 1 ? 'IS NOT NULL' : 'IS NULL';
-
-            $queryBuilder->andWhere("$alias.$field $condition");
+        if ($fieldType === 'datetime' && in_array((int)$value, [0, 1])) {
+            $queryBuilder->andWhere("$alias.$field $operator");
             return;
         }
 
@@ -65,14 +66,14 @@ abstract class BaseRepository extends ServiceEntityRepository
                 queryBuilder: $queryBuilder,
                 alias: $alias,
                 field: $field,
-                fieldType: $fieldType,
-                value: $value
+                value: $value,
+                operator: $operator
             );
             return;
         }
 
         $queryBuilder
-            ->andWhere("$alias.$field = :{$alias}_{$field}_value")
+            ->andWhere("$alias.$field $operator :{$alias}_{$field}_value")
             ->setParameter("{$alias}_{$field}_value", $value);
     }
 
@@ -80,13 +81,11 @@ abstract class BaseRepository extends ServiceEntityRepository
         QueryBuilder $queryBuilder,
         string $alias,
         string $field,
-        string $fieldType,
-        $value
+        mixed $value,
+        string $operator
     ): void
     {
         $fields = explode('.', $field);
-
-        $operator = $fieldType === 'array' ? 'IN' : '=';
 
         $currentAlias = $alias;
 
