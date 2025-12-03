@@ -5,16 +5,22 @@ namespace App\Repository;
 use App\Entity\CountHistory;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<CountHistory>
  */
-class CountHistoryRepository extends ServiceEntityRepository
+class CountHistoryRepository extends BaseRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        ManagerRegistry    $registry,
+        PaginatorInterface $paginator
+    )
     {
-        parent::__construct($registry, CountHistory::class);
+        parent::__construct($registry, $paginator, CountHistory::class);
     }
 
     public function findLastByProduct(Product $product): ?CountHistory
@@ -25,28 +31,37 @@ class CountHistoryRepository extends ServiceEntityRepository
         );
     }
 
-    //    /**
-    //     * @return CountHistory[] Returns an array of CountHistory objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getPaginatedResults(
+        int   $page = 1,
+        int   $limit = 10,
+        array $filters = [],
+        array $sorts = [],
+        array $search = [],
+        Product $product = null
+    ) : PaginationInterface
+    {
+        return $this->paginator->paginate(
+            target: $this->getListQuery($filters, $sorts, $search, $product),
+            page: $page,
+            limit: $limit
+        );
+    }
 
-    //    public function findOneBySomeField($value): ?CountHistory
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getListQuery(array $filters = [], array $sorts = [], array $search = [], Product $product = null): Query
+    {
+        $query = $this->createQueryBuilder('ch');
+
+        if ($product) {
+            $query
+                ->leftJoin('ch.product', 'p')
+                ->addSelect('p')
+                ->andWhere('ch.product = :product')
+                ->setParameter('product', $product);
+        }
+
+        $this->setFilterInQuery($query, $filters);
+        $this->setSortInQuery($query, $sorts);
+
+        return $query->getQuery();
+    }
 }

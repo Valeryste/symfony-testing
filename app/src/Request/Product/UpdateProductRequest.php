@@ -2,7 +2,9 @@
 
 namespace App\Request\Product;
 
+use App\Entity\Product;
 use App\Request\BaseRequest;
+use App\Validator\Constraints\UniqueEntityField;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -22,6 +24,11 @@ class UpdateProductRequest extends BaseRequest
     #[Regex(
         pattern: '/^[a-zA-Zа-яА-Я0-9_]+( [a-zA-Zа-яА-Я0-9_]+)*$/u',
         message: 'Name can contain letters, numbers, underscores with single spaces between words'
+    )]
+    #[UniqueEntityField(
+        entityClass: Product::class,
+        field: 'name',
+        message: 'Product with that name already exists'
     )]
     protected ?string $name = null;
 
