@@ -69,7 +69,8 @@ class ApiCategoryService extends BaseService
 
     public function update(UpdateCategoryDTO $updateCategoryDTO, Category $category): CategoryResponse
     {
-        $category->setName($updateCategoryDTO->name ?? $category->getName())
+        $category
+            ->setName($updateCategoryDTO->name ?? $category->getName())
             ->setIsActive($updateCategoryDTO->isActive ?? $category->isActive())
             ->setUpdatedAt(new \DateTime());
 

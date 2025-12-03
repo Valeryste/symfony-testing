@@ -62,8 +62,9 @@ class ApiCountryService extends BaseService
 
     public function update(UpdateCountryDTO $updateCountryDTO, Country $country): CountryResponse
     {
-        $country->setName($updateCountryDTO->name ?? $country->getName());
-        $country->setUpdatedAt(new \DateTime());
+        $country
+            ->setName($updateCountryDTO->name ?? $country->getName())
+            ->setUpdatedAt(new \DateTime());
 
         $this->entityManager->flush();
 

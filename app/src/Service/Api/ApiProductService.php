@@ -54,7 +54,8 @@ class ApiProductService extends BaseService
     {
         $product = new Product();
 
-        $product->setName($storeProductDTO->name)
+        $product
+            ->setName($storeProductDTO->name)
             ->setPrice($storeProductDTO->price)
             ->setCount($storeProductDTO->count);
 
@@ -71,7 +72,8 @@ class ApiProductService extends BaseService
 
     public function update(UpdateProductDTO $updateProductDTO, Product $product): ProductResponse
     {
-        $product->setName($updateProductDTO->name ?? $product->getName())
+        $product
+            ->setName($updateProductDTO->name ?? $product->getName())
             ->setPrice($updateProductDTO->price ?? $product->getPrice())
             ->setCount($updateProductDTO->count ?? $product->getCount())
             ->setIsActive($updateProductDTO->isActive ?? $product->isActive())

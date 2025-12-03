@@ -58,6 +58,7 @@ class ApiCityService extends BaseService
         $city = new City();
 
         $city->setName($storeCityDTO->name);
+
         $this->setCountryCity($city, $storeCityDTO->countryId);
 
         $this->entityManager->persist($city);
@@ -72,7 +73,8 @@ class ApiCityService extends BaseService
      */
     public function update(UpdateCityDTO $updateCityDTO, City $city): CityResponse
     {
-        $city->setName($updateCityDTO->name ?? $city->getName())
+        $city
+            ->setName($updateCityDTO->name ?? $city->getName())
             ->setUpdatedAt(new \DateTime());
 
         if (!empty($updateCityDTO->countryId)) {

@@ -48,7 +48,7 @@ class StoreProductRequest extends BaseRequest
     #[Range(
         notInRangeMessage: 'Price must be between 0.01 and 99,999,999.99',
         min: 0.01,
-        max: 99999999.99
+        max: 99_999_999.99
     )]
     protected float $price;
 
