@@ -217,7 +217,6 @@ class EmployeeController extends BaseController
         description: 'Employee updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Employee updated successfully'),
                 new OA\Property(
                     property: 'employee',
                     ref: new Model(type: EmployeeResponse::class)
@@ -232,7 +231,6 @@ class EmployeeController extends BaseController
             $updatedEmployee = $this->apiEmployeeService->update(new UpdateEmployeeDTO(...$request->toArray()), $employee);
 
             return $this->json([
-                'message' => 'Employee updated successfully',
                 'employee' => $updatedEmployee
             ]);
         } catch (\Exception $e) {

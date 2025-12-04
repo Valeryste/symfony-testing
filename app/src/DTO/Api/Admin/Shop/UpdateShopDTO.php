@@ -4,7 +4,7 @@ namespace App\DTO\Api\Admin\Shop;
 
 use App\DTO\BaseDTO;
 
-class UpdateShopDTO extends BaseDTO
+final class UpdateShopDTO extends BaseDTO
 {
     public function __construct(
         public readonly ?string $name,

@@ -1,7 +1,7 @@
 <div class="row">
     {% for filter in filters %}
         <div class="col-md-3 mb-3">
-            {% if filter.getType == 'checkbox' %}
+            {% if filter.getInputType == 'checkbox' %}
                 <div class="form-check">
                     <input type="checkbox"
                            name="filters[{{ filter.value }}]"
@@ -11,18 +11,16 @@
                             {{ (app.request.query.all()['filters'][filter.value] ?? '') == '1' ? 'checked' : '' }}
                            onchange="this.value = this.checked ? '1' : '0'">
                     <label class="form-check-label fw-bold" for="filter_{{ filter.value }}">
-                        {{ filter.outputInTemplate }}
+                        {{ filter.getDisplayName }}
                     </label>
                 </div>
 
-            {% elseif filter.getType == 'select' %}
-                {% set variableName = filter.getTemplateVariable() %}
+            {% elseif filter.getInputType == 'select' %}
+                {% set variableName = filter.getTemplateVariableName %}
                 {% if attribute(_context, variableName) is defined %}
                     {% set isMultiple = false %}
 
-                    {% if filter.getFieldType is defined %}
-                        {% set isMultiple = filter.getFieldType == 'array' %}
-                    {% endif %}
+                    {% set isMultiple = filter.getEntityFieldType == 'array' %}
 
                     {% include '/include/filter_select.html.twig' with {
                         filter: filter,

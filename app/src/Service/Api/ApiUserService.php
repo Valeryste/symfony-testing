@@ -4,7 +4,6 @@ namespace App\Service\Api;
 
 use App\DTO\Api\Admin\User\UpdateUserDTO;
 use App\Entity\User;
-use App\Model\Role\RoleResponse;
 use App\Model\User\UserListResponse;
 use App\Model\User\UserResponse;
 use App\Repository\RoleRepository;
@@ -42,37 +41,12 @@ class ApiUserService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new UserListResponse(
-            currentPage: $paginationUsers->getCurrentPageNumber(),
-            totalCount: $paginationUsers->getTotalItemCount(),
-            users: array_map(
-                function ($user) {
-                    return $this->toResponse($user);
-                },
-                $paginationUsers->getItems()
-            )
-        );
-    }
-
-    public function toResponse(User $user): UserResponse
-    {
-        return new UserResponse(
-            id: $user->getId(),
-            username: $user->getUsername(),
-            email: $user->getEmail(),
-            isActive: $user->isActive(),
-            role: new RoleResponse(
-                id: $user->getRole()->getId(),
-                name: $user->getRole()->getName(),
-            ),
-            createdAt: $user->getCreatedAt(),
-            updatedAt: $user->getUpdatedAt()
-        );
+        return UserListResponse::fromPagination($paginationUsers);
     }
 
     public function show(User $user): UserResponse
     {
-        return self::toResponse($user);
+        return UserResponse::fromEntity($user);
     }
 
     /**
@@ -80,17 +54,19 @@ class ApiUserService extends BaseService
      */
     public function update(UpdateUserDTO $updateUserDTO, User $user): UserResponse
     {
-        $user->setEmail($updateUserDTO->email ?? $user->getEmail());
-        $user->setUsername($updateUserDTO->username ?? $user->getUsername());
-        $user->setIsActive($updateUserDTO->isActive ?? $user->isActive());
-        $user->setUpdatedAt(new \DateTime());
+        $user
+            ->setEmail($updateUserDTO->email ?? $user->getEmail())
+            ->setUsername($updateUserDTO->username ?? $user->getUsername())
+            ->setIsActive($updateUserDTO->isActive ?? $user->isActive())
+            ->setUpdatedAt(new \DateTime());
+
         if (!empty($updateUserDTO->roleId)) {
            $this->setRoleUser($user, $updateUserDTO->roleId);
         }
 
         $this->entityManager->flush();
 
-        return $this->toResponse($user);
+        return UserResponse::fromEntity($user);
     }
 
     public function delete(User $user): void

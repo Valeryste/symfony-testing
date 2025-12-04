@@ -17,8 +17,7 @@ class ApiShopService extends BaseService
 {
     private const PAGINATION_LIMIT = 10;
 
-    public
-    function __construct(
+    public function __construct(
         private readonly ShopRepository         $shopRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly CityRepository         $cityRepository
@@ -43,34 +42,12 @@ class ApiShopService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return new ShopListResponse(
-            currentPage: $paginationShops->getCurrentPageNumber(),
-            totalCount: $paginationShops->getTotalItemCount(),
-            shops: array_map(
-                function ($shop) {
-                    return self::toResponse($shop);
-                },
-                $paginationShops->getItems()
-            )
-        );
-    }
-
-    public static function toResponse(Shop $shop): ShopResponse
-    {
-        return new ShopResponse(
-            id: $shop->getId(),
-            name: $shop->getName(),
-            address: $shop->getAddress(),
-            isOpen: $shop->isOpen(),
-            city: ApiCityService::toResponse($shop->getCity()),
-            createdAt: $shop->getCreatedAt(),
-            updatedAt: $shop->getUpdatedAt()
-        );
+        return ShopListResponse::fromPagination($paginationShops);
     }
 
     public function show(Shop $shop): ShopResponse
     {
-        return self::toResponse($shop);
+        return ShopResponse::fromEntity($shop);
     }
 
     /**
@@ -80,16 +57,18 @@ class ApiShopService extends BaseService
     {
         $shop = new Shop();
 
-        $shop->setName($storeShopDTO->name);
-        $shop->setIsOpen($storeShopDTO->isOpen);
-        $shop->setAddress($storeShopDTO->address);
+        $shop
+            ->setName($storeShopDTO->name)
+            ->setIsOpen($storeShopDTO->isOpen)
+            ->setAddress($storeShopDTO->address);
+
         $this->setCityShop($shop, $storeShopDTO->cityId);
 
         $this->entityManager->persist($shop);
 
         $this->entityManager->flush();
 
-        return self::toResponse($shop);
+        return ShopResponse::fromEntity($shop);
     }
 
     /**
@@ -97,17 +76,19 @@ class ApiShopService extends BaseService
      */
     public function update(UpdateShopDTO $updateShopDTO, Shop $shop): ShopResponse
     {
-        $shop->setName($updateShopDTO->name ?? $shop->getName());
-        $shop->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen());
-        $shop->setAddress($updateShopDTO->address ?? $shop->getAddress());
-        $shop->setUpdatedAt(new \DateTime());
+        $shop
+            ->setName($updateShopDTO->name ?? $shop->getName())
+            ->setIsOpen($updateShopDTO->isOpen ?? $shop->isOpen())
+            ->setAddress($updateShopDTO->address ?? $shop->getAddress())
+            ->setUpdatedAt(new \DateTime());
+
         if (!empty($updateShopDTO->cityId)) {
            $this->setCityShop($shop, $updateShopDTO->cityId);
         }
 
         $this->entityManager->flush();
 
-        return self::toResponse($shop);
+        return ShopResponse::fromEntity($shop);
     }
 
     public function delete(Shop $shop): void

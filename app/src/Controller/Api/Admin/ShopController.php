@@ -163,7 +163,7 @@ class ShopController extends BaseController
         }
     }
 
-    #[Route('/{id}/show', name: 'api_admin_shops_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_admin_shops_show', methods: ['GET'])]
     #[OA\Get(
         description: 'Returns shop details',
         summary: 'Get shop details'
@@ -219,7 +219,6 @@ class ShopController extends BaseController
         description: 'Shop updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Shop updated successfully'),
                 new OA\Property(
                     property: 'shop',
                     ref: new Model(type: ShopResponse::class)

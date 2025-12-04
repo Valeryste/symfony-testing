@@ -30,6 +30,7 @@ abstract class BaseRepository extends ServiceEntityRepository
             $field = $filter['field'];
             $value = $filter['value'];
             $fieldType = $filter['fieldType'];
+            $operator = $filter['operator'];
 
             if (empty($value)) {
                 continue;
@@ -40,7 +41,8 @@ abstract class BaseRepository extends ServiceEntityRepository
                 alias: $alias,
                 field: $field,
                 fieldType: $fieldType,
-                value: $value
+                value: $value,
+                operator: $operator
             );
         }
     }
@@ -50,29 +52,24 @@ abstract class BaseRepository extends ServiceEntityRepository
         string $alias,
         string $field,
         string $fieldType,
-        $value,
+        mixed $value,
+        string $operator
     ): void
     {
-        if ($fieldType === 'datetime' && !in_array($value, [0, 1], true)) {
-            $condition = (int)$value === 1 ? 'IS NOT NULL' : 'IS NULL';
+        if ($fieldType === 'datetime') {
+            $this->applyDateTimeFilter($queryBuilder, $alias, $field, $value, $operator);
 
-            $queryBuilder->andWhere("$alias.$field $condition");
             return;
         }
 
         if ($fieldType === 'array' || count(explode('.', $field)) > 1) {
-            $this->applyRelationFilter(
-                queryBuilder: $queryBuilder,
-                alias: $alias,
-                field: $field,
-                fieldType: $fieldType,
-                value: $value
-            );
+            $this->applyRelationFilter($queryBuilder, $alias, $field, $value, $operator);
+
             return;
         }
 
         $queryBuilder
-            ->andWhere("$alias.$field = :{$alias}_{$field}_value")
+            ->andWhere("$alias.$field $operator :{$alias}_{$field}_value")
             ->setParameter("{$alias}_{$field}_value", $value);
     }
 
@@ -80,13 +77,11 @@ abstract class BaseRepository extends ServiceEntityRepository
         QueryBuilder $queryBuilder,
         string $alias,
         string $field,
-        string $fieldType,
-        $value
+        mixed $value,
+        string $operator
     ): void
     {
         $fields = explode('.', $field);
-
-        $operator = $fieldType === 'array' ? 'IN' : '=';
 
         $currentAlias = $alias;
 
@@ -99,6 +94,36 @@ abstract class BaseRepository extends ServiceEntityRepository
         $queryBuilder
             ->andWhere("$currentAlias.id $operator (:{$currentAlias}_value)")
             ->setParameter("{$currentAlias}_value", $value);
+    }
+
+    private function applyDateTimeFilter(
+        QueryBuilder $queryBuilder,
+        string $alias,
+        string $field,
+        mixed $value,
+        string $operator
+    ): void
+    {
+        if(in_array((int)$value, [0, 1])){
+            $queryBuilder->andWhere("$alias.$field $operator");
+
+            return;
+        }
+
+        try {
+            $value = new \DateTime($value);
+
+            if($operator === '<=') {
+                $value->setTime(23, 59, 59);
+            }
+
+            $queryBuilder
+                ->andWhere("$alias.$field $operator :{$alias}_{$field}_value")
+                ->setParameter("{$alias}_{$field}_value", $value);
+
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException('Invalid date format ' . $value, 400);
+        }
     }
 
     protected function setSortInQuery(QueryBuilder $queryBuilder, array $sorts = []): void

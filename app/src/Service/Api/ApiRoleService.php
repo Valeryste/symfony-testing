@@ -2,7 +2,6 @@
 
 namespace App\Service\Api;
 
-use App\Entity\Role;
 use App\Model\Role\RoleResponse;
 use App\Repository\RoleRepository;
 use App\Service\BaseService;
@@ -18,17 +17,9 @@ class ApiRoleService extends BaseService
     {
         return array_map(
             function ($role) {
-                return $this->toResponse($role);
+                return RoleResponse::fromEntity($role);
             },
             $this->roleRepository->findAll()
-        );
-    }
-
-    public function toResponse(Role $role): RoleResponse
-    {
-        return new RoleResponse(
-            id: $role->getId(),
-            name: $role->getName()
         );
     }
 }

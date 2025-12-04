@@ -20,8 +20,7 @@ class ProductUpdateListener
         private readonly EntityManagerInterface $entityManager,
         private readonly CountHistoryRepository $countHistoryRepository,
         private readonly PriceHistoryRepository $priceHistoryRepository
-    )
-    {
+    ) {
     }
 
     public function onPostUpdate(Product $product, PostUpdateEventArgs $event): void

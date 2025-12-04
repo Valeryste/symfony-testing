@@ -23,7 +23,6 @@ class CategoryRepository extends BaseRepository
             ->distinct()
             ->getQuery()
             ->getResult();
-
     }
 
     public function getListQuery(array $filters = [], array $sorts = [], array $search = []): Query

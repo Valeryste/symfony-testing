@@ -2,7 +2,9 @@
 
 namespace App\Enum\Filter;
 
-enum UserFilters: string
+use App\Interface\FilterEnumInterface;
+
+enum UserFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
@@ -10,7 +12,7 @@ enum UserFilters: string
 
     case BY_ROLE = 'role';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -19,7 +21,15 @@ enum UserFilters: string
         ];
     }
 
-    public function outputInTemplate(): string
+    public function getInputType(): string
+    {
+        return match($this) {
+            self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
+            self::BY_ROLE => 'select'
+        };
+    }
+
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
@@ -28,7 +38,7 @@ enum UserFilters: string
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
@@ -37,15 +47,24 @@ enum UserFilters: string
         };
     }
 
-    public function getType(): string
+    public function getEntityField(): string
     {
         return match($this) {
-            self::WITH_DELETED, self::ONLY_ACTIVE => 'checkbox',
-            self::BY_ROLE => 'select'
+            self::WITH_DELETED => 'deletedAt',
+            self::ONLY_ACTIVE => 'isActive',
+            self::BY_ROLE => 'role'
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
     {
         return match($this) {
             self::BY_ROLE => 'roles',

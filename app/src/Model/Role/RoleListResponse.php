@@ -16,5 +16,4 @@ class RoleListResponse
         public readonly array $roles
     ) {
     }
-
 }

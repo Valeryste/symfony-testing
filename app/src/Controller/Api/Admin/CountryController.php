@@ -190,7 +190,6 @@ class CountryController extends BaseController
         description: 'Country updated successfully',
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Country updated successfully'),
                 new OA\Property(
                     property: 'country',
                     ref: new Model(type: CountryResponse::class)
@@ -203,9 +202,7 @@ class CountryController extends BaseController
     {
         try {
             return $this->json([
-                'country' => $this->apiCountryService->update(
-                    new UpdateCountryDTO(...$request->toArray()),
-                    $country)
+                'country' => $this->apiCountryService->update(new UpdateCountryDTO(...$request->toArray()), $country)
             ]);
         } catch (\Exception $e) {
             return $this->json([

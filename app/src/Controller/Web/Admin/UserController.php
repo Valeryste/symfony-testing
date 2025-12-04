@@ -45,7 +45,7 @@ class UserController extends BaseController
                     sorts: $request->query->all()['sorts'] ?? [],
                     search: $transformedSearch
                 ),
-                'filters' => UserFilters::getFilterCases(),
+                'filters' => UserFilters::getAvailableFilters(),
                 'sorts' => UserSorts::getSortCases(),
                 'roles' => $this->userService->getAllRole(),
             ]

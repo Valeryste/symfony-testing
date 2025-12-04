@@ -2,9 +2,9 @@
 
 namespace App\Enum\Filter;
 
-use phpDocumentor\Reflection\Types\Self_;
+use App\Interface\FilterEnumInterface;
 
-enum EmployeeFilters: string
+enum EmployeeFilters: string implements FilterEnumInterface
 {
     case WITH_DELETED = 'deletedAt';
 
@@ -12,7 +12,7 @@ enum EmployeeFilters: string
 
     case ONLY_DISMISSED = 'isDismissed';
 
-    public static function getFilterCases(): array
+    public static function getAvailableFilters(): array
     {
         return [
             self::WITH_DELETED,
@@ -21,7 +21,15 @@ enum EmployeeFilters: string
         ];
     }
 
-    public function outputInTemplate(): string
+    public function getInputType(): string
+    {
+        return match($this) {
+            self::WITH_DELETED, self::ONLY_DISMISSED => 'checkbox',
+            self::BY_SHOP => 'select'
+        };
+    }
+
+    public function getDisplayName(): string
     {
         return match($this) {
             self::WITH_DELETED => 'Удаленные',
@@ -30,7 +38,7 @@ enum EmployeeFilters: string
         };
     }
 
-    public function getFieldType(): string
+    public function getEntityFieldType(): string
     {
         return match($this) {
             self::WITH_DELETED => 'datetime',
@@ -39,20 +47,28 @@ enum EmployeeFilters: string
         };
     }
 
-    public function getType(): string
+    public function getEntityField(): string
     {
         return match($this) {
-            self::WITH_DELETED, self::ONLY_DISMISSED => 'checkbox',
-            self::BY_SHOP => 'select'
+            self::WITH_DELETED => 'deletedAt',
+            self::BY_SHOP => 'shop',
+            self::ONLY_DISMISSED => 'isDismissed'
         };
     }
 
-    public function getTemplateVariable(): string
+    public function getOperator(mixed $value = null): string
+    {
+        return match($this) {
+            self::WITH_DELETED => (int) $value == 1 ? 'IS NOT NULL' : 'IS NULL',
+            default => '='
+        };
+    }
+
+    public function getTemplateVariableName(): ?string
     {
         return match($this) {
             self::BY_SHOP => 'shops',
             default => '',
         };
     }
-
 }

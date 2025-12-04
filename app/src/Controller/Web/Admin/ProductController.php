@@ -26,7 +26,6 @@ class ProductController extends BaseController
     ) {
     }
 
-
     #[Route(name: 'admin_products_index')]
     public function index(Request $request): Response
     {
@@ -47,7 +46,7 @@ class ProductController extends BaseController
                 sorts: $request->query->all()['sorts'] ?? [],
                 search: $transformedSearch
             ),
-            'filters' => ProductFilters::getFilterCases(),
+            'filters' => ProductFilters::getAvailableFilters(),
             'sorts' => ProductSorts::getSortCases(),
             'categories' => $this->productService->findCategoriesWithProducts()
         ]);

@@ -1,4 +1,4 @@
-<label class="form-label small mb-1">{{ filter.outputInTemplate }}</label>
+<label class="form-label small mb-1">{{ filter.getDisplayName }}</label>
 <label>
     <select name="filters[{{ filter.value }}]{% if isMultiple %}[]{% endif %}"
             {% if isMultiple %}multiple{% endif %}

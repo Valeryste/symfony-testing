@@ -47,7 +47,7 @@ class CityController extends BaseController
                 search: $transformedSearch
             ),
             'createForm' => $this->createForm(CreateCityFormType::class),
-            'filters' => CityFilters::getFilterCases(),
+            'filters' => CityFilters::getAvailableFilters(),
             'sorts' => CitySorts::getSortCases(),
             'countries' => $this->cityService->findCountriesWithCities()
         ]);

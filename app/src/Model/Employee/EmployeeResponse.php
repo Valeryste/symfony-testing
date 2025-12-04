@@ -2,6 +2,7 @@
 
 namespace App\Model\Employee;
 
+use App\Entity\Employee;
 use App\Model\Shop\ShopResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -42,5 +43,21 @@ class EmployeeResponse
         #[OA\Property(type: 'string', format: 'date-time', example: '2025-11-12T06:39:22+00:00|null', nullable: true)]
         public readonly ?\DateTime $updatedAt
     ) {
+    }
+
+    public static function fromEntity(Employee $employee): self
+    {
+        return new self(
+            id: $employee->getId(),
+            name: $employee->getName(),
+            surname: $employee->getSurname(),
+            phone: $employee->getPhone(),
+            position: $employee->getPosition(),
+            email: $employee->getEmail(),
+            isDismissed: $employee->isDismissed(),
+            shop: ShopResponse::fromEntity($employee->getShop()),
+            createdAt: $employee->getCreatedAt(),
+            updatedAt: $employee->getUpdatedAt()
+        );
     }
 }

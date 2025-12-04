@@ -2,6 +2,7 @@
 
 namespace App\Model\User;
 
+use App\Entity\User;
 use App\Model\Role\RoleResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -33,5 +34,18 @@ class UserResponse
         #[OA\Property(type: 'string', format: 'date-time', example: '2025-11-12T06:39:22+00:00', nullable: true)]
         public readonly ?\DateTime $updatedAt
     ) {
+    }
+
+    public static function fromEntity(User $user): self
+    {
+        return new self(
+            id: $user->getId(),
+            username: $user->getUsername(),
+            email: $user->getEmail(),
+            isActive: $user->isActive(),
+            role: RoleResponse::fromEntity($user->getRole()),
+            createdAt: $user->getCreatedAt(),
+            updatedAt: $user->getUpdatedAt()
+        );
     }
 }
