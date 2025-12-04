@@ -26,7 +26,7 @@ class ApiPriceHistoryService extends BaseService
             $this->entityManager->getFilters()->disable('softdeleteable');
         }
 
-        $paginationCategories = $this->countHistoryRepository->getPaginatedResults(
+        $paginationPriceHistories = $this->countHistoryRepository->getPaginatedResults(
             page: $page,
             limit: self::PAGINATION_LIMIT,
             filters: $filters,
@@ -39,7 +39,7 @@ class ApiPriceHistoryService extends BaseService
             $this->entityManager->getFilters()->enable('softdeleteable');
         }
 
-        return CountHistoryListResponse::fromPagination($paginationCategories);
+        return CountHistoryListResponse::fromPagination($paginationPriceHistories);
     }
 
     private function getProduct(int $productId)
