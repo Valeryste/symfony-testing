@@ -75,7 +75,7 @@ class CityController extends BaseController
                 page: $request->query->getInt('page', 1),
             ),
             'createForm' => $form,
-            'filters' => CityFilters::getFilterCases(),
+            'filters' => CityFilters::getAvailableFilters(),
             'sorts' => CitySorts::getSortCases(),
             'countries' => $this->cityService->findCountriesWithCities()
         ]);
