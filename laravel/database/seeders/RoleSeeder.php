@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enum\Role;
+use App\Enums\RoleEnum;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (Role::cases() as $role) {
+        foreach (RoleEnum::cases() as $role) {
             DB::table('roles')->updateOrInsert(
                 [
                     'name' => $role->value

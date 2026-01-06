@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enum;
+namespace App\Enums;
 
-enum Status: string
+enum StatusEnum: string
 {
     case NEW = 'NEW';
 
