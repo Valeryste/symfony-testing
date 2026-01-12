@@ -5,6 +5,8 @@ namespace App\Services;
 use App\DTO\Authentication\LoginDTO;
 use App\DTO\Authentication\RegisterDTO;
 use App\Enums\RoleEnum;
+use App\Http\Resources\Authentication\LoginResource;
+use App\Http\Resources\Authentication\RegisterResource;
 use App\Models\User;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
@@ -28,12 +30,14 @@ class AuthenticationService extends BaseService
             $userRole = $this->roleRepository->findByName(RoleEnum::USER);
             $user->role()->associate($userRole);
 
+            $user->save();
+
             return $user;
         });
 
         return [
             'token' => $user->createToken('auth-token')->plainTextToken,
-            'user' => $user
+            'user' => new RegisterResource($user)
         ];
     }
 
@@ -50,10 +54,10 @@ class AuthenticationService extends BaseService
             ]);
         }
 
-        return [
-            'token' => $user->createToken('auth-token')->plainTextToken,
-            'user' => $user
-        ];
+       return [
+           'token' => $user->createToken('auth-token')->plainTextToken,
+           'user' => new LoginResource($user)
+       ];
     }
 
     public function logout(User $user): int
