@@ -71,7 +71,7 @@ abstract class BaseRepository
         $columns = Schema::getColumnListing($table);
 
         if (!in_array($sortBy, $columns)) {
-            return $query->orderBy('created_at', 'desc');
+            return $query;
         }
 
         return $query->orderBy($sortBy, $sortOrder);

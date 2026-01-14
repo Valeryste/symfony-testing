@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTO\User\IndexDTO;
+use App\DTO\Common\IndexDTO;
 use App\Http\Resources\User\UserCollection;
 use App\Repositories\UserRepository;
 

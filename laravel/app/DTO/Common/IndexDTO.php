@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\User;
+namespace App\DTO\Common;
 
 use App\DTO\BaseDTO;
 use App\Traits\WithPagination;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\DTO\User\IndexDTO;
+use App\DTO\Common\IndexDTO;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\User\IndexRequest;
+use App\Http\Requests\Common\IndexRequest;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
