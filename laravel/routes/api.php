@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('')->group(function () {
     Route::prefix('auth')->group(base_path('routes/api/authRoutes.php'));
+    Route::prefix('admin/users')->group(base_path('routes/api/admin/userRoutes.php'));
 });
