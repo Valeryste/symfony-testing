@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('')->name('app.')->group(function () {
     Route::prefix('auth')->group(base_path('routes/api/authRoutes.php'));
     Route::prefix('admin')->middleware('auth:sanctum')->group(function() {
-        Route::prefix('users')->group(base_path('routes/api/admin/userRoutes.php'));
-        Route::prefix('permissions')->group(base_path('routes/api/admin/permissionRoutes.php'));
+        Route::prefix('users')->name('users.')->group(base_path('routes/api/admin/userRoutes.php'));
+        Route::prefix('permissions')->name('permissions.')->group(base_path('routes/api/admin/permissionRoutes.php'));
     });
 });

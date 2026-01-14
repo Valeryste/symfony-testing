@@ -13,7 +13,10 @@ class Permission extends Model
 
     protected $fillable = [
         'route',
+        'role_id'
     ];
+
+    public $timestamps = false;
 
     public function role(): BelongsTo
     {

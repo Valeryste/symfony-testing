@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\DTO\Common\IndexDTO;
+use App\DTO\Permission\StoreDTO;
+use App\DTO\Permission\UpdateDTO;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Common\IndexRequest;
+use App\Http\Requests\Permission\StoreRequest;
+use App\Http\Requests\Permission\UpdateRequest;
+use App\Models\Permission;
 use App\Services\PermissionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
@@ -36,5 +41,31 @@ class PermissionController extends BaseController
         })->values();
 
         return response()->json($formattedRoutes);
+    }
+
+    public function store(StoreRequest $storeRequest): JsonResponse
+    {
+        try{
+            $storeDTO = new StoreDTO(...$storeRequest->validated());
+
+            return response()->json($this->permissionService->store($storeDTO), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function update(Permission $permission, UpdateRequest $updateRequest): JsonResponse
+    {
+        try{
+            $updateDTO = new UpdateDTO(...$updateRequest->validated());
+
+            return response()->json($this->permissionService->update($permission, $updateDTO));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

@@ -34,4 +34,16 @@ class PermissionRepository extends BaseRepository
             ->where('route', $routeName)
             ->first();
     }
+
+    public function create(array $data): Model|Permission
+    {
+        return $this->model
+            ->newQuery()
+            ->create($data);
+    }
+
+    public function update(Permission $permission, array $data): void
+    {
+        $permission->update($data);
+    }
 }
