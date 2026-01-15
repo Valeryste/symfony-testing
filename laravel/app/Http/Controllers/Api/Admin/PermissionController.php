@@ -30,17 +30,12 @@ class PermissionController extends BaseController
 
     public function getListRoute(): JsonResponse
     {
-        $routes = collect(Route::getRoutes()->getRoutes());
+        $routes = collect(Route::getRoutes()->getRoutes())
+            ->map(fn($route) => ['name' => $route->getName()])
+            ->filter(fn($route) => $route['name'] && str_starts_with($route['name'], 'app.'))
+            ->values();
 
-        $formattedRoutes = $routes->map(function ($route) {
-            return [
-                'name' => $route->getName(),
-            ];
-        })->filter(function ($route) {
-            return str_starts_with($route['name'], 'app.');
-        })->values();
-
-        return response()->json($formattedRoutes);
+        return response()->json($routes);
     }
 
     public function store(StoreRequest $storeRequest): JsonResponse
@@ -49,6 +44,7 @@ class PermissionController extends BaseController
             $storeDTO = new StoreDTO(...$storeRequest->validated());
 
             return response()->json($this->permissionService->store($storeDTO), 201);
+
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
@@ -62,6 +58,7 @@ class PermissionController extends BaseController
             $updateDTO = new UpdateDTO(...$updateRequest->validated());
 
             return response()->json($this->permissionService->update($permission, $updateDTO));
+
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage()
