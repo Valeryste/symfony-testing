@@ -9,7 +9,6 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Common\IndexRequest;
 use App\Http\Requests\Permission\StoreRequest;
 use App\Http\Requests\Permission\UpdateRequest;
-use App\Models\Permission;
 use App\Services\PermissionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
@@ -52,12 +51,12 @@ class PermissionController extends BaseController
         }
     }
 
-    public function update(Permission $permission, UpdateRequest $updateRequest): JsonResponse
+    public function update(int $id, UpdateRequest $updateRequest): JsonResponse
     {
         try{
             $updateDTO = new UpdateDTO(...$updateRequest->validated());
 
-            return response()->json($this->permissionService->update($permission, $updateDTO));
+            return response()->json($this->permissionService->update($id, $updateDTO));
 
         } catch (\Exception $e) {
             return response()->json([

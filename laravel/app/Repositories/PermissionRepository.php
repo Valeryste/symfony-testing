@@ -46,4 +46,11 @@ class PermissionRepository extends BaseRepository
     {
         $permission->update($data);
     }
+
+    public function findById(int $id): Model|Permission|null
+    {
+        return $this->model
+            ->newQuery()
+            ->find($id);
+    }
 }

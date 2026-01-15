@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends BaseRepository
 {
@@ -32,5 +31,22 @@ class UserRepository extends BaseRepository
     {
         return $user->tokens()
             ->delete();
+    }
+
+    public function findById(int $id): Model|User|null
+    {
+        return $this->model
+            ->newQuery()
+            ->find($id);
+    }
+
+    public function update(User $user, array $data): void
+    {
+        $user->update($data);
+    }
+
+    public function delete(User $user): void
+    {
+        $user->delete();
     }
 }

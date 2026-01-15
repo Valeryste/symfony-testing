@@ -7,8 +7,8 @@ use App\DTO\Permission\StoreDTO;
 use App\DTO\Permission\UpdateDTO;
 use App\Http\Resources\Permission\PermissionCollection;
 use App\Http\Resources\Permission\PermissionResource;
-use App\Models\Permission;
 use App\Repositories\PermissionRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PermissionService extends BaseService
 {
@@ -27,8 +27,14 @@ class PermissionService extends BaseService
         return new PermissionResource($this->permissionRepository->create((array) $storeDTO));
     }
 
-    public function update(Permission $permission, UpdateDTO $updateDTO): PermissionResource
+    public function update(int $id, UpdateDTO $updateDTO): PermissionResource
     {
+        $permission = $this->permissionRepository->findById($id);
+
+        if($permission === null) {
+            throw new NotFoundHttpException(message: "Not found permission with {$id} id", code: 404);
+        }
+
         $this->permissionRepository->update($permission, (array) $updateDTO);
 
         return new PermissionResource($permission);
