@@ -27,6 +27,9 @@ services:
       - app-network
     depends_on:
       - database
+    extra_hosts:
+      - 'laravel.dev:172.19.0.4'
+      - 'symfony.dev:172.19.0.4'
   nginx:
     container_name: nginx
     image: nginx:stable-alpine
