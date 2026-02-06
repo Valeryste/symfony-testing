@@ -18,13 +18,14 @@ use App\Request\Category\StoreCategoryRequest;
 use App\Request\Category\UpdateCategoryRequest;
 use App\Service\Api\ApiCategoryService;
 use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use OpenApi\Attributes as OA;
 
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted(new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER')"))]
 #[Route('api/admin/categories')]
 #[OA\Tag(name: 'Admin Categories')]
 #[ForbiddenResponse]

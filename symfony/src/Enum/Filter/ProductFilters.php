@@ -50,7 +50,7 @@ enum ProductFilters: string implements FilterEnumInterface
     public function getEntityField(): string
     {
         return match($this) {
-            self::WITH_DELETED => 'createdAt',
+            self::WITH_DELETED => 'deletedAt',
             self::BY_CATEGORIES => 'categories',
             self::ONLY_ACTIVE => 'isActive'
         };

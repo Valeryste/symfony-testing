@@ -30,5 +30,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'symfony' => [
+        'auth_username' => env('SYMFONY_AUTH_USERNAME'),
+        'auth_password' => env('SYMFONY_AUTH_PASSWORD'),
+        'base_url' => env('SYMFONY_BASE_URL')
+    ]
 ];

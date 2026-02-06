@@ -9,7 +9,8 @@ class JwtTokenService
 {
     public function __construct(
         private readonly JWTTokenManagerInterface $jwtManager
-    ) {}
+    ) {
+    }
 
     public function createToken(User $user): string
     {

@@ -12,30 +12,42 @@ use App\Services\AuthenticationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 
 class AuthenticationController extends BaseController
 {
     public function __construct(
-       private readonly AuthenticationService $authenticationService
+        private readonly AuthenticationService $authenticationService
     ) {
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $registerDTO = new RegisterDTO(...$request->validated());
+        try {
+            $registerDTO = new RegisterDTO(...$request->validated());
 
-        return response()->json($this->authenticationService->register($registerDTO), 201);
+            return response()->json($this->authenticationService->register($registerDTO), 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     /**
-     * @throws ValidationException
+     * @param LoginRequest $request
+     * @return JsonResponse
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $loginDTO = new LoginDTO(...$request->validated());
+        try {
+            $loginDTO = new LoginDTO(...$request->validated());
 
-        return response()->json($this->authenticationService->login($loginDTO));
+            return response()->json($this->authenticationService->login($loginDTO));
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], $e->getCode());
+        }
     }
 
     public function user(Request $request): User

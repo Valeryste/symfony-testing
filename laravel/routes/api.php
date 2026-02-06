@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::prefix('')->group(function () {
+Route::prefix('')->name('app.')->group(function () {
     Route::prefix('auth')->group(base_path('routes/api/authRoutes.php'));
+    Route::prefix('admin')->middleware('auth:sanctum')->group(function() {
+        Route::prefix('users')->name('users.')->group(base_path('routes/api/admin/userRoutes.php'));
+        Route::prefix('permissions')->name('permissions.')->group(base_path('routes/api/admin/permissionRoutes.php'));
+    });
 });

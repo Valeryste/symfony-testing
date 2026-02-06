@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum StatusEnum: string
+enum OrderStatusEnum: string
 {
     case NEW = 'NEW';
 
